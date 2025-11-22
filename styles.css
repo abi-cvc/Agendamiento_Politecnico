@@ -30,7 +30,7 @@ header nav ul {
 }
 
 header nav ul li {
-    padding: 10px 15px;
+    padding: 15px 15px;
     border-radius: 5px;
     transition: background-color 0.3s;
 }
@@ -41,7 +41,7 @@ header nav ul li:hover {
 
 header nav a {
     color: var(--color-7);
-    margin: 0 15px;
+    margin: 15px 15px;
     text-decoration: none;
     font-weight: 500;
 }
@@ -49,6 +49,12 @@ header nav a {
 header nav a:hover {
     color: var(--color-2);
     font-weight: 550;
+}
+
+.login {
+    background-color: var(--color-3);
+    padding: 15px 15px;
+    border-radius: 30px;
 }
 
 .logo img {
