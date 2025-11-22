@@ -156,28 +156,6 @@ main p {
     line-height: 1.6;
 }
 
-.informacion-inicio ul li::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 8px;
-    width: 12px;
-    height: 12px;
-    background: var(--gradient-accent);
-    border-radius: 50%;
-}
-
-.informacion-inicio ul li::after {
-    content: '';
-    position: absolute;
-    left: 4px;
-    top: 12px;
-    width: 4px;
-    height: 4px;
-    background: var(--color-7);
-    border-radius: 50%;
-}
-
 /* ===== FOOTER ===== */
 footer {
     background-color: var(--color-2);
