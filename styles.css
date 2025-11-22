@@ -7,6 +7,8 @@
     --color-6: #e2e4e9;
     --color-7: #ffffff;
     --color-8: #555555;
+    --gradient-primary: linear-gradient(135deg, #001F3F 0%, #003366 100%);
+    --gradient-accent: linear-gradient(135deg, var(--color-3) 0%, var(--color-4) 100%);
 }
 
 * {
@@ -354,30 +356,17 @@ footer {
 }
 
 /* ===== PÁGINA DE SEGUROS ===== */
-.seguros-page {
-    flex: 1;
-}
 
 /* Hero Seguros */
 .seguros-hero {
-    background: var(--gradient-primary);
-    color: var(--color-7);
+    color: var(--color-2);
     text-align: center;
     padding: 60px 20px;
 }
 
-.seguros-hero h1 {
-    font-family: 'Inter', sans-serif;
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 10px;
-    color: var(--color-7);
-    text-shadow: none;
-}
-
 .seguros-hero > p {
     font-family: 'Inter', sans-serif;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     color: var(--color-4);
     margin-bottom: 25px;
 }
@@ -441,7 +430,7 @@ footer {
 /* Coberturas */
 .coberturas-section {
     background: var(--color-6);
-    padding: 60px 20px;
+    padding: 80px 20px;
 }
 
 .coberturas-section h2,
@@ -454,15 +443,17 @@ footer {
     margin-bottom: 40px;
 }
 
-.coberturas-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+.coberturas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 20px;
     max-width: 1000px;
     margin: 0 auto;
 }
 
 .cobertura-item {
+    width: 200px;
     background: var(--color-7);
     border-radius: 12px;
     padding: 25px 15px;
@@ -474,15 +465,6 @@ footer {
 .cobertura-item:hover {
     border-color: var(--color-3);
     transform: scale(1.03);
-}
-
-.cobertura-item.destacado {
-    background: var(--gradient-primary);
-}
-
-.cobertura-item.destacado .cobertura-monto,
-.cobertura-item.destacado .cobertura-nombre {
-    color: var(--color-7);
 }
 
 .cobertura-monto {
@@ -500,20 +482,20 @@ footer {
 
 /* Emergencia */
 .emergencia-section {
-    padding: 60px 20px;
+    padding: 20px 20px;
     max-width: 900px;
     margin: 0 auto;
 }
 
 .telefono-emergencia {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 }
 
 .telefono-emergencia span {
     display: block;
-    color: #555;
-    margin-bottom: 5px;
+    color: var(--color-8);
+    margin-bottom: 20px;
 }
 
 .telefono-emergencia a {
@@ -535,7 +517,7 @@ footer {
 
 .paso {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 20px;
     background: var(--color-7);
     padding: 25px;
@@ -549,17 +531,17 @@ footer {
 }
 
 .paso-numero {
-    width: 45px;
-    height: 45px;
-    background: var(--gradient-accent);
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+    background: linear-gradient(135deg, var(--color-3) 0%, var(--color-4) 100%);
     color: var(--color-7);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: 1.2rem;
-    flex-shrink: 0;
+    font-size: 1.2rem;  
 }
 
 .paso-contenido h4 {
@@ -650,7 +632,7 @@ footer {
 }
 
 .contacto-item-seguros a:hover {
-    color: var(--color-2);
+    color: var(--color-4);
 }
 
 .emergencia-box {
@@ -666,89 +648,4 @@ footer {
     font-size: 1.8rem;
     font-weight: 700;
     color: var(--color-7);
-}
-
-/* ===== SECCIÓN INFORMACIÓN INICIO ===== */
-.informacion-inicio {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 60px 40px 80px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 40px;
-}
-
-.informacion-inicio > div {
-    background: var(--color-7);
-    border-radius: 20px;
-    padding: 40px;
-    box-shadow: 0 10px 40px rgba(0, 31, 63, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.informacion-inicio > div:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 50px rgba(0, 31, 63, 0.15);
-}
-
-.informacion-inicio h2 {
-    font-size: 1.5rem;
-    color: var(--color-2);
-    margin-bottom: 20px;
-    position: relative;
-    padding-bottom: 15px;
-}
-
-.informacion-inicio h2::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 60px;
-    height: 4px;
-    background: var(--gradient-accent);
-    border-radius: 2px;
-}
-
-.informacion-inicio p {
-    color: #555;
-    font-size: 1rem;
-    line-height: 1.8;
-    text-align: justify;
-}
-
-.informacion-inicio ul {
-    list-style: none;
-    margin-top: 15px;
-}
-
-.informacion-inicio ul li {
-    position: relative;
-    padding-left: 30px;
-    margin-bottom: 15px;
-    color: #555;
-    font-size: 1rem;
-    line-height: 1.6;
-}
-
-.informacion-inicio ul li::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 8px;
-    width: 12px;
-    height: 12px;
-    background: var(--gradient-accent);
-    border-radius: 50%;
-}
-
-.informacion-inicio ul li::after {
-    content: '';
-    position: absolute;
-    left: 4px;
-    top: 12px;
-    width: 4px;
-    height: 4px;
-    background: var(--color-7);
-    border-radius: 50%;
 }
