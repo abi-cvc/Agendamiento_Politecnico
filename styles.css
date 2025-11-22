@@ -6,6 +6,7 @@
     --color-5: #d2d6de;
     --color-6: #e2e4e9;
     --color-7: #ffffff;
+    --color-8: #555555;
 }
 
 * {
@@ -134,7 +135,7 @@ main p {
 }
 
 .informacion-inicio p {
-    color: #555;
+    color: var(--color-8);
     font-size: 1rem;
     line-height: 1.8;
     text-align: justify;
@@ -148,7 +149,7 @@ main p {
 .informacion-inicio ul li {
     position: relative;
     margin-bottom: 15px;
-    color: #555;
+    color: var(--color-8);
     font-size: 1rem;
     line-height: 1.6;
 }
