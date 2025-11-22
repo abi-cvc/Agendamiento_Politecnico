@@ -81,6 +81,13 @@ h1 {
     text-shadow: 2px 2px 4px rgba(0, 31, 63, 0.1);
 }
 
+h2 {
+    font-size: 2rem;
+    color: var(--color-2);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
 main p {
     font-style: italic;
     font-size: 2em;
@@ -105,11 +112,6 @@ main p {
     padding: 40px;
     box-shadow: 0 10px 40px rgba(0, 31, 63, 0.1);
     transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.informacion-inicio > div:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 50px rgba(0, 31, 63, 0.15);
 }
 
 .informacion-inicio h2 {
@@ -139,13 +141,12 @@ main p {
 }
 
 .informacion-inicio ul {
-    list-style: none;
     margin-top: 15px;
+    padding-left: 30px;
 }
 
 .informacion-inicio ul li {
     position: relative;
-    padding-left: 30px;
     margin-bottom: 15px;
     color: #555;
     font-size: 1rem;
