@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agendamientos - Bienestar Politécnico</title>
+    <title>Bienestar Politécnico</title>
+    <link rel="icon" type="image/png" href="images/logo_epn.png">
     <link rel="stylesheet" href="framework.css">
     <link rel="stylesheet" href="styles.css">
 
@@ -30,7 +31,59 @@
         </nav>
     </header>
 
-    
+    <main>
+        <h1>Agendar Cita Médica</h1>
+        <p>Bienvenido/a, <span id="userName">Usuario</span></p>
+    </main>
+
+    <section class="agendamientos-page">
+        <div class="agendamiento-container">
+            <!-- Formulario de agendamiento -->
+            <div class="agendamiento-form">
+                <h3>Nueva Cita</h3>
+                <div id="formMessage" class="form-message"></div>
+                
+                <form id="agendamientoForm">
+                    <div class="form-group">
+                        <label for="especialidad">Especialidad</label>
+                        <select id="especialidad" required>
+                            <option value="">Seleccione una especialidad</option>
+                            <option value="nutricion">Nutrición</option>
+                            <option value="odontologia">Odontología</option>
+                            <option value="psicologia">Psicología</option>
+                            <option value="medicina">Medicina General</option>
+                            <option value="enfermeria">Enfermería</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fecha">Fecha</label>
+                        <input type="date" id="fecha" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="hora">Hora</label>
+                        <input type="time" id="hora" min="08:00" max="17:00" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="motivo">Motivo de la consulta</label>
+                        <textarea id="motivo" placeholder="Describe brevemente el motivo de tu consulta" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-agendar">Agendar Cita</button>
+                </form>
+            </div>
+
+            <!-- Mis citas -->
+            <div class="mis-citas">
+                <h3>Mis Citas</h3>
+                <div id="listaCitas" class="lista-citas">
+                    <p class="no-citas">No tienes citas agendadas</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <footer>
         <div class="footer-main">
@@ -102,6 +155,6 @@
     </footer>
 
     <script src="js/auth.js"></script>
-    
+    <script src="js/agendamientos.js"></script>
 </body>
 </html>

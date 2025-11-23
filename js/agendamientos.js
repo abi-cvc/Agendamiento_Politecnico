@@ -6,10 +6,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!usuario) {
         sessionStorage.setItem('paginaAnterior', 'agendamientos.html');
         window.location.href = 'login.html';
-        window.location.href = 'agendamientos.html';
-        window.location.href = 'especialidades.html';
-        window.location.href = 'seguros.html';
-        window.location.href = 'reseñas.html';
         return;
     }
 
@@ -24,12 +20,35 @@ document.addEventListener('DOMContentLoaded', function() {
     const hoy = new Date().toISOString().split('T')[0];
     fechaInput.min = hoy;
     
+    // Detectar y pre-seleccionar especialidad desde URL
+    preseleccionarEspecialidad();
+    
     // Cargar citas existentes
     cargarCitas();
     
     // Manejar envío del formulario
     document.getElementById('agendamientoForm').addEventListener('submit', agendarCita);
 });
+
+// ===== PRE-SELECCIONAR ESPECIALIDAD DESDE URL =====
+function preseleccionarEspecialidad() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const especialidad = urlParams.get('especialidad');
+    
+    if (especialidad) {
+        const selectEspecialidad = document.getElementById('especialidad');
+        const option = selectEspecialidad.querySelector(`option[value="${especialidad}"]`);
+        
+        if (option) {
+            selectEspecialidad.value = especialidad;
+            // Agregar efecto visual temporal
+            selectEspecialidad.style.background = 'rgba(60, 141, 188, 0.1)';
+            setTimeout(() => {
+                selectEspecialidad.style.background = '';
+            }, 2000);
+        }
+    }
+}
 
 // ===== ACTUALIZAR BOTÓN DE AUTENTICACIÓN =====
 function actualizarBotonAuth(usuario) {

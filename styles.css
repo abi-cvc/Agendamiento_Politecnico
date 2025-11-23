@@ -82,6 +82,10 @@ main p {
     padding: 10px 20px 20px;
 }
 
+main p span {
+    font-weight: 600;
+}
+
 /* ===== SECCIÓN INFORMACIÓN INICIO ===== */
 .informacion-inicio {
     max-width: 1200px;
@@ -667,6 +671,32 @@ footer {
     gap: var(--spacing-lg);
 }
 
+/* Mensaje de formulario */
+.form-message {
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    text-align: center;
+    display: none;
+    margin-bottom: var(--spacing-md);
+}
+
+.form-message.show {
+    display: block;
+}
+
+.form-message.success {
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #10b981;
+}
+
+.form-message.error {
+    background: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #dc2626;
+}
+
 .toggle-password {
     position: absolute;
     right: 15px;
@@ -774,31 +804,9 @@ footer {
 
 /* ===== PÁGINA DE AGENDAMIENTOS ===== */
 .agendamientos-page {
-    flex: 1;
-    padding: 40px 20px;
+    padding: var(--spacing-xl) var(--spacing-lg);
     max-width: 1100px;
     margin: 0 auto;
-}
-
-.user-welcome {
-    text-align: center;
-    margin-bottom: 40px;
-}
-
-.user-welcome h1 {
-    font-family: 'Inter', sans-serif;
-    font-size: 2.2rem;
-    margin: 0 0 10px 0;
-}
-
-.welcome-text {
-    color: var(--color-3);
-    font-size: 1.1rem;
-    font-style: normal;
-}
-
-.welcome-text span {
-    font-weight: 600;
 }
 
 .agendamiento-container {
@@ -1072,10 +1080,14 @@ footer {
 
 /* ===== PÁGINA DE ESPECIALIDADES ===== */
 
+.especialidades-section {
+    padding: 0;
+}
+
 .especialidades-container {
-    max-width: 1400px;
+    max-width: 1100px;
     margin: 0 auto;
-    padding: var(--spacing-xl) var(--spacing-lg);
+    padding: var(--spacing-2xl) var(--spacing-lg) var(--spacing-3xl);
     display: grid;
     grid-template-columns: 280px 1fr;
     gap: var(--spacing-xl);

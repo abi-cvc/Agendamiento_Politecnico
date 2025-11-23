@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Especialidades - Bienestar Politécnico</title>
+    <title>Bienestar Politécnico</title>
+    <link rel="icon" type="image/png" href="images/logo_epn.png">
     <link rel="stylesheet" href="framework.css">
     <link rel="stylesheet" href="styles.css">
 
@@ -151,6 +152,19 @@
     </footer>
 
     <script src="js/auth.js"></script>
+    <script>
+        // Deshabilitar enlaces de navegación excepto Inicio
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('nav ul li a');
+            navLinks.forEach(link => {
+                if (!link.href.includes('index.html') && !link.href.includes('login.html')) {
+                    link.style.pointerEvents = 'none';
+                    link.style.opacity = '0.5';
+                    link.style.cursor = 'not-allowed';
+                }
+            });
+        });
+    </script>
     
 </body>
 </html>
