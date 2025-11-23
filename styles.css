@@ -48,7 +48,7 @@ header nav a:hover {
 .login {
     background-color: var(--color-3);
     padding: 2px 25px;
-    border-radius: 30px;
+    border-radius: var(--radius-full);
 }
 
 .logo img {
@@ -221,7 +221,7 @@ footer {
     width: 22px;
     height: 22px;
     fill: var(--color-4);
-    transition: fill 0.3s;
+    transition: fill var(--transition-normal);
 }
 
 .social-link:hover svg {
@@ -241,14 +241,14 @@ footer {
     color: var(--color-5);
     text-decoration: none;
     font-size: 0.95rem;
-    transition: all 0.3s;
+    transition: all var(--transition-normal);
     display: inline-block;
 }
 
 .footer-links a::before {
     content: '→ ';
     margin-right: 5px;
-    transition: margin 0.3s;
+    transition: margin var(--transition-normal);
 }
 
 .footer-links a:hover {
@@ -285,7 +285,7 @@ footer {
     width: 20px;
     height: 20px;
     fill: var(--color-4);
-    transition: fill 0.3s;
+    transition: fill var(--transition-normal);
 }
 
 .contact-icon:hover svg {
@@ -342,10 +342,10 @@ footer {
 .hero-badge {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
+    gap: var(--spacing-sm);
     background: rgba(255,255,255,0.1);
     padding: 12px 25px;
-    border-radius: 50px;
+    border-radius: var(--radius-full);
     font-size: 0.95rem;
 }
 
@@ -357,7 +357,7 @@ footer {
 .info-rapida {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 25px;
+    gap: var(--spacing-xl);
     max-width: 1000px;
     margin: -40px auto 40px;
     padding: 0 var(--spacing-lg);
@@ -367,11 +367,11 @@ footer {
 
 .info-card {
     background: var(--color-7);
-    border-radius: 16px;
+    border-radius: var(--radius-xl);
     padding: 30px;
     text-align: center;
-    box-shadow: 0 10px 40px rgba(0,31,63,0.15);
-    transition: transform 0.3s;
+    box-shadow: var(--shadow-xl);
+    transition: transform var(--transition-normal);
 }
 
 .info-card:hover {
@@ -415,7 +415,7 @@ footer {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 20px;
+    gap: var(--spacing-lg);
     max-width: 1000px;
     margin: 0 auto;
 }
@@ -423,11 +423,11 @@ footer {
 .cobertura-item {
     width: 200px;
     background: var(--color-7);
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     padding: 25px 15px;
     text-align: center;
     border: 2px solid transparent;
-    transition: all 0.3s;
+    transition: all var(--transition-normal);
 }
 
 .cobertura-item:hover {
@@ -471,7 +471,7 @@ footer {
     font-weight: 700;
     color: var(--color-3);
     text-decoration: none;
-    transition: color 0.3s;
+    transition: color var(--transition-normal);
 }
 
 .telefono-emergencia a:hover {
@@ -480,18 +480,18 @@ footer {
 
 .pasos-emergencia {
     display: grid;
-    gap: 20px;
+    gap: var(--spacing-lg);
 }
 
 .paso {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: var(--spacing-lg);
     background: var(--color-7);
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    transition: transform 0.3s;
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-normal);
 }
 
 .paso:hover {
@@ -534,7 +534,7 @@ footer {
 .detalles-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 25px;
+    gap: var(--spacing-xl);
     max-width: 1100px;
     margin: 0 auto;
 }
@@ -542,9 +542,9 @@ footer {
 .detalle-card {
     background: var(--color-7);
     padding: 30px;
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     border-left: 4px solid var(--color-3);
-    transition: transform 0.3s;
+    transition: transform var(--transition-normal);
 }
 
 .detalle-card:hover {
@@ -574,15 +574,15 @@ footer {
 .contacto-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 25px;
+    gap: var(--spacing-xl);
 }
 
 .contacto-item-seguros {
     background: var(--color-7);
     padding: 30px;
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     text-align: center;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    box-shadow: var(--shadow-md);
 }
 
 .contacto-item-seguros h4 {
@@ -596,7 +596,7 @@ footer {
     color: var(--color-3);
     text-decoration: none;
     margin-bottom: 8px;
-    transition: color 0.3s;
+    transition: color var(--transition-normal);
 }
 
 .contacto-item-seguros a:hover {
@@ -634,11 +634,11 @@ footer {
 
 .login-section .login-card {
     background: var(--color-7);
-    border-radius: 20px;
-    padding: 40px;
+    border-radius: var(--radius-2xl);
+    padding: var(--spacing-xl);
     width: 100%;
     max-width: 420px;
-    box-shadow: 0 10px 40px rgba(0, 31, 63, 0.15);
+    box-shadow: var(--shadow-xl);
 }
 
 .login-section .login-header {
@@ -664,7 +664,7 @@ footer {
 .login-form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: var(--spacing-lg);
 }
 
 .toggle-password {
@@ -683,7 +683,7 @@ footer {
     width: 22px;
     height: 22px;
     fill: var(--color-8);
-    transition: fill 0.3s;
+    transition: fill var(--transition-normal);
 }
 
 .toggle-password:hover svg {
@@ -692,15 +692,15 @@ footer {
 
 /* Botón login */
 .btn-login {
-    background: linear-gradient(135deg, var(--color-3) 0%, var(--color-4) 100%);
+    background: var(--gradient-accent);
     color: var(--color-7);
     border: none;
-    padding: 15px;
-    border-radius: 10px;
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all var(--transition-normal);
     box-shadow: 0 4px 15px rgba(60, 141, 188, 0.3);
 }
 
@@ -732,7 +732,7 @@ footer {
     text-decoration: none;
     font-size: 0.9rem;
     font-weight: 500;
-    transition: color 0.3s;
+    transition: color var(--transition-normal);
 }
 
 .login-footer a:hover {
@@ -741,10 +741,10 @@ footer {
 
 /* Usuarios de prueba */
 .test-users {
-    margin-top: 20px;
-    padding: 15px;
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-md);
     background: #fef3c7;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     text-align: center;
     border: 1px dashed #f59e0b;
 }
@@ -765,7 +765,7 @@ footer {
     color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
     font-size: 0.9rem;
-    transition: color 0.3s;
+    transition: color var(--transition-normal);
 }
 
 .back-link:hover {
@@ -804,18 +804,18 @@ footer {
 .agendamiento-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 40px;
+    gap: var(--spacing-xl);
 }
 
 /* Formulario de agendamiento */
 .agendamiento-form {
     background: var(--color-7);
     padding: 35px;
-    border-radius: 16px;
-    box-shadow: 0 10px 40px rgba(0, 31, 63, 0.1);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: var(--spacing-lg);
 }
 
 .agendamiento-form .form-group {
@@ -835,10 +835,10 @@ footer {
 .agendamiento-form textarea {
     padding: 12px 15px;
     border: 2px solid var(--color-5);
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     font-size: 1rem;
     font-family: inherit;
-    transition: all 0.3s;
+    transition: all var(--transition-normal);
     background: var(--color-6);
 }
 
@@ -858,15 +858,15 @@ footer {
 
 /* Botón agendar */
 .btn-agendar {
-    background: linear-gradient(135deg, var(--color-3) 0%, var(--color-4) 100%);
+    background: var(--gradient-accent);
     color: var(--color-7);
     border: none;
-    padding: 15px;
-    border-radius: 10px;
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all var(--transition-normal);
     box-shadow: 0 4px 15px rgba(60, 141, 188, 0.3);
 }
 
@@ -879,8 +879,8 @@ footer {
 .mis-citas {
     background: var(--color-7);
     padding: 35px;
-    border-radius: 16px;
-    box-shadow: 0 10px 40px rgba(0, 31, 63, 0.1);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
 }
 
 .mis-citas h3 {
@@ -894,7 +894,7 @@ footer {
 .lista-citas {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: var(--spacing-md);
     max-height: 500px;
     overflow-y: auto;
 }
@@ -909,9 +909,9 @@ footer {
 /* Tarjeta de cita */
 .cita-card {
     border: 2px solid var(--color-5);
-    border-radius: 12px;
-    padding: 20px;
-    transition: all 0.3s;
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    transition: all var(--transition-normal);
 }
 
 .cita-card:hover {
@@ -933,7 +933,7 @@ footer {
 
 .cita-estado {
     padding: 5px 12px;
-    border-radius: 20px;
+    border-radius: var(--radius-full);
     font-size: 0.8rem;
     font-weight: 500;
 }
@@ -958,15 +958,15 @@ footer {
 .btn-cancelar {
     width: 100%;
     margin-top: 15px;
-    padding: 10px;
+    padding: var(--spacing-sm);
     background: transparent;
     border: 2px solid #dc2626;
     color: #dc2626;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     font-size: 0.9rem;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all var(--transition-normal);
 }
 
 .btn-cancelar:hover {
@@ -982,12 +982,12 @@ footer {
 .user-menu {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: var(--spacing-sm);
     cursor: pointer;
     padding: 8px 15px;
-    border-radius: 30px;
+    border-radius: var(--radius-full);
     background: rgba(255, 255, 255, 0.1);
-    transition: all 0.3s;
+    transition: all var(--transition-normal);
     position: relative;
 }
 
@@ -1018,15 +1018,15 @@ footer {
     position: absolute;
     top: 100%;
     right: 0;
-    margin-top: 10px;
+    margin-top: var(--spacing-sm);
     background: var(--color-7);
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
     min-width: 220px;
     opacity: 0;
     visibility: hidden;
     transform: translateY(-10px);
-    transition: all 0.3s;
+    transition: all var(--transition-normal);
     z-index: 1000;
     overflow: hidden;
 }
@@ -1038,7 +1038,7 @@ footer {
 }
 
 .dropdown-header {
-    padding: 15px;
+    padding: var(--spacing-md);
     background: var(--color-6);
     border-bottom: 1px solid var(--color-5);
 }
@@ -1058,22 +1058,190 @@ footer {
 .user-dropdown a {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: var(--spacing-sm);
     padding: 12px 15px;
     color: var(--color-2);
     text-decoration: none;
     font-size: 0.9rem;
-    transition: background 0.3s;
+    transition: background var(--transition-normal);
 }
 
 .user-dropdown a:hover {
     background: var(--color-6);
 }
 
+/* ===== PÁGINA DE ESPECIALIDADES ===== */
+
+.especialidades-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--spacing-xl) var(--spacing-lg);
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: var(--spacing-xl);
+}
+
+/* Menú lateral */
+.especialidades-menu {
+    background: var(--color-7);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-lg);
+    position: sticky;
+    top: var(--spacing-lg);
+    height: fit-content;
+}
+
+.especialidades-menu h3 {
+    color: var(--color-2);
+    font-size: 1.3rem;
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--color-5);
+}
+
+.menu-especialidades {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    color: var(--color-8);
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-normal);
+    font-weight: 500;
+}
+
+.menu-item:hover {
+    background: var(--color-6);
+    color: var(--color-2);
+}
+
+.menu-item.active {
+    background: var(--gradient-accent);
+    color: var(--color-7);
+}
+
+.menu-icon {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+/* Contenido de especialidades */
+.especialidades-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+}
+
+.especialidad-card {
+    background: var(--color-7);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-lg);
+    scroll-margin-top: var(--spacing-lg);
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.especialidad-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+.especialidad-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-lg);
+    border-bottom: 2px solid var(--color-6);
+}
+
+.especialidad-icon {
+    font-size: 3.5rem;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gradient-accent);
+    border-radius: var(--radius-lg);
+    flex-shrink: 0;
+}
+
+.especialidad-header h2 {
+    font-size: 1.8rem;
+    color: var(--color-2);
+    margin: 0 0 5px 0;
+    text-align: left;
+}
+
+.especialidad-subtitle {
+    color: var(--color-3);
+    font-size: 1rem;
+    margin: 0;
+    font-style: italic;
+}
+
+.especialidad-body h3 {
+    color: var(--color-2);
+    font-size: 1.2rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.especialidad-body ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: var(--spacing-xl);
+}
+
+.especialidad-body ul li {
+    padding: var(--spacing-sm) 0;
+    padding-left: 30px;
+    position: relative;
+    color: var(--color-8);
+    line-height: 1.6;
+}
+
+.especialidad-body ul li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--color-3);
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 900px) {
     .agendamiento-container {
         grid-template-columns: 1fr;
+    }
+
+    .especialidades-container {
+        grid-template-columns: 1fr;
+    }
+
+    .especialidades-menu {
+        position: static;
+    }
+
+    .menu-especialidades {
+        flex-direction: row;
+        overflow-x: auto;
+        gap: var(--spacing-sm);
+    }
+
+    .menu-item {
+        white-space: nowrap;
+        padding: var(--spacing-sm) var(--spacing-md);
     }
 }
 
