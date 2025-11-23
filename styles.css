@@ -11,7 +11,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0px var(--spacing-xl);
+    padding: 0 var(--spacing-xl);
 }
 
 header nav ul {
@@ -22,7 +22,7 @@ header nav ul {
 }
 
 header nav ul li {
-    padding: var(--spacing-md) var(--spacing-md);
+    padding: var(--spacing-md);
     border-radius: var(--radius-sm);
     transition: background-color var(--transition-normal);
     display: flex;
@@ -98,6 +98,11 @@ main p {
     padding: var(--spacing-xl);
     box-shadow: var(--shadow-lg);
     transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.informacion-inicio > div:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
 }
 
 .informacion-inicio h2 {
@@ -192,7 +197,7 @@ footer {
 .social-links {
     display: flex;
     gap: 12px;
-    margin-top: 20px;
+    margin-top: var(--spacing-lg);
 }
 
 .social-link {
@@ -355,7 +360,7 @@ footer {
     gap: 25px;
     max-width: 1000px;
     margin: -40px auto 40px;
-    padding: 0 20px;
+    padding: 0 var(--spacing-lg);
     position: relative;
     z-index: 10;
 }
