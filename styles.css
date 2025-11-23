@@ -1,51 +1,30 @@
-:root {
-    --color-1: #000000;
-    --color-2: #001F3F;
-    --color-3: #3c8dbc;
-    --color-4: #80b5d3;
-    --color-5: #d2d6de;
-    --color-6: #e2e4e9;
-    --color-7: #ffffff;
-    --color-8: #555555;
-    --gradient-primary: linear-gradient(135deg, #001F3F 0%, #003366 100%);
-    --gradient-accent: linear-gradient(135deg, var(--color-3) 0%, var(--color-4) 100%);
-}
+/* ===================================
+   STYLES.CSS - ESTILOS ESPECÍFICOS DEL PROYECTO
+   ===================================*/
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/* Los estilos generales y reutilizables están en framework.css */
 
-body {
-    font-family: 'Inter', Arial, Helvetica, sans-serif;
-    background-color: var(--color-6);
-    color: var(--color-1);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
+/* ===== HEADER ===== */
 header {
     background-color: var(--color-2);
     color: var(--color-7);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0px 40px;
+    padding: 0px var(--spacing-xl);
 }
 
 header nav ul {
     list-style: none;
     display: flex;
-    gap: 20px;
+    gap: var(--spacing-lg);
     align-items: center;
 }
 
 header nav ul li {
-    padding: 15px 15px;
-    border-radius: 5px;
-    transition: background-color 0.3s;
+    padding: var(--spacing-md) var(--spacing-md);
+    border-radius: var(--radius-sm);
+    transition: background-color var(--transition-normal);
     display: flex;
     align-items: center;
 }
@@ -56,7 +35,7 @@ header nav ul li:not(.login):not(.user-logged):hover {
 
 header nav a {
     color: var(--color-7);
-    margin: 15px 15px;
+    margin: var(--spacing-md) var(--spacing-md);
     text-decoration: none;
     font-weight: 500;
 }
@@ -68,7 +47,7 @@ header nav a:hover {
 
 .login {
     background-color: var(--color-3);
-    padding: 15px 15px;
+    padding: 2px 25px;
     border-radius: 30px;
 }
 
@@ -77,6 +56,7 @@ header nav a:hover {
     height: auto;
 }
 
+/* ===== TÍTULOS ESPECÍFICOS ===== */
 h1 {
     font-family: 'Dancing Script', cursive;
     font-size: 3em;
@@ -106,26 +86,26 @@ main p {
 .informacion-inicio {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 60px 40px 80px;
+    padding: var(--spacing-2xl) var(--spacing-xl) var(--spacing-3xl);
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 40px;
+    gap: var(--spacing-xl);
 }
 
 .informacion-inicio > div {
     background: var(--color-7);
-    border-radius: 20px;
-    padding: 40px;
-    box-shadow: 0 10px 40px rgba(0, 31, 63, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
+    border-radius: var(--radius-2xl);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-lg);
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
 }
 
 .informacion-inicio h2 {
     font-size: 1.5rem;
     color: var(--color-2);
-    margin-bottom: 20px;
+    margin-bottom: var(--spacing-lg);
     position: relative;
-    padding-bottom: 15px;
+    padding-bottom: var(--spacing-md);
 }
 
 .informacion-inicio h2::after {
@@ -169,10 +149,10 @@ footer {
 .footer-main {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 60px 40px 40px;
+    padding: var(--spacing-2xl) var(--spacing-xl) var(--spacing-xl);
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 40px;
+    gap: var(--spacing-xl);
 }
 
 .footer-section h3 {
@@ -219,11 +199,11 @@ footer {
     width: 45px;
     height: 45px;
     background: rgba(60, 141, 188, 0.2);
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s;
+    transition: all var(--transition-normal);
 }
 
 .social-link:hover {
@@ -283,12 +263,12 @@ footer {
     width: 42px;
     height: 42px;
     background: rgba(60, 141, 188, 0.2);
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    transition: all 0.3s;
+    transition: all var(--transition-normal);
 }
 
 .contact-icon:hover {
@@ -635,12 +615,6 @@ footer {
 
 /* ===== PÁGINA DE LOGIN ===== */
 
-.login {
-    background-color: var(--color-3);
-    padding: 2px 25px;
-    border-radius: 30px;
-}
-
 .login:hover {
     background-color: var(--color-4);
 }
@@ -681,61 +655,11 @@ footer {
     font-style: normal;
 }
 
-
-
-/* Formulario */
+/* Formulario Login */
 .login-form {
     display: flex;
     flex-direction: column;
     gap: 20px;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.form-group label {
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: var(--color-2);
-}
-
-.input-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.input-icon {
-    position: absolute;
-    left: 15px;
-    width: 20px;
-    height: 20px;
-    fill: var(--color-4);
-    pointer-events: none;
-}
-
-.input-wrapper input {
-    width: 100%;
-    padding: 14px 45px;
-    border: 2px solid var(--color-5);
-    border-radius: 10px;
-    font-size: 1rem;
-    transition: all 0.3s;
-    background: var(--color-6);
-}
-
-.input-wrapper input:focus {
-    outline: none;
-    border-color: var(--color-3);
-    background: var(--color-7);
-    box-shadow: 0 0 0 4px rgba(60, 141, 188, 0.1);
-}
-
-.input-wrapper input::placeholder {
-    color: #999;
 }
 
 .toggle-password {
@@ -759,21 +683,6 @@ footer {
 
 .toggle-password:hover svg {
     fill: var(--color-3);
-}
-
-/* Mensaje de error */
-.error-message {
-    background: #fee2e2;
-    color: #dc2626;
-    padding: 12px 15px;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    display: none;
-    border-left: 4px solid #dc2626;
-}
-
-.error-message.show {
-    display: block;
 }
 
 /* Botón login */
@@ -942,30 +851,6 @@ footer {
     min-height: 80px;
 }
 
-/* Mensaje del formulario */
-.form-message {
-    padding: 12px 15px;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    display: none;
-}
-
-.form-message.show {
-    display: block;
-}
-
-.form-message.success {
-    background: #d1fae5;
-    color: #065f46;
-    border-left: 4px solid #10b981;
-}
-
-.form-message.error {
-    background: #fee2e2;
-    color: #dc2626;
-    border-left: 4px solid #dc2626;
-}
-
 /* Botón agendar */
 .btn-agendar {
     background: linear-gradient(135deg, var(--color-3) 0%, var(--color-4) 100%);
@@ -1087,7 +972,6 @@ footer {
 /* ===== USUARIO LOGUEADO EN HEADER ===== */
 .user-logged {
     position: relative;
-    
 }
 
 .user-menu {
@@ -1181,14 +1065,13 @@ footer {
     background: var(--color-6);
 }
 
-/* Responsive agendamientos */
+/* ===== RESPONSIVE ===== */
 @media (max-width: 900px) {
     .agendamiento-container {
         grid-template-columns: 1fr;
     }
 }
 
-/* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
     header {
         flex-direction: column;
