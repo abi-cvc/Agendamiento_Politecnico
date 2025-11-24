@@ -15,13 +15,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // Cambiar botón de login por logout
     actualizarBotonAuth(usuario);
     
-    // Si es doctor, ocultar el formulario de agendar
-    if (usuario.rol === 'doctor') {
+    // Si no es estudiante, ocultar el formulario de agendar
+    if (usuario.rol !== 'estudiante') {
         const formularioSection = document.querySelector('.agendamiento-form');
         if (formularioSection) {
-            formularioSection.style.display = 'none';
+            formularioSection.innerHTML = `
+                <div class="text-center" style="padding: 2rem;">
+                    <h2>🔒 Solo Estudiantes</h2>
+                    <p class="text-muted">Únicamente los estudiantes pueden agendar citas</p>
+                </div>
+            `;
         }
-        // Ajustar el layout para que las citas ocupen todo el ancho
+        // Ajustar el layout para que las citas ocupen más espacio
         const container = document.querySelector('.agendamiento-container');
         if (container) {
             container.style.gridTemplateColumns = '1fr';
