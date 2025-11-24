@@ -21,15 +21,92 @@
         </div>
         <nav>
             <ul>
-                <li><a href="index.html">Inicio</a></li>
-                <li><a href="especialidades.html">Especialidades</a></li>
-                <li><a href="agendamientos.html">Agendar Cita</a></li>
-                <li><a href="seguros.html">Seguro Politécnico</a></li>
-                <li><a href="reseñas.html">Reseñas</a></li>
-                <li class="login mt-2 mb-2" id="authButton"><a href="login.html">Login</a></li>
+                <li><a href="index.html" class="font-bold">Inicio</a></li>
+                <li><a href="especialidades.html" class="font-bold">Especialidades</a></li>
+                <li><a href="agendamientos.html" class="font-bold">Agendar Cita</a></li>
+                <li><a href="seguros.html" class="font-bold">Seguro Politécnico</a></li>
+                <li><a href="reseñas.html" class="font-bold">Reseñas</a></li>
+                <li class="login mt-2 mb-2" id="authButton"><a href="login.html" class="font-bold">Login</a></li>
             </ul>
         </nav>
     </header>
+
+    <main>
+        <h1>Reseñas de Nuestros Servicios</h1>
+        <p>Comparte tu experiencia y ayuda a otros estudiantes a conocer nuestros servicios</p>
+    </main>
+
+    <section class="resenas-page page-section">
+        <div class="resenas-container">
+            <!-- Formulario para agregar reseña -->
+            <div class="resena-form-card card">
+                <div class="resena-form-header">
+                    <h2>✍️ Deja tu Reseña</h2>
+                    <p class="text-muted">Cuéntanos sobre tu experiencia con nuestros servicios</p>
+                </div>
+
+                <form id="resenaForm" class="resena-form">
+                    <div class="form-group">
+                        <label for="especialidadResena">Especialidad/Servicio</label>
+                        <select id="especialidadResena" name="especialidad" required>
+                            <option value="">Selecciona una opción</option>
+                            <option value="nutricion">🥗 Nutrición</option>
+                            <option value="odontologia">🦷 Odontología</option>
+                            <option value="psicologia">🧠 Psicología</option>
+                            <option value="medicina-general">💊 Medicina General</option>
+                            <option value="enfermeria">💉 Enfermería</option>
+                            <option value="servicio-general">⭐ Servicio General</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="calificacion">Calificación</label>
+                        <div class="rating-input" id="ratingInput">
+                            <span class="star" data-value="1">★</span>
+                            <span class="star" data-value="2">★</span>
+                            <span class="star" data-value="3">★</span>
+                            <span class="star" data-value="4">★</span>
+                            <span class="star" data-value="5">★</span>
+                        </div>
+                        <input type="hidden" id="calificacion" name="calificacion" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="comentario">Tu Experiencia</label>
+                        <textarea id="comentario" name="comentario" rows="5" 
+                            placeholder="Cuéntanos sobre tu experiencia, el trato recibido, los resultados..." 
+                            required minlength="20"></textarea>
+                        <small class="text-muted">Mínimo 20 caracteres</small>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Publicar Reseña</button>
+                    <div id="resenaMessage" class="form-message"></div>
+                </form>
+            </div>
+
+            <!-- Filtros y lista de reseñas -->
+            <div class="resenas-display">
+                <div class="resenas-header flex-between mb-4">
+                    <h2>💬 Experiencias Compartidas</h2>
+                    <div class="form-group mb-0">
+                        <select id="filtroEspecialidad" class="filtro-select">
+                            <option value="todas">Todas las especialidades</option>
+                            <option value="nutricion">🥗 Nutrición</option>
+                            <option value="odontologia">🦷 Odontología</option>
+                            <option value="psicologia">🧠 Psicología</option>
+                            <option value="medicina-general">💊 Medicina General</option>
+                            <option value="enfermeria">💉 Enfermería</option>
+                            <option value="servicio-general">⭐ Servicio General</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="listaResenas" class="resenas-list">
+                    <!-- Las reseñas se cargarán aquí dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </section>
 
     <footer>
         <div class="footer-main">
@@ -101,6 +178,7 @@
     </footer>
 
     <script src="js/auth.js"></script>
+    <script src="js/resenas.js"></script>
     
 </body>
 </html>
