@@ -5,28 +5,78 @@ const usuariosDB = [
         nombre: "Carol Velasquez",
         email: "carol.velasquez@epn.edu.ec",
         password: "123456",
-        carrera: "Ingeniería en Sistemas"
+        carrera: "Ingeniería en Sistemas",
+        rol: "estudiante"
     },
     {
         id: 2,
         nombre: "Erick Caicedo",
         email: "erick.caicedo@epn.edu.ec",
         password: "123456",
-        carrera: "Ingeniería en Sistemas"
+        carrera: "Ingeniería en Sistemas",
+        rol: "estudiante"
     },
     {
         id: 3,
         nombre: "Belen Cholango",
         email: "belen.cholango@epn.edu.ec",
         password: "123456",
-        carrera: "Ingeniería en Sistemas"
+        carrera: "Ingeniería en Sistemas",
+        rol: "estudiante"
     },
     {
         id: 4,
         nombre: "Nohemy Llumiquinga",
         email: "nohemy.llumiquinga@epn.edu.ec",
         password: "123456",
-        carrera: "Ingeniería en Sistemas"
+        carrera: "Ingeniería en Sistemas",
+        rol: "estudiante"
+    },
+    // Doctores por especialidad
+    {
+        id: 5,
+        nombre: "Dr. Roberto García",
+        email: "doctor.nutricion@epn.edu.ec",
+        password: "doc123",
+        carrera: "Nutrición",
+        rol: "doctor",
+        especialidad: "nutricion"
+    },
+    {
+        id: 6,
+        nombre: "Dra. Ana Martínez",
+        email: "doctor.odontologia@epn.edu.ec",
+        password: "doc123",
+        carrera: "Odontología",
+        rol: "doctor",
+        especialidad: "odontologia"
+    },
+    {
+        id: 7,
+        nombre: "Dr. Luis Fernández",
+        email: "doctor.psicologia@epn.edu.ec",
+        password: "doc123",
+        carrera: "Psicología",
+        rol: "doctor",
+        especialidad: "psicologia"
+    },
+    {
+        id: 8,
+        nombre: "Dra. María Sánchez",
+        email: "doctor.medicina@epn.edu.ec",
+        password: "doc123",
+        carrera: "Medicina General",
+        rol: "doctor",
+        especialidad: "medicina-general"
+    },
+    {
+        id: 9,
+        nombre: "Enf. Patricia Ruiz",
+        email: "doctor.enfermeria@epn.edu.ec",
+        password: "doc123",
+        carrera: "Enfermería",
+        rol: "doctor",
+        especialidad: "enfermeria"
     }
 ];
 

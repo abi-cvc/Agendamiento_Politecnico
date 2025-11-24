@@ -15,19 +15,32 @@ document.addEventListener('DOMContentLoaded', function() {
     // Cambiar botón de login por logout
     actualizarBotonAuth(usuario);
     
-    // Configurar fecha mínima (hoy)
-    const fechaInput = document.getElementById('fecha');
-    const hoy = new Date().toISOString().split('T')[0];
-    fechaInput.min = hoy;
+    // Si es doctor, ocultar el formulario de agendar
+    if (usuario.rol === 'doctor') {
+        const formularioSection = document.querySelector('.agendamiento-form');
+        if (formularioSection) {
+            formularioSection.style.display = 'none';
+        }
+        // Ajustar el layout para que las citas ocupen todo el ancho
+        const container = document.querySelector('.agendamiento-container');
+        if (container) {
+            container.style.gridTemplateColumns = '1fr';
+        }
+    } else {
+        // Configurar fecha mínima (hoy) solo para estudiantes
+        const fechaInput = document.getElementById('fecha');
+        const hoy = new Date().toISOString().split('T')[0];
+        fechaInput.min = hoy;
+        
+        // Detectar y pre-seleccionar especialidad desde URL
+        preseleccionarEspecialidad();
+        
+        // Manejar envío del formulario
+        document.getElementById('agendamientoForm').addEventListener('submit', agendarCita);
+    }
     
-    // Detectar y pre-seleccionar especialidad desde URL
-    preseleccionarEspecialidad();
-    
-    // Cargar citas existentes
+    // Cargar citas existentes (para todos)
     cargarCitas();
-    
-    // Manejar envío del formulario
-    document.getElementById('agendamientoForm').addEventListener('submit', agendarCita);
 });
 
 // ===== PRE-SELECCIONAR ESPECIALIDAD DESDE URL =====
@@ -111,21 +124,36 @@ function cargarCitas() {
     const listaCitas = document.getElementById('listaCitas');
     const citas = JSON.parse(sessionStorage.getItem('citas')) || [];
     
-    // Filtrar citas del usuario actual
-    const misCitas = citas.filter(c => c.usuarioId === usuario.id);
+    let citasFiltradas;
     
-    if (misCitas.length === 0) {
-        listaCitas.innerHTML = '<p class="no-citas">No tienes citas agendadas</p>';
+    // Si es doctor, ver solo citas de su especialidad
+    if (usuario.rol === 'doctor') {
+        citasFiltradas = citas.filter(c => c.especialidadValue === usuario.especialidad);
+    } else {
+        // Si es estudiante, ver solo sus citas
+        citasFiltradas = citas.filter(c => c.usuarioId === usuario.id);
+    }
+    
+    if (citasFiltradas.length === 0) {
+        if (usuario.rol === 'doctor') {
+            listaCitas.innerHTML = '<p class="no-citas">No hay citas agendadas para tu especialidad</p>';
+        } else {
+            listaCitas.innerHTML = '<p class="no-citas">No tienes citas agendadas</p>';
+        }
         return;
     }
     
     // Ordenar por fecha
-    misCitas.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+    citasFiltradas.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
     
     // Generar HTML
     let html = '';
-    misCitas.forEach(cita => {
+    citasFiltradas.forEach(cita => {
         const fechaFormateada = formatearFecha(cita.fecha);
+        
+        // Mostrar nombre del paciente si es doctor
+        const nombrePaciente = usuario.rol === 'doctor' ? `<p><strong>👤 Paciente:</strong> ${cita.usuarioNombre}</p>` : '';
+        
         html += `
             <div class="cita-card">
                 <div class="cita-header">
@@ -133,6 +161,7 @@ function cargarCitas() {
                     <span class="cita-estado ${cita.estado.toLowerCase()}">${cita.estado}</span>
                 </div>
                 <div class="cita-detalles">
+                    ${nombrePaciente}
                     <p><strong>📅 Fecha:</strong> ${fechaFormateada}</p>
                     <p><strong>🕐 Hora:</strong> ${formatearHora(cita.hora)}</p>
                     <p><strong>📝 Motivo:</strong> ${cita.motivo}</p>
