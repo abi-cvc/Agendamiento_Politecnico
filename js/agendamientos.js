@@ -65,10 +65,8 @@ function preseleccionarEspecialidad() {
 
 // ===== ACTUALIZAR BOTÓN DE AUTENTICACIÓN =====
 function actualizarBotonAuth(usuario) {
-    const authButton = document.getElementById('authButton');
-    if (usuario) {
-        authButton.innerHTML = `<a href="#" onclick="logout(); return false;">Cerrar Sesión</a>`;
-    }
+    // Ya no es necesario, auth.js se encarga de esto
+    // Esta función se mantiene por compatibilidad pero no hace nada
 }
 
 // ===== AGENDAR CITA =====

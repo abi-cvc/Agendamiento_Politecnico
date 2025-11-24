@@ -2,7 +2,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const usuario = verificarSesion();
     
-    // El formulario solo es visible si hay sesión
+    // El formulario solo es visible para estudiantes
     const formCard = document.querySelector('.resena-form-card');
     if (!usuario) {
         formCard.innerHTML = `
@@ -10,6 +10,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 <h2>🔒 Inicia Sesión</h2>
                 <p class="text-muted mb-4">Para dejar una reseña, necesitas iniciar sesión</p>
                 <a href="login.html" class="btn-primary" onclick="sessionStorage.setItem('paginaAnterior', 'reseñas.html')">Ir a Login</a>
+            </div>
+        `;
+    } else if (usuario.rol !== 'estudiante') {
+        formCard.innerHTML = `
+            <div class="resena-form-header text-center">
+                <h2>🔒 Solo Estudiantes</h2>
+                <p class="text-muted mb-4">Únicamente los estudiantes pueden dejar reseñas</p>
             </div>
         `;
     } else {
@@ -127,6 +134,7 @@ function cargarResenas() {
     const listaResenas = document.getElementById('listaResenas');
     const filtro = document.getElementById('filtroEspecialidad').value;
     const resenas = JSON.parse(sessionStorage.getItem('resenas')) || [];
+    const usuario = verificarSesion();
     
     // Filtrar reseñas
     let resenasFiltradas = resenas;
@@ -153,8 +161,18 @@ function cargarResenas() {
         const fechaFormateada = formatearFechaResena(resena.fecha);
         const estrellas = generarEstrellas(resena.calificacion);
         
+        // Botones de admin (solo si es admin)
+        const botonesAdmin = (usuario && usuario.rol === 'admin') ? `
+            <button class="btn-editar" onclick="editarResena(${resena.id})" title="Editar reseña">
+                ✏️
+            </button>
+            <button class="btn-eliminar" onclick="eliminarResena(${resena.id})" title="Eliminar reseña">
+                🗑️
+            </button>
+        ` : '';
+        
         html += `
-            <div class="resena-card card hover-lift">
+            <div class="resena-card card hover-lift" id="resena-${resena.id}">
                 <div class="resena-header flex-between">
                     <div>
                         <h3 class="resena-usuario">${resena.usuarioNombre}</h3>
@@ -165,7 +183,7 @@ function cargarResenas() {
                     </div>
                 </div>
                 <div class="resena-body">
-                    <p class="resena-comentario text-justify">${resena.comentario}</p>
+                    <p class="resena-comentario text-justify" id="comentario-${resena.id}">${resena.comentario}</p>
                 </div>
                 <div class="resena-footer flex-between">
                     <span class="resena-fecha text-muted text-sm">${fechaFormateada}</span>
@@ -173,6 +191,7 @@ function cargarResenas() {
                         <button class="btn-like" onclick="darLike(${resena.id})">
                             👍 <span id="likes-${resena.id}">${resena.likes}</span>
                         </button>
+                        ${botonesAdmin}
                     </div>
                 </div>
             </div>
@@ -195,6 +214,53 @@ function darLike(resenaId) {
         const likesSpan = document.getElementById(`likes-${resenaId}`);
         if (likesSpan) {
             likesSpan.textContent = resena.likes;
+        }
+    }
+}
+
+// ===== ELIMINAR RESEÑA (SOLO ADMIN) =====
+function eliminarResena(resenaId) {
+    const usuario = verificarSesion();
+    if (!usuario || usuario.rol !== 'admin') {
+        alert('No tienes permisos para eliminar reseñas');
+        return;
+    }
+    
+    if (!confirm('¿Estás seguro de que deseas eliminar esta reseña?')) {
+        return;
+    }
+    
+    let resenas = JSON.parse(sessionStorage.getItem('resenas')) || [];
+    resenas = resenas.filter(r => r.id !== resenaId);
+    sessionStorage.setItem('resenas', JSON.stringify(resenas));
+    
+    // Recargar lista
+    cargarResenas();
+}
+
+// ===== EDITAR RESEÑA (SOLO ADMIN) =====
+function editarResena(resenaId) {
+    const usuario = verificarSesion();
+    if (!usuario || usuario.rol !== 'admin') {
+        alert('No tienes permisos para editar reseñas');
+        return;
+    }
+    
+    let resenas = JSON.parse(sessionStorage.getItem('resenas')) || [];
+    const resena = resenas.find(r => r.id === resenaId);
+    
+    if (!resena) return;
+    
+    const nuevoComentario = prompt('Editar comentario:', resena.comentario);
+    
+    if (nuevoComentario && nuevoComentario.trim() !== '') {
+        resena.comentario = nuevoComentario.trim();
+        sessionStorage.setItem('resenas', JSON.stringify(resenas));
+        
+        // Actualizar comentario visual
+        const comentarioElement = document.getElementById(`comentario-${resenaId}`);
+        if (comentarioElement) {
+            comentarioElement.textContent = resena.comentario;
         }
     }
 }

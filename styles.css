@@ -1366,18 +1366,49 @@ footer {
 .resena-form-card {
     position: sticky;
     top: 20px;
+    background: var(--color-7);
+    padding: 35px;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
 }
 
-.resena-form-header {
-    margin-bottom: var(--spacing-lg);
-}
-
-.resena-form-header h2 {
-    margin-bottom: var(--spacing-sm);
+.resena-form-card h3 {
+    margin: 0;
+    color: var(--color-2);
 }
 
 .resena-form .form-group {
-    margin-bottom: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.resena-form label {
+    font-weight: 500;
+    color: var(--color-2);
+    font-size: 0.95rem;
+}
+
+.resena-form select,
+.resena-form textarea {
+    padding: 12px 15px;
+    border: 2px solid var(--color-5);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all var(--transition-normal);
+    background: var(--color-6);
+}
+
+.resena-form select:focus,
+.resena-form textarea:focus {
+    outline: none;
+    border-color: var(--color-3);
+    background: var(--color-7);
+    box-shadow: 0 0 0 4px rgba(60, 141, 188, 0.1);
 }
 
 /* Sistema de calificación */
@@ -1496,6 +1527,11 @@ footer {
     font-style: italic;
 }
 
+.resena-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
 .btn-like {
     background: none;
     border: 1px solid var(--color-5);
@@ -1509,6 +1545,29 @@ footer {
 .btn-like:hover {
     background: var(--color-6);
     border-color: var(--color-3);
+    transform: translateY(-2px);
+}
+
+.btn-editar,
+.btn-eliminar {
+    background: none;
+    border: 1px solid var(--color-5);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    font-size: 1rem;
+}
+
+.btn-editar:hover {
+    background: #4CAF50;
+    border-color: #4CAF50;
+    transform: translateY(-2px);
+}
+
+.btn-eliminar:hover {
+    background: #f44336;
+    border-color: #f44336;
     transform: translateY(-2px);
 }
 

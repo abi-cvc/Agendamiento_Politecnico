@@ -77,6 +77,15 @@ const usuariosDB = [
         carrera: "Enfermería",
         rol: "doctor",
         especialidad: "enfermeria"
+    },
+    // Administrador
+    {
+        id: 10,
+        nombre: "Admin Bienestar",
+        email: "admin@epn.edu.ec",
+        password: "admin123",
+        carrera: "Administración",
+        rol: "admin"
     }
 ];
 
@@ -93,6 +102,8 @@ function login(email, password) {
             nombre: usuario.nombre,
             email: usuario.email,
             carrera: usuario.carrera,
+            rol: usuario.rol,
+            especialidad: usuario.especialidad || null,
             loginTime: new Date().toISOString()
         };
         sessionStorage.setItem('usuarioActual', JSON.stringify(sesion));
