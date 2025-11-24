@@ -58,6 +58,7 @@ header nav a:hover {
 
 /* ===== TÍTULOS ESPECÍFICOS ===== */
 h1 {
+    font-family: 'Dancing Script', cursive;
     font-size: 3em;
     color: var(--color-2);
     text-align: center;
@@ -183,10 +184,10 @@ footer {
 }
 
 .footer-logo {
+    font-family: 'Dancing Script', cursive;
     font-size: 2rem;
     color: var(--color-7);
     margin-bottom: 15px;
-    font-weight: 600;
 }
 
 .footer-tagline {
