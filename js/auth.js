@@ -163,7 +163,7 @@ function actualizarHeader() {
     } else {
         // No logueado - mostrar botón de login
         authButton.className = 'login';
-        authButton.innerHTML = '<a href="login.html">Login</a>';
+        authButton.innerHTML = '<a href="login.html" class="font-bold">Login</a>';
     }
 }
 
