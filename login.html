@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
-
+    
 </head>
 <body>
     <header>
@@ -31,79 +31,56 @@
         </nav>
     </header>
 
-    <main>
-        <h1>Reseñas de Nuestros Servicios</h1>
-        <p>Comparte tu experiencia y ayuda a otros estudiantes a conocer nuestros servicios</p>
-    </main>
-
-    <section class="resenas-page page-section">
-        <div class="resenas-container">
-            <!-- Formulario para agregar reseña -->
-            <div class="resena-form-card card">
-                <h3>✍️ Deja tu Reseña</h3>
-                <div id="resenaMessage" class="form-message"></div>
-
-                <form id="resenaForm" class="resena-form">
-                    <div class="form-group">
-                        <label for="especialidadResena">Especialidad/Servicio</label>
-                        <select id="especialidadResena" name="especialidad" required>
-                            <option value="">Selecciona una opción</option>
-                            <option value="nutricion">🥗 Nutrición</option>
-                            <option value="odontologia">🦷 Odontología</option>
-                            <option value="psicologia">🧠 Psicología</option>
-                            <option value="medicina-general">💊 Medicina General</option>
-                            <option value="enfermeria">💉 Enfermería</option>
-                            <option value="servicio-general">⭐ Servicio General</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="calificacion">Calificación</label>
-                        <div class="rating-input" id="ratingInput">
-                            <span class="star" data-value="1">★</span>
-                            <span class="star" data-value="2">★</span>
-                            <span class="star" data-value="3">★</span>
-                            <span class="star" data-value="4">★</span>
-                            <span class="star" data-value="5">★</span>
-                        </div>
-                        <input type="hidden" id="calificacion" name="calificacion" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="comentario">Tu Experiencia</label>
-                        <textarea id="comentario" name="comentario" rows="5" 
-                            placeholder="Cuéntanos sobre tu experiencia, el trato recibido, los resultados..." 
-                            required minlength="20"></textarea>
-                        <small class="text-muted">Mínimo 20 caracteres</small>
-                    </div>
-
-                    <button type="submit" class="btn-agendar">Publicar Reseña</button>
-                </form>
+    <main class="login-section">
+        <div class="login-card">
+            <!-- Logo y título -->
+            <div class="login-header">
+                <h1>Iniciar Sesión</h1>
+                <p>Ingresa con tu correo institucional</p>
             </div>
 
-            <!-- Filtros y lista de reseñas -->
-            <div class="resenas-display">
-                <div class="resenas-header flex-between mb-4">
-                    <h2>💬 Experiencias Compartidas</h2>
-                    <div class="form-group mb-0">
-                        <select id="filtroEspecialidad" class="filtro-select">
-                            <option value="todas">Todas las especialidades</option>
-                            <option value="nutricion">🥗 Nutrición</option>
-                            <option value="odontologia">🦷 Odontología</option>
-                            <option value="psicologia">🧠 Psicología</option>
-                            <option value="medicina-general">💊 Medicina General</option>
-                            <option value="enfermeria">💉 Enfermería</option>
-                            <option value="servicio-general">⭐ Servicio General</option>
-                        </select>
+            <!-- Formulario -->
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="email">Correo institucional</label>
+                    <div class="input-wrapper">
+                        <svg viewBox="0 0 24 24" class="input-icon">
+                            <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                        </svg>
+                        <input type="email" id="email" name="email" placeholder="usuario@epn.edu.ec" required>
                     </div>
                 </div>
 
-                <div id="listaResenas" class="resenas-list">
-                    <!-- Las reseñas se cargarán aquí dinámicamente -->
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <div class="input-wrapper">
+                        <svg viewBox="0 0 24 24" class="input-icon">
+                            <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+                        </svg>
+                        <input type="password" id="password" name="password" placeholder="••••••••" required>
+                        <button type="button" class="toggle-password" onclick="togglePassword()">
+                            <svg viewBox="0 0 24 24" id="eyeIcon">
+                                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
+
+                <!-- Mensaje de error -->
+                <div id="errorMessage" class="error-message"></div>
+
+                <button type="submit" class="btn-login">
+                    Iniciar Sesión
+                </button>
+            </form>
+
+            <!-- Info adicional -->
+            <div class="login-footer">
+                <p>¿Problemas para acceder?</p>
+                <a href="mailto:bienestar@epn.edu.ec">Contacta a Bienestar Politécnico</a>
             </div>
         </div>
-    </section>
+    </main>
 
     <footer>
         <div class="footer-main">
@@ -175,7 +152,19 @@
     </footer>
 
     <script src="js/auth.js"></script>
-    <script src="js/resenas.js"></script>
+    <script>
+        // Deshabilitar enlaces de navegación excepto Inicio
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('nav ul li a');
+            navLinks.forEach(link => {
+                if (!link.href.includes('index.html') && !link.href.includes('login.html')) {
+                    link.style.pointerEvents = 'none';
+                    link.style.opacity = '0.5';
+                    link.style.cursor = 'not-allowed';
+                }
+            });
+        });
+    </script>
     
 </body>
 </html>

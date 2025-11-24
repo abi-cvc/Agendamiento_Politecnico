@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Especialidades - Bienestar Politécnico</title>
+    <title>Bienestar Politécnico</title>
+    <link rel="icon" type="image/png" href="images/logo_epn.png">
+    <link rel="stylesheet" href="framework.css">
     <link rel="stylesheet" href="styles.css">
 
     <!--Tipo de letra para bienvenida-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
-    
+
 </head>
 <body>
     <header>
@@ -19,15 +21,198 @@
         </div>
         <nav>
             <ul>
-                <li><a href="index.html">Inicio</a></li>
-                <li><a href="especialidades.html">Especialidades</a></li>
-                <li><a href="agendamientos.html">Agendar Cita</a></li>
-                <li><a href="seguros.html">Seguro Politécnico</a></li>
-                <li><a href="reseñas.html">Reseñas</a></li>
-                <li class="login"><a href="login.html">Login</a></li>
+                <li><a href="index.html" class="font-bold">Inicio</a></li>
+                <li><a href="especialidades.html" class="font-bold">Especialidades</a></li>
+                <li><a href="agendamientos.html" class="font-bold">Agendar Cita</a></li>
+                <li><a href="seguros.html" class="font-bold">Seguro Politécnico</a></li>
+                <li><a href="reseñas.html" class="font-bold">Reseñas</a></li>
+                <li class="login mt-2 mb-2" id="authButton"><a href="login.html" class="font-bold">Login</a></li>
             </ul>
         </nav>
     </header>
+
+    <main>
+        <h1>Nuestras Especialidades</h1>
+        <p>Contamos con profesionales especializados para cuidar tu salud integral</p>
+    </main>
+
+    <section class="especialidades-section">
+        <div class="especialidades-container">
+        <!-- Menú lateral -->
+        <aside class="especialidades-menu">
+            <h3>Especialidades</h3>
+            <nav class="menu-especialidades">
+                <a href="#nutricion" class="menu-item active">
+                    <svg viewBox="0 0 24 24" class="menu-icon">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                    </svg>
+                    Nutrición
+                </a>
+                <a href="#odontologia" class="menu-item">
+                    <svg viewBox="0 0 24 24" class="menu-icon">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                    </svg>
+                    Odontología
+                </a>
+                <a href="#psicologia" class="menu-item">
+                    <svg viewBox="0 0 24 24" class="menu-icon">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                    </svg>
+                    Psicología
+                </a>
+                <a href="#medicina" class="menu-item">
+                    <svg viewBox="0 0 24 24" class="menu-icon">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                    </svg>
+                    Medicina General
+                </a>
+                <a href="#enfermeria" class="menu-item">
+                    <svg viewBox="0 0 24 24" class="menu-icon">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                    </svg>
+                    Enfermería
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Contenido de especialidades -->
+        <section class="especialidades-content">
+            <!-- Nutrición -->
+            <article id="nutricion" class="especialidad-card">
+                <div class="especialidad-header">
+                    <div class="especialidad-icon">🥗</div>
+                    <div>
+                        <h2>Nutrición</h2>
+                        <p class="especialidad-subtitle">Alimentación saludable para tu bienestar</p>
+                    </div>
+                </div>
+                <div class="especialidad-body">
+                    <p class="text-muted text-justify mb-4" style="line-height: 1.7;">
+                        Nuestro equipo de nutricionistas certificados te ayudará a alcanzar tus metas de salud mediante planes personalizados. 
+                        Ya sea que busques mejorar tu rendimiento deportivo, controlar tu peso o manejar condiciones específicas de salud, 
+                        te brindamos el acompañamiento necesario con un enfoque científico y humano.
+                    </p>
+                    <h3>Servicios</h3>
+                    <ul>
+                        <li>Evaluación nutricional personalizada</li>
+                        <li>Planes de alimentación según objetivos</li>
+                        <li>Seguimiento y control de peso</li>
+                        <li>Asesoría en nutrición deportiva</li>
+                        <li>Educación en autocuidado</li>
+                    </ul>
+                    <a href="agendamientos.html?especialidad=nutricion" class="btn btn-primary">Agendar Cita</a>
+                </div>
+            </article>
+
+            <!-- Odontología -->
+            <article id="odontologia" class="especialidad-card">
+                <div class="especialidad-header">
+                    <div class="especialidad-icon">🦷</div>
+                    <div>
+                        <h2>Odontología</h2>
+                        <p class="especialidad-subtitle">Cuidado integral de tu salud bucal</p>
+                    </div>
+                </div>
+                <div class="especialidad-body">
+                    <p class="text-muted text-justify mb-4" style="line-height: 1.7;">
+                        Mantén tu sonrisa saludable con nuestros servicios odontológicos de calidad. Contamos con tecnología moderna 
+                        y profesionales experimentados que te brindarán atención preventiva, diagnóstica y terapéutica. 
+                        Tu salud bucal es fundamental para tu bienestar general, y estamos aquí para cuidarla.
+                    </p>
+                    <h3>Servicios</h3>
+                    <ul>
+                        <li>Limpieza dental y profilaxis</li>
+                        <li>Tratamiento de caries</li>
+                        <li>Extracciones dentales</li>
+                        <li>Endodoncia</li>
+                        <li>Prevención y educación en salud bucal</li>
+                    </ul>
+                    <a href="agendamientos.html?especialidad=odontologia" class="btn btn-primary">Agendar Cita</a>
+                </div>
+            </article>
+
+            <!-- Psicología -->
+            <article id="psicologia" class="especialidad-card">
+                <div class="especialidad-header">
+                    <div class="especialidad-icon">🧠</div>
+                    <div>
+                        <h2>Psicología</h2>
+                        <p class="especialidad-subtitle">Apoyo para tu bienestar emocional</p>
+                    </div>
+                </div>
+                <div class="especialidad-body">
+                    <p class="text-muted text-justify mb-4" style="line-height: 1.7;">
+                        En un entorno confidencial y de apoyo, nuestros psicólogos te acompañan en tu proceso de crecimiento personal 
+                        y bienestar emocional. Entendemos los desafíos que enfrentas como estudiante y te ofrecemos herramientas efectivas 
+                        para manejar el estrés, la ansiedad y otros aspectos que afectan tu desarrollo académico y personal.
+                    </p>
+                    <h3>Servicios</h3>
+                    <ul>
+                        <li>Consulta psicológica individual</li>
+                        <li>Manejo de estrés y ansiedad</li>
+                        <li>Orientación vocacional</li>
+                        <li>Apoyo en crisis emocionales</li>
+                        <li>Talleres de desarrollo personal</li>
+                    </ul>
+                    <a href="agendamientos.html?especialidad=psicologia" class="btn btn-primary">Agendar Cita</a>
+                </div>
+            </article>
+
+            <!-- Medicina General -->
+            <article id="medicina" class="especialidad-card">
+                <div class="especialidad-header">
+                    <div class="especialidad-icon">⚕️</div>
+                    <div>
+                        <h2>Medicina General</h2>
+                        <p class="especialidad-subtitle">Atención médica integral</p>
+                    </div>
+                </div>
+                <div class="especialidad-body">
+                    <p class="text-muted text-justify mb-4" style="line-height: 1.7;">
+                        Recibe atención médica integral de profesionales capacitados para diagnosticar, tratar y prevenir enfermedades. 
+                        Desde consultas de rutina hasta seguimiento de condiciones crónicas, nuestro servicio de medicina general 
+                        es tu primera línea de atención en salud, con derivaciones oportunas cuando sea necesario.
+                    </p>
+                    <h3>Servicios</h3>
+                    <ul>
+                        <li>Consulta médica general</li>
+                        <li>Diagnóstico y tratamiento</li>
+                        <li>Control de enfermedades crónicas</li>
+                        <li>Certificados médicos</li>
+                        <li>Derivaciones a especialistas</li>
+                    </ul>
+                    <a href="agendamientos.html?especialidad=medicina" class="btn btn-primary">Agendar Cita</a>
+                </div>
+            </article>
+
+            <!-- Enfermería -->
+            <article id="enfermeria" class="especialidad-card">
+                <div class="especialidad-header">
+                    <div class="especialidad-icon">💉</div>
+                    <div>
+                        <h2>Enfermería</h2>
+                        <p class="especialidad-subtitle">Cuidados y atención de calidad</p>
+                    </div>
+                </div>
+                <div class="especialidad-body">
+                    <p class="text-muted text-justify mb-4" style="line-height: 1.7;">
+                        Nuestro equipo de enfermería profesional está disponible para brindarte cuidados de calidad, procedimientos 
+                        de enfermería y educación en salud. Con calidez humana y profesionalismo, te asistimos en el control de tu salud, 
+                        administración de medicamentos y prevención de enfermedades para que mantengas tu bienestar durante tu vida académica.
+                    </p>
+                    <h3>Servicios</h3>
+                    <ul>
+                        <li>Toma de signos vitales</li>
+                        <li>Curaciones y procedimientos menores</li>
+                        <li>Inyecciones y vacunación</li>
+                        <li>Control de medicación</li>
+                        <li>Educación en salud preventiva</li>
+                    </ul>
+                    <a href="agendamientos.html?especialidad=enfermeria" class="btn btn-primary">Agendar Cita</a>
+                </div>
+            </article>
+        </section>
+    </section>
 
     <footer>
         <div class="footer-main">
@@ -97,6 +282,9 @@
             <p>&copy; 2025 Bienestar Politécnico - Escuela Politécnica Nacional. Todos los derechos reservados.</p>
         </div>
     </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/especialidades.js"></script>
     
 </body>
 </html>

@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seguro Politécnico</title>
+    <title>Bienestar Politécnico</title>
+    <link rel="icon" type="image/png" href="images/logo_epn.png">
+    <link rel="stylesheet" href="framework.css">
     <link rel="stylesheet" href="styles.css">
 
     <!--Tipo de letra para bienvenida-->
@@ -19,12 +21,12 @@
         </div>
         <nav>
             <ul>
-                <li><a href="index.html">Inicio</a></li>
-                <li><a href="especialidades.html">Especialidades</a></li>
-                <li><a href="agendamientos.html">Agendar Cita</a></li>
-                <li><a href="seguros.html">Seguro Politécnico</a></li>
-                <li><a href="reseñas.html">Reseñas</a></li>
-                <li class="login"><a href="login.html">Login</a></li>
+                <li><a href="index.html" class="font-bold">Inicio</a></li>
+                <li><a href="especialidades.html" class="font-bold">Especialidades</a></li>
+                <li><a href="agendamientos.html" class="font-bold">Agendar Cita</a></li>
+                <li><a href="seguros.html" class="font-bold">Seguro Politécnico</a></li>
+                <li><a href="reseñas.html" class="font-bold">Reseñas</a></li>
+                <li class="login mt-2 mb-2" id="authButton"><a href="login.html" class="font-bold">Login</a></li>
             </ul>
         </nav>
     </header>
@@ -103,7 +105,7 @@
         
         <div class="pasos-emergencia">
             <div class="paso">
-                <p class="paso-numero">1</p>
+                <div class="paso-numero">1</div>
                 <div class="paso-contenido">
                     <h4>Llama al Call Center</h4>
                     <p>Indica tu número de cédula y ubicación actual.</p>
@@ -268,6 +270,8 @@
             <p>&copy; 2025 Bienestar Politécnico - Escuela Politécnica Nacional. Todos los derechos reservados.</p>
         </div>
     </footer>
+
+    <script src="js/auth.js"></script>
     
 </body>
 </html>
