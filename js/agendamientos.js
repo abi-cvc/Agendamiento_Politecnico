@@ -107,7 +107,7 @@ function agendarCita(e) {
     
     // Mostrar mensaje de éxito
     messageDiv.textContent = '¡Cita agendada exitosamente!';
-    messageDiv.className = 'form-message success show';
+    messageDiv.className = 'alert alert-success show';
     
     // Limpiar formulario
     document.getElementById('agendamientoForm').reset();
@@ -117,7 +117,7 @@ function agendarCita(e) {
     
     // Ocultar mensaje después de 3 segundos
     setTimeout(() => {
-        messageDiv.className = 'form-message';
+        messageDiv.className = 'alert';
     }, 3000);
 }
 
@@ -161,7 +161,7 @@ function cargarCitas() {
             <div class="cita-card">
                 <div class="cita-header">
                     <span class="cita-especialidad">${cita.especialidad}</span>
-                    <span class="cita-estado ${cita.estado.toLowerCase()}">${cita.estado}</span>
+                    <span class="badge ${cita.estado.toLowerCase() === 'confirmada' ? 'badge-success' : 'badge-error'}">${cita.estado}</span>
                 </div>
                 <div class="cita-detalles">
                     ${nombrePaciente}
@@ -169,7 +169,7 @@ function cargarCitas() {
                     <p><strong>🕐 Hora:</strong> ${formatearHora(cita.hora)}</p>
                     <p><strong>📝 Motivo:</strong> ${cita.motivo}</p>
                 </div>
-                <button class="btn-cancelar" onclick="cancelarCita(${cita.id})">
+                <button class="btn btn-danger btn-sm btn-full" onclick="cancelarCita(${cita.id})">
                     Cancelar Cita
                 </button>
             </div>

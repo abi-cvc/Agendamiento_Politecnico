@@ -89,8 +89,8 @@ function agregarResena(e) {
     // Validar calificación
     if (!calificacion) {
         messageDiv.textContent = 'Por favor selecciona una calificación';
-        messageDiv.className = 'form-message error show';
-        setTimeout(() => messageDiv.className = 'form-message', 3000);
+        messageDiv.className = 'alert alert-error show';
+        setTimeout(() => messageDiv.className = 'alert', 3000);
         return;
     }
     
@@ -114,7 +114,7 @@ function agregarResena(e) {
     
     // Mostrar mensaje de éxito
     messageDiv.textContent = '¡Reseña publicada exitosamente!';
-    messageDiv.className = 'form-message success show';
+    messageDiv.className = 'alert alert-success show';
     
     // Limpiar formulario
     document.getElementById('resenaForm').reset();
@@ -125,7 +125,7 @@ function agregarResena(e) {
     
     // Ocultar mensaje después de 3 segundos
     setTimeout(() => {
-        messageDiv.className = 'form-message';
+        messageDiv.className = 'alert';
     }, 3000);
 }
 
