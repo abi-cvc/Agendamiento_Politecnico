@@ -15,12 +15,12 @@
 
 </head>
 <body>
-    <header>
+    <header class="flex-between">
         <div class="logo">
             <img src="images/logo.svg" alt="Logo">
         </div>
         <nav>
-            <ul>
+            <ul class="flex gap-lg list-none">
                 <li><a href="index.html" class="font-bold">Inicio</a></li>
                 <li><a href="especialidades.html" class="font-bold">Especialidades</a></li>
                 <li><a href="agendamientos.html" class="font-bold">Agendar Cita</a></li>
@@ -41,12 +41,12 @@
             <!-- Formulario de agendamiento -->
             <div class="agendamiento-form">
                 <h3>Nueva Cita</h3>
-                <div id="formMessage" class="form-message"></div>
+                <div id="formMessage" class="alert"></div>
                 
                 <form id="agendamientoForm">
                     <div class="form-group">
-                        <label for="especialidad">Especialidad</label>
-                        <select id="especialidad" required>
+                        <label for="especialidad" class="form-label">Especialidad</label>
+                        <select id="especialidad" class="form-select" required>
                             <option value="">Seleccione una especialidad</option>
                             <option value="nutricion">Nutrición</option>
                             <option value="odontologia">Odontología</option>
@@ -57,21 +57,21 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="fecha">Fecha</label>
-                        <input type="date" id="fecha" required>
+                        <label for="fecha" class="form-label">Fecha</label>
+                        <input type="date" id="fecha" class="form-input" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="hora">Hora</label>
-                        <input type="time" id="hora" min="08:00" max="17:00" required>
+                        <label for="hora" class="form-label">Hora</label>
+                        <input type="time" id="hora" class="form-input" min="08:00" max="17:00" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="motivo">Motivo de la consulta</label>
-                        <textarea id="motivo" placeholder="Describe brevemente el motivo de tu consulta" required></textarea>
+                        <label for="motivo" class="form-label">Motivo de la consulta</label>
+                        <textarea id="motivo" class="form-textarea" placeholder="Describe brevemente el motivo de tu consulta" required></textarea>
                     </div>
 
-                    <button type="submit" class="btn-agendar">Agendar Cita</button>
+                    <button type="submit" class="btn btn-primary btn-full">Agendar Cita</button>
                 </form>
             </div>
 
@@ -107,7 +107,7 @@
             <!-- Columna 2: Enlaces -->
             <div class="footer-section">
                 <h3>Enlaces Rápidos</h3>
-                <ul class="footer-links">
+                <ul class="footer-links list-none">
                     <li><a href="index.html">Inicio</a></li>
                     <li><a href="especialidades.html">Especialidades</a></li>
                     <li><a href="agendamientos.html">Agendar Cita</a></li>

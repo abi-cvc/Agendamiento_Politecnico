@@ -8,17 +8,7 @@
 header {
     background-color: var(--color-2);
     color: var(--color-7);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     padding: 0 var(--spacing-xl);
-}
-
-header nav ul {
-    list-style: none;
-    display: flex;
-    gap: var(--spacing-lg);
-    align-items: center;
 }
 
 header nav ul li {
@@ -91,22 +81,6 @@ main p span {
     max-width: 1200px;
     margin: 0 auto;
     padding: var(--spacing-2xl) var(--spacing-xl) var(--spacing-3xl);
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: var(--spacing-xl);
-}
-
-.informacion-inicio > div {
-    background: var(--color-7);
-    border-radius: var(--radius-2xl);
-    padding: var(--spacing-xl);
-    box-shadow: var(--shadow-lg);
-    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
-}
-
-.informacion-inicio > div:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-xl);
 }
 
 .informacion-inicio h2 {
@@ -159,9 +133,6 @@ footer {
     max-width: 1200px;
     margin: 0 auto;
     padding: var(--spacing-2xl) var(--spacing-xl) var(--spacing-xl);
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--spacing-xl);
 }
 
 .footer-section h3 {
@@ -233,10 +204,6 @@ footer {
 }
 
 /* Footer Links */
-.footer-links {
-    list-style: none;
-}
-
 .footer-links li {
     margin-bottom: 12px;
 }
@@ -671,31 +638,7 @@ footer {
     gap: var(--spacing-lg);
 }
 
-/* Mensaje de formulario */
-.form-message {
-    padding: var(--spacing-md);
-    border-radius: var(--radius-md);
-    font-size: 0.9rem;
-    text-align: center;
-    display: none;
-    margin-bottom: var(--spacing-md);
-}
 
-.form-message.show {
-    display: block;
-}
-
-.form-message.success {
-    background: #d1fae5;
-    color: #065f46;
-    border: 1px solid #10b981;
-}
-
-.form-message.error {
-    background: #fee2e2;
-    color: #dc2626;
-    border: 1px solid #dc2626;
-}
 
 .toggle-password {
     position: absolute;
@@ -720,28 +663,7 @@ footer {
     fill: var(--color-3);
 }
 
-/* Botón login */
-.btn-login {
-    background: var(--gradient-accent);
-    color: var(--color-7);
-    border: none;
-    padding: var(--spacing-md);
-    border-radius: var(--radius-md);
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all var(--transition-normal);
-    box-shadow: 0 4px 15px rgba(60, 141, 188, 0.3);
-}
 
-.btn-login:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(60, 141, 188, 0.4);
-}
-
-.btn-login:active {
-    transform: translateY(0);
-}
 
 /* Footer del login */
 .login-footer {
@@ -821,67 +743,9 @@ footer {
     padding: 35px;
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-lg);
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-lg);
 }
 
-.agendamiento-form .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
 
-.agendamiento-form label {
-    font-weight: 500;
-    color: var(--color-2);
-    font-size: 0.95rem;
-}
-
-.agendamiento-form select,
-.agendamiento-form input,
-.agendamiento-form textarea {
-    padding: 12px 15px;
-    border: 2px solid var(--color-5);
-    border-radius: var(--radius-md);
-    font-size: 1rem;
-    font-family: inherit;
-    transition: all var(--transition-normal);
-    background: var(--color-6);
-}
-
-.agendamiento-form select:focus,
-.agendamiento-form input:focus,
-.agendamiento-form textarea:focus {
-    outline: none;
-    border-color: var(--color-3);
-    background: var(--color-7);
-    box-shadow: 0 0 0 4px rgba(60, 141, 188, 0.1);
-}
-
-.agendamiento-form textarea {
-    resize: vertical;
-    min-height: 80px;
-}
-
-/* Botón agendar */
-.btn-agendar {
-    background: var(--gradient-accent);
-    color: var(--color-7);
-    border: none;
-    padding: var(--spacing-md);
-    border-radius: var(--radius-md);
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all var(--transition-normal);
-    box-shadow: 0 4px 15px rgba(60, 141, 188, 0.3);
-}
-
-.btn-agendar:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(60, 141, 188, 0.4);
-}
 
 /* Mis citas */
 .mis-citas {
@@ -939,22 +803,7 @@ footer {
     font-size: 1.05rem;
 }
 
-.cita-estado {
-    padding: 5px 12px;
-    border-radius: var(--radius-full);
-    font-size: 0.8rem;
-    font-weight: 500;
-}
 
-.cita-estado.confirmada {
-    background: #d1fae5;
-    color: #065f46;
-}
-
-.cita-estado.cancelada {
-    background: #fee2e2;
-    color: #dc2626;
-}
 
 .cita-detalles p {
     margin: 8px 0;
@@ -963,24 +812,7 @@ footer {
     text-align: left;
 }
 
-.btn-cancelar {
-    width: 100%;
-    margin-top: 15px;
-    padding: var(--spacing-sm);
-    background: transparent;
-    border: 2px solid #dc2626;
-    color: #dc2626;
-    border-radius: var(--radius-sm);
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all var(--transition-normal);
-}
 
-.btn-cancelar:hover {
-    background: #dc2626;
-    color: white;
-}
 
 /* ===== USUARIO LOGUEADO EN HEADER ===== */
 .user-logged {
@@ -1378,37 +1210,6 @@ footer {
 .resena-form-card h3 {
     margin: 0;
     color: var(--color-2);
-}
-
-.resena-form .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.resena-form label {
-    font-weight: 500;
-    color: var(--color-2);
-    font-size: 0.95rem;
-}
-
-.resena-form select,
-.resena-form textarea {
-    padding: 12px 15px;
-    border: 2px solid var(--color-5);
-    border-radius: var(--radius-md);
-    font-size: 1rem;
-    font-family: inherit;
-    transition: all var(--transition-normal);
-    background: var(--color-6);
-}
-
-.resena-form select:focus,
-.resena-form textarea:focus {
-    outline: none;
-    border-color: var(--color-3);
-    background: var(--color-7);
-    box-shadow: 0 0 0 4px rgba(60, 141, 188, 0.1);
 }
 
 /* Sistema de calificación */

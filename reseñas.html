@@ -15,12 +15,12 @@
 
 </head>
 <body>
-    <header>
+    <header class="flex-between">
         <div class="logo">
             <img src="images/logo.svg" alt="Logo">
         </div>
         <nav>
-            <ul>
+            <ul class="flex gap-lg list-none">
                 <li><a href="index.html" class="font-bold">Inicio</a></li>
                 <li><a href="especialidades.html" class="font-bold">Especialidades</a></li>
                 <li><a href="agendamientos.html" class="font-bold">Agendar Cita</a></li>
@@ -41,12 +41,12 @@
             <!-- Formulario para agregar reseña -->
             <div class="resena-form-card card">
                 <h3>✍️ Deja tu Reseña</h3>
-                <div id="resenaMessage" class="form-message"></div>
+                <div id="resenaMessage" class="alert"></div>
 
                 <form id="resenaForm" class="resena-form">
                     <div class="form-group">
-                        <label for="especialidadResena">Especialidad/Servicio</label>
-                        <select id="especialidadResena" name="especialidad" required>
+                        <label for="especialidadResena" class="form-label">Especialidad/Servicio</label>
+                        <select id="especialidadResena" name="especialidad" class="form-select" required>
                             <option value="">Selecciona una opción</option>
                             <option value="nutricion">🥗 Nutrición</option>
                             <option value="odontologia">🦷 Odontología</option>
@@ -58,7 +58,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="calificacion">Calificación</label>
+                        <label for="calificacion" class="form-label">Calificación</label>
                         <div class="rating-input" id="ratingInput">
                             <span class="star" data-value="1">★</span>
                             <span class="star" data-value="2">★</span>
@@ -70,14 +70,14 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="comentario">Tu Experiencia</label>
-                        <textarea id="comentario" name="comentario" rows="5" 
+                        <label for="comentario" class="form-label">Tu Experiencia</label>
+                        <textarea id="comentario" name="comentario" class="form-textarea" rows="5" 
                             placeholder="Cuéntanos sobre tu experiencia, el trato recibido, los resultados..." 
                             required minlength="20"></textarea>
                         <small class="text-muted">Mínimo 20 caracteres</small>
                     </div>
 
-                    <button type="submit" class="btn-agendar">Publicar Reseña</button>
+                    <button type="submit" class="btn btn-primary btn-full">Publicar Reseña</button>
                 </form>
             </div>
 
@@ -127,7 +127,7 @@
             <!-- Columna 2: Enlaces -->
             <div class="footer-section">
                 <h3>Enlaces Rápidos</h3>
-                <ul class="footer-links">
+                <ul class="footer-links list-none">
                     <li><a href="index.html">Inicio</a></li>
                     <li><a href="especialidades.html">Especialidades</a></li>
                     <li><a href="agendamientos.html">Agendar Cita</a></li>
