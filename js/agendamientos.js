@@ -1,3 +1,51 @@
+// ===== BASE DE DATOS DE DOCTORES (PREPARADO PARA BDD) =====
+const doctoresDB = [
+    {
+        id: 5,
+        nombre: "Dr. Roberto García",
+        email: "doctor.nutricion@epn.edu.ec",
+        especialidad: "nutricion",
+        especialidadNombre: "Nutrición"
+    },
+    {
+        id: 6,
+        nombre: "Dra. Ana Martínez",
+        email: "doctor.odontologia@epn.edu.ec",
+        especialidad: "odontologia",
+        especialidadNombre: "Odontología"
+    },
+    {
+        id: 7,
+        nombre: "Dr. Luis Fernández",
+        email: "doctor.psicologia@epn.edu.ec",
+        especialidad: "psicologia",
+        especialidadNombre: "Psicología"
+    },
+    {
+        id: 8,
+        nombre: "Dra. María Sánchez",
+        email: "doctor.medicina@epn.edu.ec",
+        especialidad: "medicina-general",
+        especialidadNombre: "Medicina General"
+    },
+    {
+        id: 9,
+        nombre: "Enf. Patricia Ruiz",
+        email: "doctor.enfermeria@epn.edu.ec",
+        especialidad: "enfermeria",
+        especialidadNombre: "Enfermería"
+    }
+];
+
+// ===== HORARIOS DISPONIBLES (8:00am - 5:00pm, rangos de una hora) =====
+const horariosBase = [
+    "8:00am-9:00am", "9:00am-10:00am", "10:00am-11:00am", "11:00am-12:00pm", 
+    "12:00pm-1:00pm", "1:00pm-2:00pm", "2:00pm-3:00pm", "3:00pm-4:00pm", "4:00pm-5:00pm"
+];
+
+// Variables globales
+let horaSeleccionada = null;
+
 // ===== PROTEGER PÁGINA Y CARGAR DATOS =====
 document.addEventListener('DOMContentLoaded', function() {
     // Verificar sesión - si no hay, guardar página actual y redirigir
@@ -12,9 +60,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mostrar nombre del usuario
     document.getElementById('userName').textContent = usuario.nombre;
     
-    // Cambiar botón de login por logout
-    actualizarBotonAuth(usuario);
-    
     // Si no es estudiante, ocultar el formulario de agendar
     if (usuario.rol !== 'estudiante') {
         const formularioSection = document.querySelector('.agendamiento-form');
@@ -26,13 +71,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             `;
         }
-        // Ajustar el layout para que las citas ocupen más espacio
-        const container = document.querySelector('.agendamiento-container');
-        if (container) {
-            container.style.gridTemplateColumns = '1fr';
+        const horariosSection = document.querySelector('.horarios-disponibles');
+        if (horariosSection) {
+            horariosSection.style.display = 'none';
         }
     } else {
-        // Configurar fecha mínima (hoy) solo para estudiantes
+        // Configurar fecha mínima (hoy)
         const fechaInput = document.getElementById('fecha');
         const hoy = new Date().toISOString().split('T')[0];
         fechaInput.min = hoy;
@@ -40,12 +84,12 @@ document.addEventListener('DOMContentLoaded', function() {
         // Detectar y pre-seleccionar especialidad desde URL
         preseleccionarEspecialidad();
         
-        // Manejar envío del formulario
+        // Event listeners
+        document.getElementById('especialidad').addEventListener('change', cargarDoctoresPorEspecialidad);
+        document.getElementById('doctor').addEventListener('change', habilitarFecha);
+        document.getElementById('fecha').addEventListener('change', cargarHorariosDisponibles);
         document.getElementById('agendamientoForm').addEventListener('submit', agendarCita);
     }
-    
-    // Cargar citas existentes (para todos)
-    cargarCitas();
 });
 
 // ===== PRE-SELECCIONAR ESPECIALIDAD DESDE URL =====
@@ -59,137 +103,213 @@ function preseleccionarEspecialidad() {
         
         if (option) {
             selectEspecialidad.value = especialidad;
-            // Agregar efecto visual temporal
+            // Bloquear el campo en modo solo lectura
+            selectEspecialidad.disabled = true;
             selectEspecialidad.style.background = 'rgba(60, 141, 188, 0.1)';
-            setTimeout(() => {
-                selectEspecialidad.style.background = '';
-            }, 2000);
+            selectEspecialidad.style.cursor = 'not-allowed';
+            selectEspecialidad.style.opacity = '0.8';
+            
+            // Cargar doctores automáticamente
+            cargarDoctoresPorEspecialidad();
         }
     }
 }
 
-// ===== ACTUALIZAR BOTÓN DE AUTENTICACIÓN =====
-function actualizarBotonAuth(usuario) {
-    // Ya no es necesario, auth.js se encarga de esto
-    // Esta función se mantiene por compatibilidad pero no hace nada
+// ===== CARGAR DOCTORES POR ESPECIALIDAD =====
+function cargarDoctoresPorEspecialidad() {
+    const especialidadSeleccionada = document.getElementById('especialidad').value;
+    const selectDoctor = document.getElementById('doctor');
+    const fechaInput = document.getElementById('fecha');
+    const btnSubmit = document.querySelector('.btn-agendar');
+    
+    // Resetear selecciones posteriores
+    selectDoctor.innerHTML = '<option value="">Seleccione un doctor</option>';
+    selectDoctor.disabled = true;
+    fechaInput.disabled = true;
+    fechaInput.value = '';
+    btnSubmit.disabled = true;
+    horaSeleccionada = null;
+    
+    // Limpiar horarios
+    document.getElementById('horariosContainer').innerHTML = '<p class="no-horarios">Seleccione un doctor y fecha para ver los horarios disponibles</p>';
+    
+    if (!especialidadSeleccionada) {
+        selectDoctor.innerHTML = '<option value="">Primero seleccione una especialidad</option>';
+        return;
+    }
+    
+    // Filtrar doctores por especialidad
+    const doctoresFiltrados = doctoresDB.filter(d => d.especialidad === especialidadSeleccionada);
+    
+    if (doctoresFiltrados.length === 0) {
+        selectDoctor.innerHTML = '<option value="">No hay doctores disponibles</option>';
+        return;
+    }
+    
+    // Agregar doctores al select
+    doctoresFiltrados.forEach(doctor => {
+        const option = document.createElement('option');
+        option.value = doctor.id;
+        option.textContent = doctor.nombre;
+        option.dataset.especialidad = doctor.especialidad;
+        option.dataset.especialidadNombre = doctor.especialidadNombre;
+        selectDoctor.appendChild(option);
+    });
+    
+    selectDoctor.disabled = false;
+}
+
+// ===== HABILITAR FECHA CUANDO SE SELECCIONA DOCTOR =====
+function habilitarFecha() {
+    const doctorSeleccionado = document.getElementById('doctor').value;
+    const fechaInput = document.getElementById('fecha');
+    
+    if (doctorSeleccionado) {
+        fechaInput.disabled = false;
+        fechaInput.value = '';
+        horaSeleccionada = null;
+        document.getElementById('horariosContainer').innerHTML = '<p class="no-horarios">Seleccione una fecha para ver los horarios disponibles</p>';
+    } else {
+        fechaInput.disabled = true;
+        fechaInput.value = '';
+        document.getElementById('horariosContainer').innerHTML = '<p class="no-horarios">Seleccione un doctor y fecha para ver los horarios disponibles</p>';
+    }
+    
+    document.querySelector('.btn-agendar').disabled = true;
+}
+
+// ===== CARGAR HORARIOS DISPONIBLES =====
+function cargarHorariosDisponibles() {
+    const doctorId = document.getElementById('doctor').value;
+    const fecha = document.getElementById('fecha').value;
+    const horariosContainer = document.getElementById('horariosContainer');
+    
+    if (!doctorId || !fecha) {
+        return;
+    }
+    
+    // Obtener citas existentes (preparado para BDD)
+    const citasExistentes = JSON.parse(sessionStorage.getItem('citas')) || [];
+    
+    // Filtrar citas del doctor en la fecha seleccionada
+    const citasOcupadas = citasExistentes.filter(c => 
+        c.doctorId == doctorId && c.fecha === fecha
+    ).map(c => c.hora);
+    
+    // Generar horarios disponibles
+    let html = '<div class="horarios-grid">';
+    
+    horariosBase.forEach(hora => {
+        const ocupado = citasOcupadas.includes(hora);
+        const claseOcupado = ocupado ? 'ocupado' : '';
+        const deshabilitado = ocupado ? 'disabled' : '';
+        
+        html += `
+            <button type="button" 
+                    class="horario-btn ${claseOcupado}" 
+                    data-hora="${hora}" 
+                    ${deshabilitado}
+                    onclick="seleccionarHorario('${hora}')">
+                ${formatearHora(hora)}
+                ${ocupado ? '<span class="ocupado-badge">Ocupado</span>' : ''}
+            </button>
+        `;
+    });
+    
+    html += '</div>';
+    horariosContainer.innerHTML = html;
+    
+    // Resetear selección
+    horaSeleccionada = null;
+    document.querySelector('.btn-agendar').disabled = true;
+}
+
+// ===== SELECCIONAR HORARIO =====
+function seleccionarHorario(hora) {
+    // Remover selección anterior
+    document.querySelectorAll('.horario-btn').forEach(btn => {
+        btn.classList.remove('seleccionado');
+    });
+    
+    // Marcar como seleccionado
+    const btnSeleccionado = document.querySelector(`[data-hora="${hora}"]`);
+    btnSeleccionado.classList.add('seleccionado');
+    
+    horaSeleccionada = hora;
+    
+    // Habilitar botón de agendar
+    document.querySelector('.btn-agendar').disabled = false;
 }
 
 // ===== AGENDAR CITA =====
 function agendarCita(e) {
     e.preventDefault();
     
+    if (!horaSeleccionada) {
+        alert('Por favor seleccione un horario');
+        return;
+    }
+    
     const usuario = verificarSesion();
     const messageDiv = document.getElementById('formMessage');
     
-    const especialidad = document.getElementById('especialidad');
+    const especialidadSelect = document.getElementById('especialidad');
+    const doctorSelect = document.getElementById('doctor');
     const fecha = document.getElementById('fecha').value;
-    const hora = document.getElementById('hora').value;
     const motivo = document.getElementById('motivo').value;
     
-    // Crear objeto de cita
+    // Obtener datos del doctor seleccionado
+    const doctorOption = doctorSelect.options[doctorSelect.selectedIndex];
+    const doctorId = doctorSelect.value;
+    const doctorNombre = doctorOption.textContent;
+    const especialidadValue = doctorOption.dataset.especialidad;
+    const especialidadNombre = doctorOption.dataset.especialidadNombre;
+    
+    console.log('=== DEBUG AGENDAR CITA ===');
+    console.log('Doctor ID seleccionado:', doctorId, 'tipo:', typeof doctorId);
+    console.log('Doctor ID parseado:', parseInt(doctorId), 'tipo:', typeof parseInt(doctorId));
+    console.log('Usuario ID:', usuario.id, 'tipo:', typeof usuario.id);
+    
+    // Crear objeto de cita (preparado para BDD)
     const nuevaCita = {
-        id: Date.now(),
+        id: Date.now().toString(),
         usuarioId: usuario.id,
         usuarioNombre: usuario.nombre,
-        especialidad: especialidad.options[especialidad.selectedIndex].text,
-        especialidadValue: especialidad.value,
+        doctorId: parseInt(doctorId),
+        doctorNombre: doctorNombre,
+        especialidad: especialidadNombre,
+        especialidadValue: especialidadValue,
         fecha: fecha,
-        hora: hora,
+        hora: horaSeleccionada,
         motivo: motivo,
-        estado: 'Confirmada',
+        estado: 'Pendiente',
         fechaCreacion: new Date().toISOString()
     };
     
-    // Guardar en sessionStorage
+    console.log('Nueva cita creada:', nuevaCita);
+    
+    // Guardar en sessionStorage (temporal, preparado para BDD)
     let citas = JSON.parse(sessionStorage.getItem('citas')) || [];
     citas.push(nuevaCita);
     sessionStorage.setItem('citas', JSON.stringify(citas));
     
+    console.log('Todas las citas en sessionStorage:', citas);
+    
     // Mostrar mensaje de éxito
-    messageDiv.textContent = '¡Cita agendada exitosamente!';
+    messageDiv.textContent = `¡Cita agendada exitosamente para el ${formatearFecha(fecha)} a las ${formatearHora(horaSeleccionada)} con ${doctorNombre}!`;
     messageDiv.className = 'form-message success show';
     
     // Limpiar formulario
-    document.getElementById('agendamientoForm').reset();
+    document.getElementById('motivo').value = '';
+    horaSeleccionada = null;
     
-    // Recargar lista de citas
-    cargarCitas();
+    // Recargar horarios
+    cargarHorariosDisponibles();
     
-    // Ocultar mensaje después de 3 segundos
+    // Ocultar mensaje después de 5 segundos
     setTimeout(() => {
         messageDiv.className = 'form-message';
-    }, 3000);
-}
-
-// ===== CARGAR CITAS DEL USUARIO =====
-function cargarCitas() {
-    const usuario = verificarSesion();
-    const listaCitas = document.getElementById('listaCitas');
-    const citas = JSON.parse(sessionStorage.getItem('citas')) || [];
-    
-    let citasFiltradas;
-    
-    // Si es doctor, ver solo citas de su especialidad
-    if (usuario.rol === 'doctor') {
-        citasFiltradas = citas.filter(c => c.especialidadValue === usuario.especialidad);
-    } else {
-        // Si es estudiante, ver solo sus citas
-        citasFiltradas = citas.filter(c => c.usuarioId === usuario.id);
-    }
-    
-    if (citasFiltradas.length === 0) {
-        if (usuario.rol === 'doctor') {
-            listaCitas.innerHTML = '<p class="no-citas">No hay citas agendadas para tu especialidad</p>';
-        } else {
-            listaCitas.innerHTML = '<p class="no-citas">No tienes citas agendadas</p>';
-        }
-        return;
-    }
-    
-    // Ordenar por fecha
-    citasFiltradas.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
-    
-    // Generar HTML
-    let html = '';
-    citasFiltradas.forEach(cita => {
-        const fechaFormateada = formatearFecha(cita.fecha);
-        
-        // Mostrar nombre del paciente si es doctor
-        const nombrePaciente = usuario.rol === 'doctor' ? `<p><strong>👤 Paciente:</strong> ${cita.usuarioNombre}</p>` : '';
-        
-        html += `
-            <div class="cita-card">
-                <div class="cita-header">
-                    <span class="cita-especialidad">${cita.especialidad}</span>
-                    <span class="cita-estado ${cita.estado.toLowerCase()}">${cita.estado}</span>
-                </div>
-                <div class="cita-detalles">
-                    ${nombrePaciente}
-                    <p><strong>📅 Fecha:</strong> ${fechaFormateada}</p>
-                    <p><strong>🕐 Hora:</strong> ${formatearHora(cita.hora)}</p>
-                    <p><strong>📝 Motivo:</strong> ${cita.motivo}</p>
-                </div>
-                <button class="btn-cancelar" onclick="cancelarCita(${cita.id})">
-                    Cancelar Cita
-                </button>
-            </div>
-        `;
-    });
-    
-    listaCitas.innerHTML = html;
-}
-
-// ===== CANCELAR CITA =====
-function cancelarCita(citaId) {
-    if (!confirm('¿Estás seguro de que deseas cancelar esta cita?')) {
-        return;
-    }
-    
-    let citas = JSON.parse(sessionStorage.getItem('citas')) || [];
-    citas = citas.filter(c => c.id !== citaId);
-    sessionStorage.setItem('citas', JSON.stringify(citas));
-    
-    cargarCitas();
+    }, 5000);
 }
 
 // ===== UTILIDADES =====
@@ -200,9 +320,6 @@ function formatearFecha(fechaStr) {
 }
 
 function formatearHora(hora) {
-    const [h, m] = hora.split(':');
-    const hour = parseInt(h);
-    const ampm = hour >= 12 ? 'PM' : 'AM';
-    const hour12 = hour % 12 || 12;
-    return `${hour12}:${m} ${ampm}`;
+    // Los horarios ya vienen en el formato correcto
+    return hora;
 }

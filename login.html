@@ -23,8 +23,7 @@
             <ul>
                 <li><a href="index.html" class="font-bold">Inicio</a></li>
                 <li><a href="especialidades.html" class="font-bold">Especialidades</a></li>
-                <li><a href="agendamientos.html" class="font-bold">Agendar Cita</a></li>
-                <li><a href="seguros.html" class="font-bold">Seguro Politécnico</a></li>
+                <li><a href="consultar-citas.html" class="font-bold">Mis Citas</a></li>
                 <li><a href="reseñas.html" class="font-bold">Reseñas</a></li>
                 <li class="login mt-2 mb-2" id="authButton"><a href="login.html" class="font-bold">Login</a></li>
             </ul>
@@ -41,6 +40,21 @@
 
             <!-- Formulario -->
             <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="rol">Selecciona tu rol</label>
+                    <div class="input-wrapper">
+                        <svg viewBox="0 0 24 24" class="input-icon">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                        <select id="rol" name="rol" required>
+                            <option value="">Selecciona una opción</option>
+                            <option value="estudiante">Estudiante</option>
+                            <option value="doctor">Doctor</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label for="email">Correo institucional</label>
                     <div class="input-wrapper">
@@ -107,8 +121,7 @@
                 <ul class="footer-links">
                     <li><a href="index.html">Inicio</a></li>
                     <li><a href="especialidades.html">Especialidades</a></li>
-                    <li><a href="agendamientos.html">Agendar Cita</a></li>
-                    <li><a href="seguros.html">Seguro Politécnico</a></li>
+                    <li><a href="index.html">Seguro Politécnico</a></li>
                     <li><a href="reseñas.html">Reseñas</a></li>
                 </ul>
             </div>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bienestar Politécnico</title>
+    <title>Bienestar Politécnico - Mis Citas</title>
     <link rel="icon" type="image/png" href="images/logo_epn.png">
     <link rel="stylesheet" href="framework.css">
     <link rel="stylesheet" href="styles.css">
@@ -31,75 +31,25 @@
     </header>
 
     <main>
-        <h1>Reseñas de Nuestros Servicios</h1>
-        <p>Comparte tu experiencia y ayuda a otros estudiantes a conocer nuestros servicios</p>
+        <h1>Mis Citas Médicas</h1>
+        <p>Bienvenido/a, <span id="userName">Usuario</span></p>
     </main>
 
-    <section class="resenas-page page-section">
-        <div class="resenas-container">
-            <!-- Formulario para agregar reseña -->
-            <div class="resena-form-card card">
-                <h3>✍️ Deja tu Reseña</h3>
-                <div id="resenaMessage" class="form-message"></div>
-
-                <form id="resenaForm" class="resena-form">
-                    <div class="form-group">
-                        <label for="especialidadResena">Especialidad/Servicio</label>
-                        <select id="especialidadResena" name="especialidad" required>
-                            <option value="">Selecciona una opción</option>
-                            <option value="nutricion">🥗 Nutrición</option>
-                            <option value="odontologia">🦷 Odontología</option>
-                            <option value="psicologia">🧠 Psicología</option>
-                            <option value="medicina-general">💊 Medicina General</option>
-                            <option value="enfermeria">💉 Enfermería</option>
-                            <option value="servicio-general">⭐ Servicio General</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="calificacion">Calificación</label>
-                        <div class="rating-input" id="ratingInput">
-                            <span class="star" data-value="1">★</span>
-                            <span class="star" data-value="2">★</span>
-                            <span class="star" data-value="3">★</span>
-                            <span class="star" data-value="4">★</span>
-                            <span class="star" data-value="5">★</span>
-                        </div>
-                        <input type="hidden" id="calificacion" name="calificacion" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="comentario">Tu Experiencia</label>
-                        <textarea id="comentario" name="comentario" rows="5" 
-                            placeholder="Cuéntanos sobre tu experiencia, el trato recibido, los resultados..." 
-                            required minlength="20"></textarea>
-                        <small class="text-muted">Mínimo 20 caracteres</small>
-                    </div>
-
-                    <button type="submit" class="btn-agendar">Publicar Reseña</button>
-                </form>
+    <section class="consultar-citas-page">
+        <div class="consultar-container">
+            <div class="citas-header">
+                <h2>Historial de Citas</h2>
+                <div class="filtros">
+                    <select id="filtroEstado" class="filtro-select">
+                        <option value="todas">Todas las citas</option>
+                        <option value="Confirmada">Confirmadas</option>
+                        <option value="Cancelada">Canceladas</option>
+                    </select>
+                </div>
             </div>
 
-            <!-- Filtros y lista de reseñas -->
-            <div class="resenas-display">
-                <div class="resenas-header flex-between mb-4">
-                    <h2>💬 Experiencias Compartidas</h2>
-                    <div class="form-group mb-0">
-                        <select id="filtroEspecialidad" class="filtro-select">
-                            <option value="todas">Todas las especialidades</option>
-                            <option value="nutricion">🥗 Nutrición</option>
-                            <option value="odontologia">🦷 Odontología</option>
-                            <option value="psicologia">🧠 Psicología</option>
-                            <option value="medicina-general">💊 Medicina General</option>
-                            <option value="enfermeria">💉 Enfermería</option>
-                            <option value="servicio-general">⭐ Servicio General</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div id="listaResenas" class="resenas-list">
-                    <!-- Las reseñas se cargarán aquí dinámicamente -->
-                </div>
+            <div id="listaCitas" class="lista-citas-consulta">
+                <p class="no-citas">No tienes citas agendadas</p>
             </div>
         </div>
     </section>
@@ -129,6 +79,8 @@
                 <ul class="footer-links">
                     <li><a href="index.html">Inicio</a></li>
                     <li><a href="especialidades.html">Especialidades</a></li>
+                    <li><a href="agendamientos.html">Agendar Cita</a></li>
+                    <li><a href="consultar-citas.html">Mis Citas</a></li>
                     <li><a href="index.html">Seguro Politécnico</a></li>
                     <li><a href="reseñas.html">Reseñas</a></li>
                 </ul>
@@ -173,7 +125,6 @@
     </footer>
 
     <script src="js/auth.js"></script>
-    <script src="js/resenas.js"></script>
-    
+    <script src="js/consultar-citas.js"></script>
 </body>
 </html>

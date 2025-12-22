@@ -342,7 +342,8 @@ a {
     pointer-events: none;
 }
 
-.input-wrapper input {
+.input-wrapper input,
+.input-wrapper select {
     width: 100%;
     padding: 14px 45px;
     border: 2px solid var(--color-5);
@@ -352,7 +353,8 @@ a {
     background: var(--color-6);
 }
 
-.input-wrapper input:focus {
+.input-wrapper input:focus,
+.input-wrapper select:focus {
     outline: none;
     border-color: var(--color-3);
     background: var(--color-7);
@@ -361,6 +363,19 @@ a {
 
 .input-wrapper input::placeholder {
     color: #999;
+}
+
+.input-wrapper select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233c8dbc'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 24px;
+}
+
+.input-wrapper select option {
+    padding: 10px;
 }
 
 /* ===== ALERTAS Y MENSAJES ===== */

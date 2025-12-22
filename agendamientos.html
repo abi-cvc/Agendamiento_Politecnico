@@ -23,8 +23,7 @@
             <ul>
                 <li><a href="index.html" class="font-bold">Inicio</a></li>
                 <li><a href="especialidades.html" class="font-bold">Especialidades</a></li>
-                <li><a href="agendamientos.html" class="font-bold">Agendar Cita</a></li>
-                <li><a href="seguros.html" class="font-bold">Seguro Politécnico</a></li>
+                <li><a href="consultar-citas.html" class="font-bold">Mis Citas</a></li>
                 <li><a href="reseñas.html" class="font-bold">Reseñas</a></li>
                 <li class="login mt-2 mb-2" id="authButton"><a href="login.html" class="font-bold">Login</a></li>
             </ul>
@@ -51,19 +50,21 @@
                             <option value="nutricion">Nutrición</option>
                             <option value="odontologia">Odontología</option>
                             <option value="psicologia">Psicología</option>
-                            <option value="medicina">Medicina General</option>
+                            <option value="medicina-general">Medicina General</option>
                             <option value="enfermeria">Enfermería</option>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label for="fecha">Fecha</label>
-                        <input type="date" id="fecha" required>
+                        <label for="doctor">Doctor</label>
+                        <select id="doctor" required disabled>
+                            <option value="">Primero seleccione una especialidad</option>
+                        </select>
                     </div>
 
                     <div class="form-group">
-                        <label for="hora">Hora</label>
-                        <input type="time" id="hora" min="08:00" max="17:00" required>
+                        <label for="fecha">Fecha</label>
+                        <input type="date" id="fecha" required disabled>
                     </div>
 
                     <div class="form-group">
@@ -71,15 +72,15 @@
                         <textarea id="motivo" placeholder="Describe brevemente el motivo de tu consulta" required></textarea>
                     </div>
 
-                    <button type="submit" class="btn-agendar">Agendar Cita</button>
+                    <button type="submit" class="btn-agendar" disabled>Agendar Cita</button>
                 </form>
             </div>
 
-            <!-- Mis citas -->
-            <div class="mis-citas">
-                <h3>Mis Citas</h3>
-                <div id="listaCitas" class="lista-citas">
-                    <p class="no-citas">No tienes citas agendadas</p>
+            <!-- Horarios disponibles -->
+            <div class="horarios-disponibles">
+                <h3>Horarios Disponibles</h3>
+                <div id="horariosContainer" class="horarios-container">
+                    <p class="no-horarios">Seleccione un doctor y fecha para ver los horarios disponibles</p>
                 </div>
             </div>
         </div>
@@ -111,7 +112,7 @@
                     <li><a href="index.html">Inicio</a></li>
                     <li><a href="especialidades.html">Especialidades</a></li>
                     <li><a href="agendamientos.html">Agendar Cita</a></li>
-                    <li><a href="seguros.html">Seguro Politécnico</a></li>
+                    <li><a href="index.html">Seguro Politécnico</a></li>
                     <li><a href="reseñas.html">Reseñas</a></li>
                 </ul>
             </div>

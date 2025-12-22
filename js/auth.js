@@ -92,8 +92,8 @@ const usuariosDB = [
 // ===== FUNCIONES DE AUTENTICACIÓN =====
 
 // Iniciar sesión
-function login(email, password) {
-    const usuario = usuariosDB.find(u => u.email === email && u.password === password);
+function login(email, password, rol) {
+    const usuario = usuariosDB.find(u => u.email === email && u.password === password && u.rol === rol);
     
     if (usuario) {
         // Guardar sesión (sin la contraseña)
@@ -115,7 +115,9 @@ function login(email, password) {
 
 // Cerrar sesión
 function logout() {
+    // Solo remover la sesión del usuario, NO las citas
     sessionStorage.removeItem('usuarioActual');
+    sessionStorage.removeItem('paginaAnterior');
     window.location.href = 'index.html';
 }
 
@@ -126,12 +128,22 @@ function verificarSesion() {
 }
 
 // Proteger página (redirige al login si no hay sesión)
-function protegerPagina() {
+function protegerPagina(rolesPermitidos = null) {
     const usuario = verificarSesion();
     if (!usuario) {
         window.location.href = 'login.html';
         return null;
     }
+    
+    // Si se especificaron roles permitidos, verificar que el usuario tenga uno de ellos
+    if (rolesPermitidos && rolesPermitidos.length > 0) {
+        if (!rolesPermitidos.includes(usuario.rol)) {
+            alert('Acceso no autorizado para tu rol de usuario');
+            window.location.href = 'index.html';
+            return null;
+        }
+    }
+    
     return usuario;
 }
 
@@ -155,7 +167,6 @@ function actualizarHeader() {
                         <strong>${usuario.nombre}</strong>
                         <small>${usuario.email}</small>
                     </div>
-                    <a href="agendamientos.html">📅 Mis Citas</a>
                     <a href="#" onclick="logout(); return false;">🚪 Cerrar Sesión</a>
                 </div>
             </div>
@@ -167,10 +178,170 @@ function actualizarHeader() {
     }
 }
 
+// ===== ACTUALIZAR NAVEGACIÓN SEGÚN ROL =====
+function actualizarNavegacionPorRol() {
+    const usuario = verificarSesion();
+    const nav = document.querySelector('nav ul');
+    
+    if (!nav) return;
+    
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    
+    // Si es doctor, mostrar solo su navegación específica
+    if (usuario && usuario.rol === 'doctor') {
+        // Guardar el authButton antes de limpiar
+        const authButton = document.getElementById('authButton');
+        const authButtonClone = authButton ? authButton.cloneNode(true) : null;
+        
+        // Limpiar la navegación
+        nav.innerHTML = '';
+        
+        // Agregar links de doctor
+        const navLinks = [
+            { href: 'index.html', text: 'Inicio' },
+            { href: 'citas-agendadas.html', text: 'Citas Agendadas' },
+            { href: 'atender-cita.html', text: 'Atender Cita' }
+        ];
+        
+        navLinks.forEach(link => {
+            const li = document.createElement('li');
+            li.className = 'flex';
+            
+            const a = document.createElement('a');
+            a.href = link.href;
+            a.className = 'font-bold';
+            a.textContent = link.text;
+            
+            if (currentPage === link.href) {
+                a.style.color = 'var(--color-3)';
+            }
+            
+            li.appendChild(a);
+            nav.appendChild(li);
+        });
+        
+        // Restaurar el authButton
+        if (authButtonClone) {
+            nav.appendChild(authButtonClone);
+        }
+        
+    } else if (usuario && usuario.rol === 'estudiante') {
+        // Verificar si ya tiene la navegación correcta
+        const links = nav.querySelectorAll('a');
+        const hasCorrectLinks = Array.from(links).some(link => 
+            link.textContent.includes('Mis Citas')
+        );
+        
+        // Si no tiene los links correctos de estudiante, actualizar
+        if (!hasCorrectLinks) {
+            const authButton = document.getElementById('authButton');
+            const authButtonClone = authButton ? authButton.cloneNode(true) : null;
+            
+            nav.innerHTML = '';
+            
+            const navLinks = [
+                { href: 'index.html', text: 'Inicio' },
+                { href: 'especialidades.html', text: 'Especialidades' },
+                { href: 'consultar-citas.html', text: 'Mis Citas' },
+                { href: 'reseñas.html', text: 'Reseñas' }
+            ];
+            
+            navLinks.forEach(link => {
+                const li = document.createElement('li');
+                li.className = 'flex';
+                
+                const a = document.createElement('a');
+                a.href = link.href;
+                a.className = 'font-bold';
+                a.textContent = link.text;
+                
+                if (currentPage === link.href) {
+                    a.style.color = 'var(--color-3)';
+                }
+                
+                li.appendChild(a);
+                nav.appendChild(li);
+            });
+            
+            if (authButtonClone) {
+                nav.appendChild(authButtonClone);
+            }
+        }
+    }
+}
+
 // ===== EJECUTAR AL CARGAR CUALQUIER PÁGINA =====
 document.addEventListener('DOMContentLoaded', function() {
     // Actualizar header en todas las páginas
     actualizarHeader();
+    
+    // Actualizar navegación según rol
+    actualizarNavegacionPorRol();
+    
+    // Header auto-hide con detección de scroll y hover (optimizado)
+    const header = document.querySelector('header');
+    if (header) {
+        let lastScrollTop = 0;
+        let isScrolling = false;
+        let lastMouseY = -1;
+        const scrollThreshold = 150; // Píxeles antes de activar
+        const scrollDelta = 1000; // Diferencia mínima para detectar dirección
+        
+        // Función optimizada de scroll con requestAnimationFrame
+        function handleScroll() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            // Evitar cálculos si el scroll no cambió significativamente
+            if (Math.abs(scrollTop - lastScrollTop) < scrollDelta && scrollTop > scrollThreshold) {
+                isScrolling = false;
+                return;
+            }
+            
+            if (scrollTop > scrollThreshold) {
+                header.classList.add('scrolled');
+                
+                if (scrollTop > lastScrollTop + scrollDelta) {
+                    // Scrolling down - ocultar header
+                    header.classList.add('header-hidden');
+                    document.body.classList.add('header-is-hidden');
+                } else if (scrollTop < lastScrollTop - scrollDelta) {
+                    // Scrolling up - mostrar header
+                    header.classList.remove('header-hidden');
+                    document.body.classList.remove('header-is-hidden');
+                }
+            } else {
+                header.classList.remove('scrolled', 'header-hidden');
+                document.body.classList.remove('header-is-hidden');
+            }
+            
+            lastScrollTop = scrollTop;
+            isScrolling = false;
+        }
+        
+        // Throttle del evento scroll usando requestAnimationFrame
+        window.addEventListener('scroll', function() {
+            if (!isScrolling) {
+                isScrolling = true;
+                requestAnimationFrame(handleScroll);
+            }
+        }, { passive: true });
+        
+        // Throttle del mousemove - solo verifica cada 100ms
+        let mouseThrottle;
+        document.addEventListener('mousemove', function(e) {
+            if (e.clientY < 80 && e.clientY !== lastMouseY) {
+                lastMouseY = e.clientY;
+                
+                if (!mouseThrottle) {
+                    header.classList.remove('header-hidden');
+                    document.body.classList.remove('header-is-hidden');
+                    mouseThrottle = setTimeout(() => {
+                        mouseThrottle = null;
+                    }, 100);
+                }
+            }
+        }, { passive: true });
+    }
     
     // Si estamos en la página de login
     const loginForm = document.getElementById('loginForm');
@@ -184,9 +355,17 @@ document.addEventListener('DOMContentLoaded', function() {
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
+            const rol = document.getElementById('rol').value;
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
             const errorDiv = document.getElementById('errorMessage');
+            
+            // Validar que se seleccionó un rol
+            if (!rol) {
+                errorDiv.textContent = 'Por favor selecciona tu rol';
+                errorDiv.classList.add('show');
+                return;
+            }
             
             // Validar dominio
             if (!email.endsWith('@epn.edu.ec')) {
@@ -196,7 +375,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Intentar login
-            const resultado = login(email, password);
+            const resultado = login(email, password, rol);
             
             if (resultado.success) {
                 errorDiv.classList.remove('show');
