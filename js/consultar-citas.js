@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (!usuario) {
         sessionStorage.setItem('paginaAnterior', 'consultar-citas.html');
-        window.location.href = 'login.html';
+        window.location.href = 'index.html';
         return;
     }
 

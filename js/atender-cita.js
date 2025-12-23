@@ -25,7 +25,7 @@ function cargarCitasDelDoctor() {
     
     if (!usuario || usuario.rol !== 'doctor') {
         alert('Acceso no autorizado');
-        window.location.href = 'login.html';
+        window.location.href = 'index.html';
         return;
     }
 

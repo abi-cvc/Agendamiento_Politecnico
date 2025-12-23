@@ -131,7 +131,7 @@ function verificarSesion() {
 function protegerPagina(rolesPermitidos = null) {
     const usuario = verificarSesion();
     if (!usuario) {
-        window.location.href = 'inicio.html';
+        window.location.href = 'index.html';
         return null;
     }
     
@@ -139,7 +139,7 @@ function protegerPagina(rolesPermitidos = null) {
     if (rolesPermitidos && rolesPermitidos.length > 0) {
         if (!rolesPermitidos.includes(usuario.rol)) {
             alert('Acceso no autorizado para tu rol de usuario');
-            window.location.href = 'index.html';
+            window.location.href = 'inicio.html';
             return null;
         }
     }
@@ -167,7 +167,7 @@ function actualizarHeader() {
                         <strong>${usuario.nombre}</strong>
                         <small>${usuario.email}</small>
                     </div>
-                    <a href="#" onclick="logout(); return false;">🚪 Cerrar Sesión</a>
+                    <a href="index.html" onclick="logout(); return false;">🚪 Cerrar Sesión</a>
                 </div>
             </div>
         `;
@@ -185,7 +185,7 @@ function actualizarNavegacionPorRol() {
     
     if (!nav) return;
     
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    const currentPage = window.location.pathname.split('/').pop() || 'inicio.html';
     
     // Si es doctor, mostrar solo su navegación específica
     if (usuario && usuario.rol === 'doctor') {
@@ -198,7 +198,7 @@ function actualizarNavegacionPorRol() {
         
         // Agregar links de doctor
         const navLinks = [
-            { href: 'index.html', text: 'Inicio' },
+            { href: 'inicio.html', text: 'Inicio' },
             { href: 'citas-agendadas.html', text: 'Citas Agendadas' },
             { href: 'atender-cita.html', text: 'Atender Cita' }
         ];
@@ -381,7 +381,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 errorDiv.classList.remove('show');
                 // Redirigir a página anterior o inicio
                 const urlAnterior = sessionStorage.getItem('paginaAnterior');
-                window.location.href = urlAnterior || 'index.html';
+                window.location.href = urlAnterior || 'inicio.html';
                 sessionStorage.removeItem('paginaAnterior');
             } else {
                 errorDiv.textContent = resultado.mensaje;
