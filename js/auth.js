@@ -131,7 +131,7 @@ function verificarSesion() {
 function protegerPagina(rolesPermitidos = null) {
     const usuario = verificarSesion();
     if (!usuario) {
-        window.location.href = 'login.html';
+        window.location.href = 'inicio.html';
         return null;
     }
     
@@ -174,7 +174,7 @@ function actualizarHeader() {
     } else {
         // No logueado - mostrar botón de login
         authButton.className = 'login';
-        authButton.innerHTML = '<a href="login.html" class="font-bold">Login</a>';
+        authButton.innerHTML = '<a href="index.html" class="font-bold">Login</a>';
     }
 }
 
@@ -240,7 +240,7 @@ function actualizarNavegacionPorRol() {
             nav.innerHTML = '';
             
             const navLinks = [
-                { href: 'index.html', text: 'Inicio' },
+                { href: 'inicio.html', text: 'Inicio' },
                 { href: 'especialidades.html', text: 'Especialidades' },
                 { href: 'consultar-citas.html', text: 'Mis Citas' },
                 { href: 'reseñas.html', text: 'Reseñas' }
@@ -348,7 +348,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (loginForm) {
         // Si ya hay sesión, redirigir al inicio
         if (verificarSesion()) {
-            window.location.href = 'index.html';
+            window.location.href = 'inicio.html';
             return;
         }
 

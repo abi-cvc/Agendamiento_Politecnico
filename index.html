@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,233 +7,102 @@
     <link rel="icon" type="image/png" href="images/logo_epn.png">
     <link rel="stylesheet" href="framework.css">
     <link rel="stylesheet" href="styles.css">
-    
+
     <!--Tipo de letra para bienvenida-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
-
-
+    
 </head>
 <body>
-    <header class="flex-between">
+    <header>
         <div class="logo">
             <img src="images/logo.svg" alt="Logo">
         </div>
         <nav>
             <ul>
-                <li class="flex"><a href="index.html" class="font-bold">Inicio</a></li>
-                <li class="flex"><a href="especialidades.html" class="font-bold">Especialidades</a></li>
-                <li class="flex"><a href="consultar-citas.html" class="font-bold">Mis Citas</a></li>
-                <li class="flex"><a href="reseñas.html" class="font-bold">Reseñas</a></li>
-                <li class="login mt-2 mb-2" id="authButton"><a href="login.html" class="font-bold">Login</a></li>
+                <li><a href="inicio.html" class="font-bold">Inicio</a></li>
+                <li><a href="especialidades.html" class="font-bold">Especialidades</a></li>
+                <li><a href="consultar-citas.html" class="font-bold">Mis Citas</a></li>
+                <li><a href="reseñas.html" class="font-bold">Reseñas</a></li>
             </ul>
         </nav>
     </header>
 
-    <main>
-        <h1> Bienvenido a Bienestar Politécnico</h1>
-        <p> Tu bienestar es nuestra prioridad.</p>
+    <main class="login-section">
+        <div class="login-card">
+            <!-- Logo y título -->
+            <div class="login-header">
+                <h1>Iniciar Sesión</h1>
+                <p>Ingresa con tu correo institucional</p>
+            </div>
+
+            <!-- Formulario -->
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="rol">Selecciona tu rol</label>
+                    <div class="input-wrapper">
+                        <svg viewBox="0 0 24 24" class="input-icon">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                        <select id="rol" name="rol" required>
+                            <option value="">Selecciona una opción</option>
+                            <option value="estudiante">Estudiante</option>
+                            <option value="doctor">Doctor</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Correo institucional</label>
+                    <div class="input-wrapper">
+                        <svg viewBox="0 0 24 24" class="input-icon">
+                            <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                        </svg>
+                        <input type="email" id="email" name="email" placeholder="usuario@epn.edu.ec" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <div class="input-wrapper">
+                        <svg viewBox="0 0 24 24" class="input-icon">
+                            <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+                        </svg>
+                        <input type="password" id="password" name="password" placeholder="••••••••" required>
+                        <button type="button" class="toggle-password" onclick="togglePassword()">
+                            <svg viewBox="0 0 24 24" id="eyeIcon">
+                                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mensaje de error -->
+                <div id="errorMessage" class="error-message"></div>
+
+                <button type="submit" class="btn-login">
+                    Iniciar Sesión
+                </button>
+            </form>
+
+            <!-- Info adicional -->
+            <div class="login-footer">
+                <p>¿Problemas para acceder?</p>
+                <a href="mailto:bienestar@epn.edu.ec">Contacta a Bienestar Politécnico</a>
+            </div>
+        </div>
     </main>
 
-    <section class="informacion-inicio grid grid-auto-lg gap-xl">
-        <div class="card hover-lift">
-            <h2>Objetivo del Área de Bienestar Politécnico</h2>
-            <p>El Área de Bienestar Politécnico tiene como objetivo promover el bienestar integral de la comunidad estudiantil mediante servicios y programas que apoyen su salud física, emocional y social. Nuestro compromiso es brindar acompañamiento, orientación y atención oportuna para contribuir al adecuado desarrollo académico y personal de los estudiantes.</p>
-        </div>
-
-        <div class="card hover-lift">
-            <h2>Beneficios para los estudiantes</h2>
-            <p>Los estudiantes de la institución cuentan con múltiples servicios diseñados para apoyar su bienestar y seguridad durante toda su trayectoria académica, entre los cuales destacan:</p>
-            <ul>
-                <li>Atención médica general y por especialidades, brindada por profesionales capacitados.</li>
-                <li>Seguro de salud contra accidentes, disponible para todos los estudiantes activos.</li>
-                <li>Acompañamiento y asesoría en procesos de salud, como derivaciones, orientaciones y seguimiento.</li>
-                <li>Prevención y promoción de la salud, mediante campañas, talleres y actividades informativas.</li>
-                <li>Un espacio seguro y de apoyo, donde la comunidad puede recibir orientación y atención oportuna ante cualquier eventualidad.</li>
-            </ul>
-        </div>
-    </section>
-
-    <!-- Hero del Seguro -->
-    <section class="seguros-hero">
-        <h1>Seguro de Vida y Accidentes Personales</h1>
-        <p>Protección integral para todos los estudiantes de la EPN</p>
-        <div class="hero-badge">
-            <span class="badge-icon">🛡️</span>
-            <span>Cobertura 24/7 en cualquier parte del mundo</span>
-        </div>
-    </section>
-
-    <!-- Info Rápida -->
-    <section class="info-rapida">
-        <div class="info-card">
-            <div class="info-icon">👥</div>
-            <h3>¿Quiénes son beneficiarios?</h3>
-            <p>Todos los estudiantes de la EPN legalmente matriculados en el periodo académico vigente.</p>
-        </div>
-        <div class="info-card">
-            <div class="info-icon">📅</div>
-            <h3>Vigencia</h3>
-            <p><strong>730 días</strong><br>Del 21 agosto 2024 al 23 agosto 2026</p>
-        </div>
-        <div class="info-card">
-            <div class="info-icon">💵</div>
-            <h3>Deducible</h3>
-            <p>Cancelar solo <strong>$10 USD</strong> por accidente</p>
-        </div>
-    </section>
-
-    <!-- Coberturas -->
-    <section class="coberturas-section">
-        <h2>Principales Coberturas</h2>
-        <div class="coberturas">
-            <div class="cobertura-item">
-                <div class="cobertura-monto">$8.800</div>
-                <div class="cobertura-nombre">Muerte accidental</div>
-            </div>
-            <div class="cobertura-item">
-                <div class="cobertura-monto">$5.500</div>
-                <div class="cobertura-nombre">Desmembración accidental</div>
-            </div>
-            <div class="cobertura-item">
-                <div class="cobertura-monto">$5.500</div>
-                <div class="cobertura-nombre">Incapacidad total y permanente</div>
-            </div>
-            <div class="cobertura-item">
-                <div class="cobertura-monto">$2.750</div>
-                <div class="cobertura-nombre">Gastos médicos por accidente</div>
-            </div>
-            <div class="cobertura-item">
-                <div class="cobertura-monto">$300</div>
-                <div class="cobertura-nombre">Ambulancia por accidente</div>
-            </div>
-            <div class="cobertura-item">
-                <div class="cobertura-monto">$1.650</div>
-                <div class="cobertura-nombre">Beca por muerte del representante</div>
-            </div>
-            <div class="cobertura-item">
-                <div class="cobertura-monto">$550</div>
-                <div class="cobertura-nombre">Gastos por sepelio</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Qué hacer en emergencia -->
-    <section class="emergencia-section">
-        <h2>🚨 ¿Qué hacer en caso de emergencia?</h2>
-        <div class="telefono-emergencia">
-            <span>Llama al</span>
-            <a href="tel:1800528462">1800 LATINA (528462)</a>
-        </div>
-        
-        <div class="pasos-emergencia">
-            <div class="paso">
-                <div class="paso-numero">1</div>
-                <div class="paso-contenido">
-                    <h4>Llama al Call Center</h4>
-                    <p>Indica tu número de cédula y ubicación actual.</p>
-                </div>
-            </div>
-            <div class="paso">
-                <div class="paso-numero">2</div>
-                <div class="paso-contenido">
-                    <h4>Acude a Emergencias</h4>
-                    <p>Dirígete a la recepción de emergencia de la casa de salud indicada.</p>
-                </div>
-            </div>
-            <div class="paso">
-                <div class="paso-numero">3</div>
-                <div class="paso-contenido">
-                    <h4>Identifícate</h4>
-                    <p>Presenta tu cédula e indica que eres estudiante EPN con convenio Latina Seguros.</p>
-                </div>
-            </div>
-            <div class="paso">
-                <div class="paso-numero">4</div>
-                <div class="paso-contenido">
-                    <h4>Recibe atención</h4>
-                    <p>Cobertura hasta $2.500 USD. Paga solo $10 de deducible.</p>
-                </div>
-            </div>
-            <div class="paso">
-                <div class="paso-numero">5</div>
-                <div class="paso-contenido">
-                    <h4>Solicita tu certificado</h4>
-                    <p>Pide el certificado médico para validar en Bienestar Politécnico.</p>
-                </div>
-            </div>
-            <div class="paso">
-                <div class="paso-numero">6</div>
-                <div class="paso-contenido">
-                    <h4>Notifica el accidente</h4>
-                    <p>Agenda tu cita de control y notifica por correo para seguimiento.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Detalles de Coberturas -->
-    <section class="detalles-section">
-        <h2>Detalle de las Coberturas</h2>
-        <div class="detalles-grid">
-            <div class="detalle-card">
-                <h4>💔 Muerte Accidental</h4>
-                <p>El pago de la indemnización se efectuará por la muerte del asegurado. Este monto se entregará a los beneficiarios legales.</p>
-            </div>
-            <div class="detalle-card">
-                <h4>🦾 Desmembración</h4>
-                <p>Si el asegurado pierde una extremidad superior o inferior, la compañía pagará un porcentaje según la tabla de beneficios de la póliza.</p>
-            </div>
-            <div class="detalle-card">
-                <h4>🏥 Gastos Médicos</h4>
-                <p>Cubre tratamiento médico o quirúrgico, honorarios profesionales, medicinas, exámenes de imágenes, hospitalización, ambulancia y relacionados.</p>
-            </div>
-            <div class="detalle-card">
-                <h4>⚱️ Gastos de Sepelio</h4>
-                <p>Cubre servicios exequiales por fallecimiento de cualquier causa, las 24 horas, en cualquier lugar del mundo.</p>
-            </div>
-            <div class="detalle-card">
-                <h4>🎓 Beca por Fallecimiento</h4>
-                <p>En caso de fallecimiento del sustento económico del estudiante por accidente, se cancelará la totalidad de la beca.</p>
-            </div>
-            <div class="detalle-card">
-                <h4>🏨 Red Hospitalaria</h4>
-                <p>Servicio de crédito hospitalario en clínicas y hospitales afiliados a nivel nacional. Cualquier cambio será notificado en máximo 2 días laborables.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contacto -->
-    <section class="contacto-seguros">
-        <h2>📞 Contacto y Más Información</h2>
-        <div class="contacto-grid">
-            <div class="contacto-item-seguros">
-                <h4>Correos electrónicos</h4>
-                <a href="mailto:erika.heredia@epn.edu.ec">erika.heredia@epn.edu.ec</a>
-                <a href="mailto:seguro.estudiantil2123@epn.edu.ec">seguro.estudiantil2123@epn.edu.ec</a>
-            </div>
-            <div class="contacto-item-seguros">
-                <h4>Teléfonos</h4>
-                <a href="tel:+593982428897">098-242-8897</a>
-                <a href="tel:+59322976300">2976-300 ext. 1109</a>
-            </div>
-            <div class="contacto-item-seguros emergencia-box">
-                <h4>Emergencias 24/7</h4>
-                <a href="tel:1800528462" class="telefono-grande">1800 LATINA</a>
-                <span>(528462)</span>
-            </div>
-        </div>
-    </section>
-
     <footer>
-        <div class="footer-main grid grid-auto gap-xl">
+        <div class="footer-main">
             <!-- Columna 1: Marca -->
             <div class="footer-section">
                 <div class="footer-logo">Bienestar Politécnico</div>
                 <p class="footer-tagline">Cuidando de ti, cuidamos el futuro de la Politécnica.</p>
-                <div class="social-links flex gap-sm">
-                    <a href="https://facebook.com/DBPEPN" class="social-link flex-center" title="Facebook">
+                <div class="social-links">
+                    <a href="https://facebook.com/DBPEPN" class="social-link" title="Facebook">
                         <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
                     </a>
                     <a href="#" class="social-link" title="Instagram">
@@ -293,9 +162,21 @@
             <p>&copy; 2025 Bienestar Politécnico - Escuela Politécnica Nacional. Todos los derechos reservados.</p>
         </div>
     </footer>
-    
 
     <script src="js/auth.js"></script>
+    <script>
+        // Deshabilitar enlaces de navegación excepto Inicio
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('nav ul li a');
+            navLinks.forEach(link => {
+                if (!link.href.includes('inicio.html') && !link.href.includes('index.html')) {
+                    link.style.pointerEvents = 'none';
+                    link.style.opacity = '0.5';
+                    link.style.cursor = 'not-allowed';
+                }
+            });
+        });
+    </script>
     
 </body>
 </html>
