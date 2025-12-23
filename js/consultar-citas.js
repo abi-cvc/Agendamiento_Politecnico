@@ -19,6 +19,14 @@ document.addEventListener('DOMContentLoaded', function() {
     cargarCitas();
 });
 
+// ===== VERIFICAR SI SE PUEDE CANCELAR LA CITA =====
+function puedeCancelar(fecha, hora) {
+    const ahora = new Date();
+    const fechaCita = new Date(fecha + 'T' + hora);
+    const diferenciaMinutos = (fechaCita - ahora) / (1000 * 60);
+    return diferenciaMinutos > 30;
+}
+
 // ===== CARGAR CITAS DEL USUARIO =====
 function cargarCitas() {
     const usuario = verificarSesion();
@@ -46,7 +54,7 @@ function cargarCitas() {
     let html = '';
     citasFiltradas.forEach(cita => {
         const fechaFormateada = formatearFecha(cita.fecha);
-        const esPasada = new Date(cita.fecha) < new Date();
+        const esPasada = new Date(cita.fecha + 'T' + cita.hora) < new Date();
         const claseAdicional = esPasada ? 'cita-pasada' : '';
         
         html += `
@@ -85,7 +93,7 @@ function cargarCitas() {
                     </div>
                 </div>
                 
-                ${cita.estado === 'Confirmada' && !esPasada ? `
+                ${cita.estado === 'Pendiente' && !esPasada ? `
                     <div class="cita-acciones">
                         <button class="btn-cancelar-consulta" onclick="cancelarCita(${cita.id})">
                             Cancelar Cita
@@ -101,21 +109,30 @@ function cargarCitas() {
 
 // ===== CANCELAR CITA =====
 function cancelarCita(citaId) {
+    let citas = JSON.parse(sessionStorage.getItem('citas')) || [];
+    const cita = citas.find(c => c.id === citaId);
+    
+    if (!cita) {
+        alert('No se encontró la cita');
+        return;
+    }
+
+    // Verificar restricción de tiempo PRIMERO
+    if (!puedeCancelar(cita.fecha, cita.hora)) {
+        alert('⚠️ No se puede cancelar la cita.\n\nLas citas solo pueden cancelarse hasta 30 minutos antes del horario agendado.');
+        return;
+    }
+    
+    // Si pasa la verificación, entonces pedir confirmación
     if (!confirm('¿Estás seguro de que deseas cancelar esta cita?')) {
         return;
     }
     
-    let citas = JSON.parse(sessionStorage.getItem('citas')) || [];
-    const cita = citas.find(c => c.id === citaId);
+    cita.estado = 'Cancelada';
+    sessionStorage.setItem('citas', JSON.stringify(citas));
+    cargarCitas();
     
-    if (cita) {
-        cita.estado = 'Cancelada';
-        sessionStorage.setItem('citas', JSON.stringify(citas));
-        cargarCitas();
-        
-        // Mostrar mensaje de confirmación
-        alert('Cita cancelada exitosamente');
-    }
+    alert('✓ Cita cancelada exitosamente');
 }
 
 // ===== UTILIDADES =====
