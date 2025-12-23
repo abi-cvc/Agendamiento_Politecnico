@@ -760,6 +760,18 @@ a {
     margin-bottom: var(--spacing-xs);
 }
 
+.calendar-day-badge {
+    background: linear-gradient(135deg, var(--color-3), var(--color-4));
+    color: var(--color-7);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-align: center;
+    margin-top: var(--spacing-xs);
+    box-shadow: var(--shadow-sm);
+}
+
 .calendar-day-appointments {
     display: flex;
     flex-direction: column;
@@ -803,4 +815,166 @@ a {
 .calendar-modal-close {
     background: var(--color-5);
     padding: var(--spacing-sm) var(--spacing-lg);
+}
+
+/* ===== ATENDER CITA ===== */
+.atender-tabs {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-2xl);
+}
+
+.btn-atender-active {
+    background: var(--color-3);
+    color: var(--color-7);
+    border: 2px solid var(--color-3);
+    padding: 14px 28px;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.date-selector-card {
+    text-align: center;
+    padding: var(--spacing-xl);
+}
+
+.date-input-hidden {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.date-display-box {
+    display: inline-block;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+}
+
+.date-display-box:hover {
+    transform: translateY(-2px);
+}
+
+.date-display-content {
+    background: linear-gradient(135deg, #FF8C42, #FF6B35);
+    color: var(--color-7);
+    padding: var(--spacing-xl) var(--spacing-2xl);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    min-width: 200px;
+}
+
+.date-day {
+    display: block;
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.date-month {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-top: var(--spacing-xs);
+}
+
+.date-count {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: var(--spacing-sm);
+    opacity: 0.9;
+}
+
+.atender-citas-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.atender-cita-item {
+    background: var(--color-7);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-normal);
+}
+
+.atender-cita-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.atender-cita-header {
+    background: linear-gradient(135deg, var(--color-3), var(--color-4));
+    color: var(--color-7);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.atender-cita-time {
+    font-weight: 700;
+    font-size: 1.1rem;
+    min-width: 70px;
+}
+
+.atender-cita-patient {
+    font-weight: 600;
+    flex: 1;
+}
+
+.atender-cita-reason {
+    font-size: 0.9rem;
+    opacity: 0.95;
+}
+
+.atender-cita-form {
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: flex-start;
+}
+
+.atender-textarea {
+    flex: 1;
+    padding: var(--spacing-md);
+    border: 2px solid var(--color-5);
+    border-radius: var(--radius-md);
+    font-family: inherit;
+    font-size: 1rem;
+    resize: vertical;
+    transition: all var(--transition-normal);
+}
+
+.atender-textarea:focus {
+    outline: none;
+    border-color: var(--color-3);
+    box-shadow: 0 0 0 3px rgba(60, 141, 188, 0.1);
+}
+
+.btn-guardar {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: var(--color-7);
+    border: none;
+    padding: var(--spacing-md) var(--spacing-xl);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-guardar:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-guardar:active {
+    transform: translateY(0);
 }

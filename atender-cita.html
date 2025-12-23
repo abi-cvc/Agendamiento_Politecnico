@@ -30,64 +30,42 @@
     </header>
 
     <!-- Main Content -->
-    <main class="citas-agendadas-doctor-page">
-        <h1 class="text-center mb-lg">Atender Citas</h1>
+    <main class="atender-cita-page">
+        <h1 class="text-center mb-lg" id="nombreDoctor">Doctor</h1>
         <p class="text-center subtitle-text mb-2xl">Atiende y completa las citas programadas</p>
 
-        <!-- Filtro por fecha -->
-        <div class="filtros-section card hover-lift mb-2xl">
-            <div class="filtro-group" style="flex: 1; max-width: 400px; margin: 0 auto;">
-                <label for="filtroFechaAtencion" class="font-bold">Seleccionar fecha:</label>
-                <input type="date" id="filtroFechaAtencion" class="filtro-select" style="width: 100%;">
+        <!-- Selector de fecha destacado -->
+        <div class="container-sm mb-2xl">
+            <div class="date-selector-card">
+                <input type="date" id="filtroFechaAtencion" class="date-input-hidden">
+                <div id="fechaDisplay" class="date-display-box">
+                    <div class="date-display-content">
+                        <span id="diaNumero" class="date-day">22</span>
+                        <span id="mesTexto" class="date-month">diciembre</span>
+                        <span id="numeroCitas" class="date-count">5 citas</span>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- Listado de Citas -->
-        <div id="listadoCitasAtencion" class="citas-grid">
-            <!-- Las citas se cargarán dinámicamente aquí -->
-        </div>
+        <!-- Listado de Citas con campos inline -->
+        <div class="container-sm">
+            <div id="listadoCitasAtencion" class="atender-citas-list">
+                <!-- Las citas se cargarán dinámicamente aquí -->
+            </div>
 
-        <!-- Mensaje cuando no hay citas -->
-        <div id="mensajeSinCitasAtencion" class="mensaje-vacio card" style="display: none;">
-            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-            </svg>
-            <p class="text-center mt-lg">No hay citas pendientes para la fecha seleccionada</p>
+            <!-- Mensaje cuando no hay citas -->
+            <div id="mensajeSinCitasAtencion" class="mensaje-vacio card">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <p class="text-center mt-lg">No hay citas pendientes para la fecha seleccionada</p>
+            </div>
         </div>
     </main>
-
-    <!-- Modal para atender cita -->
-    <div id="modalAtenderCita" class="modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Atender Cita</h2>
-                <button class="modal-close" onclick="cerrarModalAtencion()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div id="infoCitaModal" class="info-cita-modal mb-xl">
-                    <!-- Información de la cita -->
-                </div>
-                
-                <div class="form-group">
-                    <label for="retroalimentacion" class="font-bold">Retroalimentación de la consulta:</label>
-                    <textarea 
-                        id="retroalimentacion" 
-                        rows="6" 
-                        class="form-control"
-                        placeholder="Escribe aquí las observaciones, diagnóstico o recomendaciones de la consulta..."
-                        required
-                    ></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary" onclick="cerrarModalAtencion()">Cancelar</button>
-                <button class="btn-primary" onclick="completarCita()">Completar Cita</button>
-            </div>
-        </div>
-    </div>
 
     <!-- Footer -->
     <footer class="text-center p-2xl bg-primary text-white mt-3xl">

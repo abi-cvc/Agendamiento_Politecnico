@@ -288,10 +288,10 @@ function agendarCita(e) {
     
     console.log('Nueva cita creada:', nuevaCita);
     
-    // Guardar en sessionStorage (temporal, preparado para BDD)
-    let citas = JSON.parse(sessionStorage.getItem('citas')) || [];
+    // Guardar en localStorage (temporal, preparado para BDD)
+    let citas = JSON.parse(localStorage.getItem('citas')) || [];
     citas.push(nuevaCita);
-    sessionStorage.setItem('citas', JSON.stringify(citas));
+    localStorage.setItem('citas', JSON.stringify(citas));
     
     console.log('Todas las citas en sessionStorage:', citas);
     

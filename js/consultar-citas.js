@@ -73,7 +73,7 @@ function cargarCitas() {
     const usuario = verificarSesion();
     const listaCitas = document.getElementById('listaCitas');
     const filtroEstado = document.getElementById('filtroEstado').value;
-    const citas = JSON.parse(sessionStorage.getItem('citas')) || [];
+    const citas = JSON.parse(localStorage.getItem('citas')) || [];
     
     // Filtrar citas del estudiante
     let citasFiltradas = citas.filter(c => c.usuarioId === usuario.id);
@@ -152,7 +152,7 @@ function cargarCitas() {
 function cancelarCita(citaId) {
     console.log('ID de cita a cancelar:', citaId);
     
-    let citas = JSON.parse(sessionStorage.getItem('citas')) || [];
+    let citas = JSON.parse(localStorage.getItem('citas')) || [];
     console.log('Todas las citas:', citas);
     
     // Convertir citaId a string para la comparación
@@ -178,7 +178,7 @@ function cancelarCita(citaId) {
     }
     
     citas[citaIndex].estado = 'Cancelada';
-    sessionStorage.setItem('citas', JSON.stringify(citas));
+    localStorage.setItem('citas', JSON.stringify(citas));
     cargarCitas();
     
     alert('✓ Cita cancelada exitosamente');

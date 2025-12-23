@@ -27,8 +27,8 @@ function cargarCitasDelDoctor() {
         return;
     }
 
-    // Obtener todas las citas del sessionStorage
-    todasLasCitas = JSON.parse(sessionStorage.getItem('citas')) || [];
+    // Obtener todas las citas del localStorage
+    todasLasCitas = JSON.parse(localStorage.getItem('citas')) || [];
     
     console.log('=== DEBUG CARGAR CITAS DEL DOCTOR ===');
     console.log('Usuario doctor:', usuario);
@@ -39,7 +39,8 @@ function cargarCitasDelDoctor() {
     citasDelDoctor = todasLasCitas.filter(cita => {
         console.log('Comparando - Cita doctorId:', cita.doctorId, 'tipo:', typeof cita.doctorId, 'vs Usuario ID:', usuario.id, 'tipo:', typeof usuario.id);
         console.log('¿Son iguales?', cita.doctorId === usuario.id);
-        return cita.doctorId === usuario.id;
+        console.log('¿Son iguales con ==?', cita.doctorId == usuario.id);
+        return cita.doctorId == usuario.id; // Usar == en lugar de === para comparar sin tipo
     });
     
     console.log('Citas del doctor filtradas:', citasDelDoctor);
@@ -100,7 +101,7 @@ function mostrarCalendario() {
     // Contar citas por día
     const citasPorDia = {};
     citasDelDoctor.forEach(cita => {
-        const fechaCita = new Date(cita.fecha);
+        const fechaCita = new Date(cita.fecha + 'T00:00:00');
         if (fechaCita.getMonth() === mesActual.getMonth() && 
             fechaCita.getFullYear() === mesActual.getFullYear()) {
             const dia = fechaCita.getDate();
@@ -137,27 +138,18 @@ function mostrarCalendario() {
         
         let contenido = `<div class="calendar-day-number">${dia}</div>`;
         
-        // Agregar citas si las hay
+        // Agregar contador de citas si las hay
         if (citasPorDia[dia] && citasPorDia[dia].length > 0) {
-            contenido += '<div class="calendar-day-appointments">';
+            const numCitas = citasPorDia[dia].length;
+            contenido += `
+                <div class="calendar-day-badge">${numCitas} cita${numCitas > 1 ? 's' : ''}</div>
+            `;
             
-            // Ordenar citas por hora
-            citasPorDia[dia].sort((a, b) => {
-                return a.hora.localeCompare(b.hora);
+            // Hacer el día clickeable
+            diaDiv.style.cursor = 'pointer';
+            diaDiv.addEventListener('click', () => {
+                mostrarCitasDia(dia, citasPorDia[dia]);
             });
-            
-            citasPorDia[dia].forEach(cita => {
-                const horaInicio = cita.hora.split('-')[0].trim();
-                const nombreCorto = cita.usuarioNombre.split(' ')[0];
-                contenido += `
-                    <div class="calendar-appointment" onclick="mostrarCitasDia(${dia}, ${JSON.stringify(citasPorDia[dia]).replace(/"/g, '&quot;')})">
-                        <span class="calendar-appointment-time">${horaInicio}</span>
-                        <span class="calendar-appointment-patient">${nombreCorto}</span>
-                    </div>
-                `;
-            });
-            
-            contenido += '</div>';
         }
         
         diaDiv.innerHTML = contenido;
@@ -220,7 +212,7 @@ function crearTarjetaCita(cita) {
     }
     
     // Formatear la fecha
-    const fecha = new Date(cita.fecha);
+    const fecha = new Date(cita.fecha + 'T00:00:00');
     const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const fechaFormateada = fecha.toLocaleDateString('es-ES', opciones);
     
@@ -306,8 +298,8 @@ function cancelarCita(citaId) {
     // Actualizar el estado a "Cancelada"
     todasLasCitas[citaIndex].estado = 'Cancelada';
     
-    // Guardar en sessionStorage
-    sessionStorage.setItem('citas', JSON.stringify(todasLasCitas));
+    // Guardar en localStorage
+    localStorage.setItem('citas', JSON.stringify(todasLasCitas));
     
     // Cerrar el modal
     cerrarModal();
