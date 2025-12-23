@@ -2337,3 +2337,42 @@ body.header-is-hidden .especialidades-menu {
     }
 }
 
+/* Estilos para citas completadas */
+.cita-completada {
+    background-color: #f0fdf4;
+    border-left: 4px solid #22c55e;
+    margin-bottom: 25px;
+}
+
+.badge-completada {
+    background-color: #22c55e;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.atender-cita-observaciones {
+    padding: 15px;
+    background-color: white;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+.observaciones-header {
+    color: #22c55e;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.observaciones-contenido {
+    padding: 12px;
+    background-color: #f9fafb;
+    border-radius: 6px;
+    border-left: 3px solid #22c55e;
+    color: #374151;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+

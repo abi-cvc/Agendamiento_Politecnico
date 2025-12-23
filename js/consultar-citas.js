@@ -88,8 +88,12 @@ function cargarCitas() {
         return;
     }
     
-    // Ordenar por fecha (más recientes primero)
-    citasFiltradas.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+    // Ordenar por fecha y hora (más recientes primero)
+    citasFiltradas.sort((a, b) => {
+        const fechaA = new Date(a.fecha + 'T' + a.hora.split('-')[0]);
+        const fechaB = new Date(b.fecha + 'T' + b.hora.split('-')[0]);
+        return fechaB - fechaA;
+    });
     
     // Generar HTML
     let html = '';

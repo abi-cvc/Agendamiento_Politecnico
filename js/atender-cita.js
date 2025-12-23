@@ -91,9 +91,9 @@ function mostrarCitas() {
         console.log('Revisando cita:', cita);
         console.log('Estado:', cita.estado, 'Fecha cita:', cita.fecha, 'Fecha filtro:', filtroFecha);
         
-        // Solo mostrar citas pendientes
-        if (cita.estado !== 'Pendiente') {
-            console.log('Rechazada por estado');
+        // Mostrar citas pendientes y completadas (no canceladas)
+        if (cita.estado === 'Cancelada') {
+            console.log('Rechazada por estado cancelada');
             return false;
         }
         
@@ -113,8 +113,13 @@ function mostrarCitas() {
     const numeroCitas = citasFiltradas.length;
     document.getElementById('numeroCitas').textContent = `${numeroCitas} cita${numeroCitas !== 1 ? 's' : ''}`;
     
-    // Ordenar por hora
+    // Ordenar: primero pendientes, luego completadas, y por hora
     citasFiltradas.sort((a, b) => {
+        // Primero ordenar por estado (Pendiente primero)
+        if (a.estado === 'Pendiente' && b.estado !== 'Pendiente') return -1;
+        if (a.estado !== 'Pendiente' && b.estado === 'Pendiente') return 1;
+        
+        // Luego por hora
         const horaA = a.hora.split('-')[0];
         const horaB = b.hora.split('-')[0];
         return horaA.localeCompare(horaB);
@@ -143,26 +148,53 @@ function crearTarjetaCitaAtencion(cita) {
     const card = document.createElement('div');
     card.className = 'atender-cita-item';
     card.setAttribute('data-id', cita.id);
+
+    // Agregar clase adicional si está completada
+    if (cita.estado === 'Completada') {
+        card.classList.add('cita-completada');
+    }
     
     const horaInicio = cita.hora.split('-')[0].trim();
     
-    card.innerHTML = `
-        <div class="atender-cita-header">
-            <span class="atender-cita-time">${horaInicio}</span>
-            <span class="atender-cita-patient">${cita.usuarioNombre}</span>
-            <span class="atender-cita-reason">${cita.motivo}</span>
-        </div>
-        
-        <div class="atender-cita-form">
-            <textarea 
-                id="retro_${cita.id}" 
-                class="atender-textarea"
-                placeholder="Ingresar retroalimentación (escritura)"
-                rows="3"
-            ></textarea>
-            <button class="btn-guardar" onclick="guardarRetroalimentacion('${cita.id}')">Guardar</button>
-        </div>
-    `;
+    // Si la cita está completada, mostrar en modo solo lectura
+    if (cita.estado === 'Completada') {
+        card.innerHTML = `
+            <div class="atender-cita-header">
+                <span class="atender-cita-time">${horaInicio}</span>
+                <span class="atender-cita-patient">${cita.usuarioNombre}</span>
+                <span class="atender-cita-reason">${cita.motivo}</span>
+                <span class="badge-completada">✓ Completada</span>
+            </div>
+            
+            <div class="atender-cita-observaciones">
+                <div class="observaciones-header">
+                    <strong>📋 Observaciones guardadas:</strong>
+                </div>
+                <div class="observaciones-contenido">
+                    ${cita.observaciones || cita.retroalimentacion || 'Sin observaciones'}
+                </div>
+            </div>
+        `;
+    } else {
+        // Cita pendiente - modo edición
+        card.innerHTML = `
+            <div class="atender-cita-header">
+                <span class="atender-cita-time">${horaInicio}</span>
+                <span class="atender-cita-patient">${cita.usuarioNombre}</span>
+                <span class="atender-cita-reason">${cita.motivo}</span>
+            </div>
+            
+            <div class="atender-cita-form">
+                <textarea 
+                    id="retro_${cita.id}" 
+                    class="atender-textarea"
+                    placeholder="Ingresar observaciones de la consulta..."
+                    rows="3"
+                ></textarea>
+                <button class="btn-guardar" onclick="guardarRetroalimentacion('${cita.id}')">Guardar Observaciones</button>
+            </div>
+        `;
+    }
     
     return card;
 }
