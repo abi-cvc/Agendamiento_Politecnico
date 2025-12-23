@@ -98,11 +98,11 @@ function mostrarCalendario() {
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
     
-    // Contar citas por día
+    // Contar solo citas pendientes por día
     const citasPorDia = {};
     citasDelDoctor.forEach(cita => {
-        // solo se muestre el número de citas pendientes del dia 
-        document.getElementById('mesActual').textContent = `${mesNombre} de ${año}`;
+        // Solo contar citas pendientes
+        if (cita.estado !== 'Pendiente') return;
 
         const fechaCita = new Date(cita.fecha + 'T00:00:00');
         if (fechaCita.getMonth() === mesActual.getMonth() && 
