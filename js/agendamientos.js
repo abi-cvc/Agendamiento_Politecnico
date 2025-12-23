@@ -188,13 +188,24 @@ function cargarHorariosDisponibles() {
         return;
     }
     
-    // Obtener citas existentes (preparado para BDD)
-    const citasExistentes = JSON.parse(sessionStorage.getItem('citas')) || [];
+    // Obtener citas existentes desde localStorage (no sessionStorage)
+    const citasExistentes = JSON.parse(localStorage.getItem('citas')) || [];
     
-    // Filtrar citas del doctor en la fecha seleccionada
-    const citasOcupadas = citasExistentes.filter(c => 
-        c.doctorId == doctorId && c.fecha === fecha
-    ).map(c => c.hora);
+    console.log('=== DEBUG HORARIOS ===');
+    console.log('Doctor ID:', doctorId, 'tipo:', typeof doctorId);
+    console.log('Fecha:', fecha);
+    console.log('Todas las citas:', citasExistentes);
+    
+    // Filtrar citas del doctor en la fecha seleccionada (usar == para comparar sin tipo)
+    const citasOcupadas = citasExistentes.filter(c => {
+        console.log('Comparando - Cita doctorId:', c.doctorId, 'tipo:', typeof c.doctorId, 'vs', doctorId, 'tipo:', typeof doctorId);
+        console.log('Fecha cita:', c.fecha, 'vs fecha seleccionada:', fecha);
+        console.log('Estado:', c.estado);
+        // Solo bloquear citas pendientes
+        return c.doctorId == doctorId && c.fecha === fecha && c.estado === 'Pendiente';
+    }).map(c => c.hora);
+    
+    console.log('Horarios ocupados:', citasOcupadas);
     
     // Generar horarios disponibles
     let html = '<div class="horarios-grid">';
