@@ -56,17 +56,11 @@ function cargarCitasDelDoctor() {
 // Configurar eventos de los filtros
 function configurarFiltros() {
     const filtroFecha = document.getElementById('filtroFechaAtencion');
-    const dateDisplay = document.getElementById('fechaDisplay');
     
     filtroFecha.addEventListener('change', function() {
         const fecha = new Date(this.value + 'T00:00:00');
         actualizarDisplayFecha(fecha);
         mostrarCitas();
-    });
-    
-    // Permitir click en el display para abrir el selector
-    dateDisplay.addEventListener('click', () => {
-        filtroFecha.showPicker();
     });
 }
 
