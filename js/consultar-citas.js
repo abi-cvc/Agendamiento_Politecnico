@@ -22,10 +22,51 @@ document.addEventListener('DOMContentLoaded', function() {
 // ===== VERIFICAR SI SE PUEDE CANCELAR LA CITA =====
 function puedeCancelar(fecha, hora) {
     const ahora = new Date();
-    const fechaCita = new Date(fecha + 'T' + hora);
+    
+    console.log('Fecha recibida:', fecha);
+    console.log('Hora recibida:', hora);
+    
+    // Extraer solo la hora de inicio (antes del guion)
+    // Ejemplo: "10:00am-11:00am" -> "10:00am"
+    const horaInicio = hora.split('-')[0].trim();
+    console.log('Hora de inicio:', horaInicio);
+    
+    // Separar fecha (YYYY-MM-DD)
+    const [year, month, day] = fecha.split('-').map(Number);
+    
+    // Extraer hora y minutos del formato "10:00am" o "2:30pm"
+    const horaMatch = horaInicio.match(/(\d+):(\d+)(am|pm)/i);
+    
+    if (!horaMatch) {
+        console.error('Formato de hora inválido:', horaInicio);
+        return false;
+    }
+    
+    let hours = parseInt(horaMatch[1]);
+    const minutes = parseInt(horaMatch[2]);
+    const periodo = horaMatch[3].toLowerCase();
+    
+    // Convertir a formato 24 horas
+    if (periodo === 'pm' && hours !== 12) {
+        hours += 12;
+    } else if (periodo === 'am' && hours === 12) {
+        hours = 0;
+    }
+    
+    console.log('Valores parseados:', { year, month, day, hours, minutes });
+    
+    // Crear fecha de la cita correctamente (month - 1 porque los meses van de 0-11)
+    const fechaCita = new Date(year, month - 1, day, hours, minutes);
+    
+    console.log('Ahora:', ahora);
+    console.log('Fecha cita:', fechaCita);
+    
     const diferenciaMinutos = (fechaCita - ahora) / (1000 * 60);
+    console.log('Diferencia en minutos:', diferenciaMinutos);
+    
     return diferenciaMinutos > 30;
 }
+
 
 // ===== CARGAR CITAS DEL USUARIO =====
 function cargarCitas() {
@@ -109,13 +150,21 @@ function cargarCitas() {
 
 // ===== CANCELAR CITA =====
 function cancelarCita(citaId) {
-    let citas = JSON.parse(sessionStorage.getItem('citas')) || [];
-    const cita = citas.find(c => c.id === citaId);
+    console.log('ID de cita a cancelar:', citaId);
     
-    if (!cita) {
+    let citas = JSON.parse(sessionStorage.getItem('citas')) || [];
+    console.log('Todas las citas:', citas);
+    
+    // Convertir citaId a string para la comparación
+    const citaIndex = citas.findIndex(c => c.id === String(citaId));
+    
+    if (citaIndex === -1) {
         alert('No se encontró la cita');
+        console.log('Cita no encontrada con ID:', citaId);
         return;
     }
+    
+    const cita = citas[citaIndex];
 
     // Verificar restricción de tiempo PRIMERO
     if (!puedeCancelar(cita.fecha, cita.hora)) {
@@ -128,7 +177,7 @@ function cancelarCita(citaId) {
         return;
     }
     
-    cita.estado = 'Cancelada';
+    citas[citaIndex].estado = 'Cancelada';
     sessionStorage.setItem('citas', JSON.stringify(citas));
     cargarCitas();
     
