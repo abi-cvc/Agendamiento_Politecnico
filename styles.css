@@ -2308,3 +2308,32 @@ body.header-is-hidden .especialidades-menu {
         grid-template-columns: 1fr;
     }
 }
+
+/* ===== MODAL PARA CITAS ===== */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    overflow-y: auto;
+}
+
+.modal .modal-content {
+    box-shadow: var(--shadow-xl);
+    animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+

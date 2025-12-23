@@ -1,6 +1,7 @@
 // Variables globales
 let todasLasCitas = [];
 let citasDelDoctor = [];
+let mesActual = new Date();
 
 // Cargar citas cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
@@ -9,8 +10,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (!usuario) return;
     
+    // Mostrar nombre del doctor
+    document.getElementById('nombreDoctor').textContent = usuario.nombre || 'Doctor';
+    
     cargarCitasDelDoctor();
-    configurarFiltros();
+    configurarCalendario();
 });
 
 // Cargar las citas del doctor actual
@@ -47,86 +51,158 @@ function cargarCitasDelDoctor() {
         return fechaB - fechaA;
     });
     
-    // Mostrar las citas
-    mostrarCitas();
+    // Mostrar el calendario
+    mostrarCalendario();
 }
 
-// Configurar eventos de los filtros
-function configurarFiltros() {
-    const filtroEstado = document.getElementById('filtroEstado');
-    const filtroFecha = document.getElementById('filtroFecha');
-    
-    filtroEstado.addEventListener('change', mostrarCitas);
-    filtroFecha.addEventListener('change', mostrarCitas);
-}
-
-// Mostrar las citas según los filtros
-function mostrarCitas() {
-    const filtroEstado = document.getElementById('filtroEstado').value;
-    const filtroFecha = document.getElementById('filtroFecha').value;
-    const listadoCitas = document.getElementById('listadoCitas');
-    const mensajeSinCitas = document.getElementById('mensajeSinCitas');
-    
-    console.log('=== DEBUG MOSTRAR CITAS ===');
-    console.log('citasDelDoctor:', citasDelDoctor);
-    console.log('Filtro estado:', filtroEstado);
-    console.log('Filtro fecha:', filtroFecha);
-    
-    // Aplicar filtros
-    let citasFiltradas = citasDelDoctor.filter(cita => {
-        console.log('Filtrando cita:', cita);
-        
-        // Filtro por estado
-        if (filtroEstado !== 'todas' && cita.estado !== filtroEstado) {
-            console.log('Rechazada por estado. Esperado:', filtroEstado, 'Real:', cita.estado);
-            return false;
-        }
-        
-        // Filtro por fecha
-        if (filtroFecha !== 'todas') {
-            const fechaCita = new Date(cita.fecha);
-            const hoy = new Date();
-            hoy.setHours(0, 0, 0, 0);
-            
-            if (filtroFecha === 'hoy') {
-                const citaHoy = new Date(fechaCita);
-                citaHoy.setHours(0, 0, 0, 0);
-                if (citaHoy.getTime() !== hoy.getTime()) {
-                    return false;
-                }
-            } else if (filtroFecha === 'proximas') {
-                if (fechaCita < hoy) {
-                    return false;
-                }
-            } else if (filtroFecha === 'pasadas') {
-                if (fechaCita >= hoy) {
-                    return false;
-                }
-            }
-        }
-        
-        console.log('Cita ACEPTADA');
-        return true;
+// Configurar el calendario
+function configurarCalendario() {
+    document.getElementById('prevMonth').addEventListener('click', () => {
+        mesActual.setMonth(mesActual.getMonth() - 1);
+        mostrarCalendario();
     });
     
-    console.log('Citas filtradas final:', citasFiltradas);
+    document.getElementById('nextMonth').addEventListener('click', () => {
+        mesActual.setMonth(mesActual.getMonth() + 1);
+        mostrarCalendario();
+    });
     
-    // Limpiar el listado
-    listadoCitas.innerHTML = '';
+    document.getElementById('todayBtn').addEventListener('click', () => {
+        mesActual = new Date();
+        mostrarCalendario();
+    });
+}
+
+// Mostrar el calendario del mes
+function mostrarCalendario() {
+    const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 
+                   'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
     
-    // Si no hay citas, mostrar mensaje
-    if (citasFiltradas.length === 0) {
-        mensajeSinCitas.style.display = 'block';
-        return;
+    const mesNombre = meses[mesActual.getMonth()];
+    const año = mesActual.getFullYear();
+    document.getElementById('mesActual').textContent = `${mesNombre} de ${año}`;
+    
+    // Obtener el primer y último día del mes
+    const primerDia = new Date(mesActual.getFullYear(), mesActual.getMonth(), 1);
+    const ultimoDia = new Date(mesActual.getFullYear(), mesActual.getMonth() + 1, 0);
+    
+    // Obtener el día de la semana del primer día (0 = domingo, ajustar a lunes = 0)
+    let primerDiaSemana = primerDia.getDay() - 1;
+    if (primerDiaSemana === -1) primerDiaSemana = 6; // Si es domingo, poner al final
+    
+    const calendarioDias = document.getElementById('calendarioDias');
+    calendarioDias.innerHTML = '';
+    
+    // Obtener fecha de hoy
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    
+    // Contar citas por día
+    const citasPorDia = {};
+    citasDelDoctor.forEach(cita => {
+        const fechaCita = new Date(cita.fecha);
+        if (fechaCita.getMonth() === mesActual.getMonth() && 
+            fechaCita.getFullYear() === mesActual.getFullYear()) {
+            const dia = fechaCita.getDate();
+            if (!citasPorDia[dia]) {
+                citasPorDia[dia] = [];
+            }
+            citasPorDia[dia].push(cita);
+        }
+    });
+    
+    // Agregar días del mes anterior para completar la primera semana
+    const mesAnterior = new Date(mesActual.getFullYear(), mesActual.getMonth(), 0);
+    const diasMesAnterior = mesAnterior.getDate();
+    
+    for (let i = primerDiaSemana - 1; i >= 0; i--) {
+        const diaNum = diasMesAnterior - i;
+        const diaDiv = document.createElement('div');
+        diaDiv.className = 'calendar-day other-month';
+        diaDiv.innerHTML = `<div class="calendar-day-number">${diaNum}</div>`;
+        calendarioDias.appendChild(diaDiv);
     }
     
-    mensajeSinCitas.style.display = 'none';
+    // Agregar los días del mes actual
+    for (let dia = 1; dia <= ultimoDia.getDate(); dia++) {
+        const diaDiv = document.createElement('div');
+        diaDiv.className = 'calendar-day';
+        
+        // Verificar si es hoy
+        const fechaDia = new Date(mesActual.getFullYear(), mesActual.getMonth(), dia);
+        fechaDia.setHours(0, 0, 0, 0);
+        if (fechaDia.getTime() === hoy.getTime()) {
+            diaDiv.classList.add('today');
+        }
+        
+        let contenido = `<div class="calendar-day-number">${dia}</div>`;
+        
+        // Agregar citas si las hay
+        if (citasPorDia[dia] && citasPorDia[dia].length > 0) {
+            contenido += '<div class="calendar-day-appointments">';
+            
+            // Ordenar citas por hora
+            citasPorDia[dia].sort((a, b) => {
+                return a.hora.localeCompare(b.hora);
+            });
+            
+            citasPorDia[dia].forEach(cita => {
+                const horaInicio = cita.hora.split('-')[0].trim();
+                const nombreCorto = cita.usuarioNombre.split(' ')[0];
+                contenido += `
+                    <div class="calendar-appointment" onclick="mostrarCitasDia(${dia}, ${JSON.stringify(citasPorDia[dia]).replace(/"/g, '&quot;')})">
+                        <span class="calendar-appointment-time">${horaInicio}</span>
+                        <span class="calendar-appointment-patient">${nombreCorto}</span>
+                    </div>
+                `;
+            });
+            
+            contenido += '</div>';
+        }
+        
+        diaDiv.innerHTML = contenido;
+        calendarioDias.appendChild(diaDiv);
+    }
     
-    // Crear las tarjetas de citas
-    citasFiltradas.forEach(cita => {
+    // Agregar días del mes siguiente para completar la última semana
+    const diasMostrados = primerDiaSemana + ultimoDia.getDate();
+    const diasRestantes = diasMostrados % 7 === 0 ? 0 : 7 - (diasMostrados % 7);
+    
+    for (let dia = 1; dia <= diasRestantes; dia++) {
+        const diaDiv = document.createElement('div');
+        diaDiv.className = 'calendar-day other-month';
+        diaDiv.innerHTML = `<div class="calendar-day-number">${dia}</div>`;
+        calendarioDias.appendChild(diaDiv);
+    }
+}
+
+// Mostrar citas de un día específico
+function mostrarCitasDia(dia, citas) {
+    const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+                   'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    
+    const tituloModal = document.getElementById('tituloModal');
+    tituloModal.textContent = `Citas del ${dia} de ${meses[mesActual.getMonth()]} de ${mesActual.getFullYear()}`;
+    
+    const listadoCitasDia = document.getElementById('listadoCitasDia');
+    listadoCitasDia.innerHTML = '';
+    
+    // Si las citas vienen como string (desde onclick), parsear
+    if (typeof citas === 'string') {
+        citas = JSON.parse(citas);
+    }
+    
+    citas.forEach(cita => {
         const citaCard = crearTarjetaCita(cita);
-        listadoCitas.appendChild(citaCard);
+        listadoCitasDia.appendChild(citaCard);
     });
+    
+    document.getElementById('modalCitas').style.display = 'block';
+}
+
+// Cerrar modal
+function cerrarModal() {
+    document.getElementById('modalCitas').style.display = 'none';
 }
 
 // Crear una tarjeta de cita
@@ -232,6 +308,9 @@ function cancelarCita(citaId) {
     
     // Guardar en sessionStorage
     sessionStorage.setItem('citas', JSON.stringify(todasLasCitas));
+    
+    // Cerrar el modal
+    cerrarModal();
     
     // Recargar las citas
     cargarCitasDelDoctor();

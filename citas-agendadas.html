@@ -31,45 +31,49 @@
 
     <!-- Main Content -->
     <main class="citas-agendadas-doctor-page">
-        <h1 class="text-center mb-lg">Mis Citas Agendadas</h1>
-        <p class="text-center subtitle-text mb-2xl">Gestiona las citas programadas con tus pacientes</p>
+        <h1 class="text-center mb-lg" id="nombreDoctor">Doctor</h1>
+        <p class="text-center subtitle-text mb-2xl">Visualiza tus citas agendadas por día</p>
 
-        <!-- Filtros -->
-        <div class="filtros-section card hover-lift mb-2xl">
-            <div class="filtro-group">
-                <label for="filtroEstado" class="font-bold">Filtrar por estado:</label>
-                <select id="filtroEstado" class="filtro-select">
-                    <option value="todas">Todas las citas</option>
-                    <option value="Pendiente" selected>Pendientes</option>
-                    <option value="Completada">Completadas</option>
-                    <option value="Cancelada">Canceladas</option>
-                </select>
-            </div>
-            <div class="filtro-group">
-                <label for="filtroFecha" class="font-bold">Filtrar por fecha:</label>
-                <select id="filtroFecha" class="filtro-select">
-                    <option value="todas">Todas las fechas</option>
-                    <option value="hoy">Hoy</option>
-                    <option value="proximas">Próximas</option>
-                    <option value="pasadas">Pasadas</option>
-                </select>
+        <!-- Calendario -->
+        <div class="container-sm">
+            <div class="card calendar-container">
+                <!-- Navegación del mes -->
+                <div class="calendar-header">
+                    <button id="prevMonth" class="calendar-nav-btn">&larr;</button>
+                    <button id="todayBtn" class="calendar-today-btn">Hoy</button>
+                    <h2 id="mesActual">Diciembre de 2025</h2>
+                    <button id="nextMonth" class="calendar-nav-btn">&rarr;</button>
+                </div>
+
+                <!-- Días de la semana -->
+                <div class="calendar-weekdays">
+                    <div class="calendar-weekday">lun</div>
+                    <div class="calendar-weekday">mar</div>
+                    <div class="calendar-weekday">mié</div>
+                    <div class="calendar-weekday">jue</div>
+                    <div class="calendar-weekday">vie</div>
+                    <div class="calendar-weekday">sáb</div>
+                    <div class="calendar-weekday">dom</div>
+                </div>
+
+                <!-- Grid de días -->
+                <div id="calendarioDias" class="calendar-grid">
+                    <!-- Los días se cargarán dinámicamente -->
+                </div>
             </div>
         </div>
 
-        <!-- Listado de Citas -->
-        <div id="listadoCitas" class="citas-grid">
-            <!-- Las citas se cargarán dinámicamente aquí -->
-        </div>
-
-        <!-- Mensaje cuando no hay citas -->
-        <div id="mensajeSinCitas" class="mensaje-vacio card" style="display: none;">
-            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-            </svg>
-            <p class="text-center mt-lg">No hay citas con los filtros seleccionados</p>
+        <!-- Modal para ver citas del día -->
+        <div id="modalCitas" class="modal">
+            <div class="modal-content card calendar-modal-content">
+                <div class="flex-between mb-xl">
+                    <h3 id="tituloModal">Citas del día</h3>
+                    <button onclick="cerrarModal()" class="btn calendar-modal-close">✕</button>
+                </div>
+                <div id="listadoCitasDia">
+                    <!-- Las citas del día se mostrarán aquí -->
+                </div>
+            </div>
         </div>
     </main>
 
