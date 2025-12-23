@@ -101,6 +101,9 @@ function mostrarCalendario() {
     // Contar citas por día
     const citasPorDia = {};
     citasDelDoctor.forEach(cita => {
+        // solo se muestre el número de citas pendientes del dia 
+        document.getElementById('mesActual').textContent = `${mesNombre} de ${año}`;
+
         const fechaCita = new Date(cita.fecha + 'T00:00:00');
         if (fechaCita.getMonth() === mesActual.getMonth() && 
             fechaCita.getFullYear() === mesActual.getFullYear()) {
