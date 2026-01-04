@@ -1,7 +1,9 @@
 package controller;
 
 import model.dao.CitaDAO;
+import model.dao.EspecialidadDAO;
 import model.entity.Cita;
+import model.entity.Especialidad;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -14,6 +16,15 @@ import java.time.LocalTime;
 @WebServlet("/agendarCita")
 public class AgendarCitasController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
+	private CitaDAO citaDAO;
+	private EspecialidadDAO especialidadDAO;
+	
+	@Override
+	public void init() throws ServletException {
+		citaDAO = new CitaDAO();
+		especialidadDAO = new EspecialidadDAO();
+	}
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -52,8 +63,8 @@ public class AgendarCitasController extends HttpServlet {
         // Recoge datos del formulario
         Cita cita = crearCita(request);
 
-        // Persiste
-        new CitaDAO().guardar(cita);
+        // Persiste usando ORM
+        citaDAO.guardar(cita);
 
         // Confirma
         confirmar(request, response, cita);
@@ -67,6 +78,15 @@ public class AgendarCitasController extends HttpServlet {
         cita.setMotivoConsulta(request.getParameter("motivo"));
         cita.setEstadoCita("Agendada");
         cita.setObservacionCita("Sin observaciones");
+        
+        // ===== RELACIÓN ORM CON ESPECIALIDAD =====
+        String nombreEspecialidad = request.getParameter("especialidad");
+        if (nombreEspecialidad != null && !nombreEspecialidad.isEmpty()) {
+        	Especialidad especialidad = especialidadDAO.obtenerPorNombre(nombreEspecialidad);
+        	if (especialidad != null) {
+        		cita.setEspecialidad(especialidad);  // ← Relación ORM
+        	}
+        }
 
         return cita;
     }
@@ -75,6 +95,6 @@ public class AgendarCitasController extends HttpServlet {
             throws ServletException, IOException {
 
         request.setAttribute("cita", cita);
-        request.getRequestDispatcher("confirmacion.jsp").forward(request, response);
+        request.getRequestDispatcher("views/confirmacion.jsp").forward(request, response);
     }
 }

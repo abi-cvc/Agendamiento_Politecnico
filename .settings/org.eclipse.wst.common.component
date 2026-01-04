@@ -1,25 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-            
-    
-    <wb-module deploy-name="Agendamiento_Politecnico-0.0.1-SNAPSHOT">
                 
-        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+    
+    
+    <wb-module deploy-name="01_MiProyecto-0.0.1-SNAPSHOT">
                         
+        
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+                                
+        
         
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
-                        
+                                
+        
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+                
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-                        
+                                
         
-        <property name="context-root" value="Agendamiento_Politecnico"/>
-                        
         
         <property name="java-output-path" value="/Agendamiento_Politecnico/build/classes"/>
-                    
+        <property name="context-root" value="01_MiProyecto"/>
+                            
+    
     
     </wb-module>
-        
+            
+
 
 </project-modules>

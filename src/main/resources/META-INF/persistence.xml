@@ -5,6 +5,12 @@
              version="3.0">
     <persistence-unit name="AgendamientoPU" transaction-type="RESOURCE_LOCAL">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        
+        <!-- Entidades JPA -->
+        <class>model.entity.Cita</class>
+        <class>model.entity.Especialidad</class>
+        <class>model.entity.Doctor</class>
+        <class>model.entity.Disponibilidad</class>
 
         <properties>
             <!-- Conexión a MySQL -->
