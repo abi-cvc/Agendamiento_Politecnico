@@ -29,15 +29,6 @@ D:.
 |       
 +---build
 |   \---classes
-+---js
-|       agendamientos.js
-|       atender-cita.js
-|       auth.js
-|       citas-agendadas.js
-|       consultar-citas.js
-|       especialidades.js
-|       resenas.js
-|       
 +---src
 |   \---main
 |       +---java
@@ -60,21 +51,38 @@ D:.
 |       |           
 |       \---webapp
 |           |   agendamientos.html
+|           |   agendamientos.jsp
 |           |   atender-cita.html
+|           |   atender-cita.jsp
 |           |   citas-agendadas.html
+|           |   citas-agendadas.jsp
 |           |   consultar-citas.html
+|           |   consultar-citas.jsp
 |           |   especialidades.html
+|           |   especialidades.jsp
 |           |   estructura.txt
 |           |   framework.css
 |           |   index.html
+|           |   index.jsp
 |           |   inicio.html
+|           |   inicio.jsp
 |           |   rese¤as.html
+|           |   rese¤as.jsp
 |           |   styles.css
 |           |   
 |           +---images
 |           |       logo.svg
 |           |       logo_epn.png
 |           |       user.svg
+|           |       
+|           +---js
+|           |       agendamientos.js
+|           |       atender-cita.js
+|           |       auth.js
+|           |       citas-agendadas.js
+|           |       consultar-citas.js
+|           |       especialidades.js
+|           |       resenas.js
 |           |       
 |           +---META-INF
 |           |       MANIFEST.MF
