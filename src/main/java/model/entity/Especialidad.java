@@ -1,28 +1,35 @@
 package model.entity;
 
 import jakarta.persistence.*;
+import java.io.Serializable;
 
+/**
+ * Entidad Especialidad - Representa las especialidades médicas disponibles
+ */
 @Entity
 @Table(name = "especialidad")
-public class Especialidad {
+public class Especialidad implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id_especialidad")
 	private int idEspecialidad;
 	
-	@Column(nullable = false, unique = true, length = 50)
+	@Column(name = "nombre", nullable = false, unique = true, length = 50)
 	private String nombre;
 	
-	@Column(nullable = false, length = 100)
+	@Column(name = "titulo", nullable = false, length = 100)
 	private String titulo;
 	
-	@Column(nullable = false, columnDefinition = "TEXT")
+	@Column(name = "descripcion", nullable = false, columnDefinition = "TEXT")
 	private String descripcion;
 	
-	@Column(nullable = false, columnDefinition = "TEXT")
+	@Column(name = "servicios", nullable = false, columnDefinition = "TEXT")
 	private String servicios;
 	
-	@Column(length = 50)
+	@Column(name = "icono", length = 50)
 	private String icono;
 	
 	// Constructor vacío (requerido por JPA)

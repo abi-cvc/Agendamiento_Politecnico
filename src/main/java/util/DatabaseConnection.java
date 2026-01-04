@@ -23,11 +23,19 @@ public class DatabaseConnection {
      * URL de conexión a MySQL
      * FORMATO: jdbc:mysql://[HOST]:[PUERTO]/[NOMBRE_BD]?serverTimezone=UTC
      * 
+     * CONFIGURACIÓN PARA XAMPP (MySQL Default):
+     * - Host: localhost
+     * - Puerto: 3306
+     * - Base de datos: agendamiento_politecnico
+     * - useSSL=false: Desactiva SSL (no necesario en desarrollo local)
+     * - serverTimezone=America/Guayaquil: Zona horaria de Ecuador
+     * - allowPublicKeyRetrieval=true: Necesario para MySQL 8.x con root sin password
+     * 
      * EJEMPLOS:
-     * - Local: "jdbc:mysql://localhost:3306/agendamiento_politecnico?serverTimezone=UTC"
-     * - Remoto: "jdbc:mysql://192.168.1.100:3306/agendamiento_politecnico?serverTimezone=UTC"
+     * - Local XAMPP: "jdbc:mysql://localhost:3306/agendamiento_politecnico?useSSL=false&serverTimezone=America/Guayaquil&allowPublicKeyRetrieval=true"
+     * - Remoto: "jdbc:mysql://192.168.1.100:3306/agendamiento_politecnico?useSSL=false&serverTimezone=America/Guayaquil"
      */
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/agendamiento_politecnico?serverTimezone=UTC";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/agendamiento_politecnico?useSSL=false&serverTimezone=America/Guayaquil&allowPublicKeyRetrieval=true";
     
     /**
      * Usuario de MySQL

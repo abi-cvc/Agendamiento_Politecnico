@@ -3,28 +3,67 @@
              xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence
                                  https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
              version="3.0">
+    
+    <!-- ============================================ -->
+    <!-- UNIDAD DE PERSISTENCIA: Agendamiento Politécnico -->
+    <!-- Configuración para XAMPP MySQL (Default) -->
+    <!-- ============================================ -->
     <persistence-unit name="AgendamientoPU" transaction-type="RESOURCE_LOCAL">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         
-        <!-- Entidades JPA -->
-        <class>model.entity.Cita</class>
+        <!-- ============================================ -->
+        <!-- ENTIDADES JPA -->
+        <!-- ============================================ -->
         <class>model.entity.Especialidad</class>
         <class>model.entity.Doctor</class>
         <class>model.entity.Disponibilidad</class>
+        <class>model.entity.Cita</class>
 
         <properties>
-            <!-- Conexión a MySQL -->
+            <!-- ============================================ -->
+            <!-- CONEXIÓN A MYSQL - XAMPP (Configuración Default) -->
+            <!-- ============================================ -->
+            <!-- Driver JDBC para MySQL 8.x -->
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/agendamiento_politecnico"/>
+            
+            <!-- URL de conexión con parámetros adicionales -->
+            <!-- useSSL=false: Desactiva SSL (no necesario en local) -->
+            <!-- serverTimezone=America/Guayaquil: Zona horaria de Ecuador -->
+            <!-- allowPublicKeyRetrieval=true: Necesario para MySQL 8.x -->
+            <property name="jakarta.persistence.jdbc.url" 
+                      value="jdbc:mysql://localhost:3306/agendamiento_politecnico?useSSL=false&amp;serverTimezone=America/Guayaquil&amp;allowPublicKeyRetrieval=true"/>
+            
+            <!-- Usuario de XAMPP MySQL (Default: root) -->
             <property name="jakarta.persistence.jdbc.user" value="root"/>
+            
+            <!-- Contraseña de XAMPP MySQL (Default: vacía) -->
             <property name="jakarta.persistence.jdbc.password" value=""/>
 
-            <!-- EclipseLink crea la tabla automáticamente -->
-            <property name="jakarta.persistence.schema-generation.database.action" value="create"/>
+            <!-- ============================================ -->
+            <!-- ESTRATEGIA DE ESQUEMA -->
+            <!-- ============================================ -->
+            <!-- IMPORTANTE: Las tablas YA EXISTEN (creadas con init_database.sql) -->
+            <!-- Opciones: -->
+            <!--   - none: No hace nada (RECOMENDADO - tablas ya existen) -->
+            <!--   - create: Borra y recrea tablas (¡PELIGRO! Pierde datos) -->
+            <!--   - drop-and-create: Igual que create -->
+            <!--   - validate: Solo valida que las entidades coincidan con BD -->
+            <property name="jakarta.persistence.schema-generation.database.action" value="none"/>
             
-            <!-- Logging SQL -->
-            <property name="eclipselink.logging.level" value="FINE"/>
+            <!-- ============================================ -->
+            <!-- CONFIGURACIÓN DE ECLIPSELINK -->
+            <!-- ============================================ -->
+            <!-- Logging SQL: Muestra las consultas SQL en consola -->
+            <!-- Valores: OFF, SEVERE, WARNING, INFO, CONFIG, FINE, FINER, FINEST, ALL -->
+            <property name="eclipselink.logging.level" value="INFO"/>
             <property name="eclipselink.logging.level.sql" value="FINE"/>
+            <property name="eclipselink.logging.parameters" value="true"/>
+            
+            <!-- Pool de conexiones -->
+            <property name="eclipselink.jdbc.cache-statements" value="true"/>
+            
+            <!-- DDL Generation (para desarrollo - desactivado porque BD ya existe) -->
+            <!-- <property name="eclipselink.ddl-generation" value="none"/> -->
         </properties>
     </persistence-unit>
 </persistence>
