@@ -1,0 +1,115 @@
+Listado de rutas de carpetas para el volumen Respaldos
+El n£mero de serie del volumen es F876-62DB
+D:.
+|   .classpath
+|   .gitignore
+|   .project
+|   agendamientos.html
+|   atender-cita.html
+|   citas-agendadas.html
+|   consultar-citas.html
+|   especialidades.html
+|   estructura.txt
+|   framework.css
+|   index.html
+|   inicio.html
+|   pom.xml
+|   README.md
+|   rese¤as.html
+|   styles.css
+|   
++---.settings
+|       .jsdtscope
+|       org.eclipse.jdt.core.prefs
+|       org.eclipse.m2e.core.prefs
+|       org.eclipse.wst.common.component
+|       org.eclipse.wst.common.project.facet.core.xml
+|       org.eclipse.wst.jsdt.ui.superType.container
+|       org.eclipse.wst.jsdt.ui.superType.name
+|       org.eclipse.wst.validation.prefs
+|       
++---.vscode
+|       settings.json
+|       
++---ADOO
+|       1. Caso de Uso - Agendamiento Polit‚cnico.png
+|       2. Descripcion formal de los CU.docx
+|       3. Diagrama de clases - Agendamiento Polit‚cnico.png
+|       4.1. Diagrama de robustez de agendar cita.png
+|       
++---build
+|   \---classes
++---images
+|       logo.svg
+|       logo_epn.png
+|       user.svg
+|       
++---js
+|       agendamientos.js
+|       atender-cita.js
+|       auth.js
+|       citas-agendadas.js
+|       consultar-citas.js
+|       especialidades.js
+|       resenas.js
+|       
++---src
+|   \---main
+|       +---java
+|       |   +---controller
+|       |   |       AgendarCitasController.java
+|       |   |       
+|       |   +---model
+|       |   |   +---dao
+|       |   |   |       CitaDAO.java
+|       |   |   |       
+|       |   |   \---entity
+|       |   |           Cita.java
+|       |   |           
+|       |   \---util
+|       |           JPAUtil.java
+|       |           
+|       +---resources
+|       |   \---META-INF
+|       |           persistence.xml
+|       |           
+|       \---webapp
+|           +---META-INF
+|           |       MANIFEST.MF
+|           |       
+|           +---views
+|           |       agendarCita.jsp
+|           |       confirmacion.jsp
+|           |       
+|           \---WEB-INF
+|               \---lib
+\---target
+    +---classes
+    |   +---controller
+    |   |       AgendarCitasController.class
+    |   |       
+    |   +---META-INF
+    |   |       persistence.xml
+    |   |       
+    |   +---model
+    |   |   +---dao
+    |   |   |       CitaDAO.class
+    |   |   |       
+    |   |   \---entity
+    |   |           Cita.class
+    |   |           
+    |   \---util
+    |           JPAUtil.class
+    |           
+    +---m2e-wtp
+    |   \---web-resources
+    |       \---META-INF
+    |           |   MANIFEST.MF
+    |           |   
+    |           \---maven
+    |               \---Agendamiento_Politecnico
+    |                   \---Agendamiento_Politecnico
+    |                           pom.properties
+    |                           pom.xml
+    |                           
+    \---test-classes
