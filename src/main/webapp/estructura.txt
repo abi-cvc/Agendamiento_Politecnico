@@ -4,9 +4,19 @@ D:.
 |   .classpath
 |   .gitignore
 |   .project
+|   agendamientos.html
+|   atender-cita.html
+|   citas-agendadas.html
+|   consultar-citas.html
+|   especialidades.html
 |   estructura.txt
+|   framework.css
+|   index.html
+|   inicio.html
 |   pom.xml
 |   README.md
+|   rese¤as.html
+|   styles.css
 |   
 +---.settings
 |       .jsdtscope
@@ -29,6 +39,11 @@ D:.
 |       
 +---build
 |   \---classes
++---images
+|       logo.svg
+|       logo_epn.png
+|       user.svg
+|       
 +---js
 |       agendamientos.js
 |       atender-cita.js
@@ -59,23 +74,6 @@ D:.
 |       |           persistence.xml
 |       |           
 |       \---webapp
-|           |   agendamientos.html
-|           |   atender-cita.html
-|           |   citas-agendadas.html
-|           |   consultar-citas.html
-|           |   especialidades.html
-|           |   estructura.txt
-|           |   framework.css
-|           |   index.html
-|           |   inicio.html
-|           |   rese¤as.html
-|           |   styles.css
-|           |   
-|           +---images
-|           |       logo.svg
-|           |       logo_epn.png
-|           |       user.svg
-|           |       
 |           +---META-INF
 |           |       MANIFEST.MF
 |           |       
