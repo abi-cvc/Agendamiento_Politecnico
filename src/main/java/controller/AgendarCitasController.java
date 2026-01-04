@@ -17,6 +17,8 @@ public class AgendarCitasController extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+    	
+    	response.getWriter().println("SERVLET FUNCIONANDO");
 
         String accion = request.getParameter("accion");
 
