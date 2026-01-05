@@ -168,7 +168,7 @@ public class CitaDAO {
 	 * @param mesActual Mes a consultar (YearMonth)
 	 * @return Lista de citas del doctor en ese mes
 	 */
-los	public List<Cita> obtenerPorDoctorYMes(int idDoctor, java.time.YearMonth mesActual) {
+	public List<Cita> obtenerPorDoctorYMes(int idDoctor, java.time.YearMonth mesActual) {
 		EntityManager em = JPAUtil.getEntityManager();
 		try {
 			LocalDate primerDia = mesActual.atDay(1);
