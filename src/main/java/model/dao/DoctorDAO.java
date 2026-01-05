@@ -88,6 +88,30 @@ public class DoctorDAO {
     }
     
     /**
+     * Obtiene doctores por ID de especialidad
+     */
+    public List<Doctor> obtenerPorEspecialidad(int idEspecialidad) {
+        EntityManager em = JPAUtil.getEntityManager();
+        List<Doctor> doctores = new ArrayList<>();
+        
+        try {
+            TypedQuery<Doctor> query = em.createQuery(
+                "SELECT d FROM Doctor d WHERE d.especialidad.idEspecialidad = :idEspecialidad AND d.activo = true ORDER BY d.apellido",
+                Doctor.class
+            );
+            query.setParameter("idEspecialidad", idEspecialidad);
+            doctores = query.getResultList();
+        } catch (Exception e) {
+            System.err.println("Error al obtener doctores por ID de especialidad: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+        
+        return doctores;
+    }
+    
+    /**
      * Obtiene un doctor por ID
      */
     public Doctor obtenerPorId(int idDoctor) {

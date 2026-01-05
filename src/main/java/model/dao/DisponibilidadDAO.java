@@ -214,6 +214,39 @@ public class DisponibilidadDAO {
     }
     
     /**
+     * Obtiene una disponibilidad por doctor, fecha y hora específica
+     * 5: liberarHorario(idHorario)
+     * @param idDoctor ID del doctor
+     * @param fecha Fecha de la cita
+     * @param hora Hora de la cita
+     * @return Disponibilidad encontrada o null
+     */
+    public Disponibilidad obtenerPorDoctorYFechaYHora(int idDoctor, LocalDate fecha, LocalTime hora) {
+        EntityManager em = JPAUtil.getEntityManager();
+        
+        try {
+            TypedQuery<Disponibilidad> query = em.createQuery(
+                "SELECT d FROM Disponibilidad d WHERE d.doctor.idDoctor = :idDoctor " +
+                "AND d.fecha = :fecha " +
+                "AND d.horaInicio <= :hora " +
+                "AND d.horaFin > :hora",
+                Disponibilidad.class
+            );
+            query.setParameter("idDoctor", idDoctor);
+            query.setParameter("fecha", fecha);
+            query.setParameter("hora", hora);
+            
+            List<Disponibilidad> resultados = query.getResultList();
+            return resultados.isEmpty() ? null : resultados.get(0);
+        } catch (Exception e) {
+            System.err.println("Error al obtener disponibilidad: " + e.getMessage());
+            return null;
+        } finally {
+            em.close();
+        }
+    }
+    
+    /**
      * Marca una disponibilidad como no disponible (cuando se agenda una cita)
      */
     public void marcarNoDisponible(int idDisponibilidad) {

@@ -348,27 +348,41 @@ document.addEventListener('DOMContentLoaded', function() {
     if (loginForm) {
         // Si ya hay sesión, redirigir al inicio
         if (verificarSesion()) {
-            window.location.href = 'inicio.html';
+ia            window.location.href = 'inicio.html';
             return;
         }
 
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const rol = document.getElementById('rol').value;
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            const errorDiv = document.getElementById('errorMessage');
-            
-            // Validar que se seleccionó un rol
-            if (!rol) {
-                errorDiv.textContent = 'Por favor selecciona tu rol';
-                errorDiv.classList.add('show');
-                return;
-            }
-            
-            // Validar dominio
-            if (!email.endsWith('@epn.edu.ec')) {
+        // Solo agregar listener si el formulario existe
+        if (loginForm) {
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const rolElement = document.getElementById('rol');
+                const emailElement = document.getElementById('email');
+                const passwordElement = document.getElementById('password');
+                const errorDiv = document.getElementById('errorMessage');
+                
+                // Verificar que todos los elementos existan
+                if (!rolElement || !emailElement || !passwordElement) {
+                    console.error('Elementos del formulario no encontrados');
+                    return;
+                }
+                
+                const rol = rolElement.value;
+                const email = emailElement.value.trim();
+                const password = passwordElement.value;
+                
+                // Validar que se seleccionó un rol
+                if (!rol) {
+                    if (errorDiv) {
+                        errorDiv.textContent = 'Por favor selecciona tu rol';
+                        errorDiv.classList.add('show');
+                    }
+                    return;
+                }
+                
+                // Validar dominio
+                if (!email.endsWith('@epn.edu.ec')) {
                 errorDiv.textContent = 'Debes usar tu correo institucional (@epn.edu.ec)';
                 errorDiv.classList.add('show');
                 return;

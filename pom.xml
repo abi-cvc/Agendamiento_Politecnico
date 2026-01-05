@@ -79,5 +79,12 @@
 			<version>8.3.0</version>
 		</dependency>
 
+		<!-- Gson - Para convertir objetos Java a JSON -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.10.1</version>
+		</dependency>
+
 </dependencies>
 </project>

@@ -26,7 +26,7 @@
         <ul>
             <li><a href="<%= request.getContextPath() %>/inicio.jsp" class="font-bold">Inicio</a></li>
             <li><a href="<%= request.getContextPath() %>/especialidades.jsp" class="font-bold">Especialidades</a></li>
-            <li><a href="<%= request.getContextPath() %>/consultar-citas.jsp" class="font-bold">Mis Citas</a></li>
+            <li><a href="<%= request.getContextPath() %>/ConsultarCitasAgendadasController" class="font-bold">Mis Citas</a></li>
             <li><a href="<%= request.getContextPath() %>/reseñas.jsp" class="font-bold">Reseñas</a></li>
         </ul>
     </nav>
@@ -55,20 +55,23 @@
             </div>
 
             <div class="form-group">
-                <label for="email">Correo institucional</label>
-                <input type="email" id="email" name="email"
-                       placeholder="usuario@epn.edu.ec" required>
+                <label for="identificacion">ID / Cédula</label>
+                <input type="text" id="identificacion" name="identificacion"
+                       placeholder="Ej: 1725896347" required>
             </div>
 
             <div class="form-group">
                 <label for="password">Contraseña</label>
-                <input type="password" id="password" name="password" required>
+                <input type="password" id="password" name="password"
+                       placeholder="Ingresa tu contraseña" required>
             </div>
 
             <!-- Mensaje de error -->
-            <div class="error-message">
-                <%= request.getAttribute("error") != null ? request.getAttribute("error") : "" %>
-            </div>
+            <% if (request.getAttribute("error") != null) { %>
+                <div class="error-message" style="background: #fee2e2; color: #dc2626; padding: 12px; border-radius: 8px; margin-bottom: 15px;">
+                    <%= request.getAttribute("error") %>
+                </div>
+            <% } %>
 
             <button type="submit" class="btn-login">
                 Iniciar Sesión
@@ -78,6 +81,11 @@
         <div class="login-footer">
             <p>¿Problemas para acceder?</p>
             <a href="mailto:bienestar@epn.edu.ec">Contacta a Bienestar Politécnico</a>
+            <p style="margin-top: 15px; font-size: 0.85rem; color: #666;">
+                <strong>Credenciales de prueba:</strong><br>
+                Estudiante: 1725896347 / 123456<br>
+                Admin: admin001 / 123456
+            </p>
         </div>
     </div>
 </main>
@@ -98,6 +106,32 @@
                 link.style.pointerEvents = 'none';
                 link.style.opacity = '0.5';
             }
+        });
+        
+        // Debug del formulario de login
+        const loginForm = document.getElementById('loginForm');
+        console.log('Formulario de login encontrado:', loginForm);
+        console.log('Action del formulario:', loginForm.action);
+        
+        loginForm.addEventListener('submit', function(e) {
+            console.log('=== FORMULARIO ENVIÁNDOSE ===');
+            console.log('Rol:', document.getElementById('rol').value);
+            console.log('Identificación:', document.getElementById('identificacion').value);
+            console.log('Password:', document.getElementById('password').value ? '****' : 'vacío');
+            console.log('Action URL:', this.action);
+            
+            // Validar que todos los campos estén llenos
+            const rol = document.getElementById('rol').value;
+            const id = document.getElementById('identificacion').value;
+            const pass = document.getElementById('password').value;
+            
+            if (!rol || !id || !pass) {
+                e.preventDefault();
+                alert('Por favor completa todos los campos');
+                return false;
+            }
+            
+            console.log('Formulario válido, enviando...');
         });
     });
 </script>

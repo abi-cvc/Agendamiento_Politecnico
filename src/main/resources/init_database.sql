@@ -30,7 +30,36 @@ CREATE TABLE IF NOT EXISTS especialidad (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
--- 2. TABLA: doctor
+-- 2. TABLA: estudiante
+-- ============================================
+CREATE TABLE IF NOT EXISTS estudiante (
+    id_estudiante INT AUTO_INCREMENT PRIMARY KEY,
+    id_paciente VARCHAR(20) NOT NULL UNIQUE,
+    nombre_estudiante VARCHAR(100) NOT NULL,
+    apellido_estudiante VARCHAR(100) NOT NULL,
+    correo_estudiante VARCHAR(100) NOT NULL UNIQUE,
+    INDEX idx_id_paciente (id_paciente),
+    INDEX idx_correo_estudiante (correo_estudiante)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================
+-- 3. TABLA: administrador
+-- ============================================
+CREATE TABLE IF NOT EXISTS administrador (
+    id_administrador INT AUTO_INCREMENT PRIMARY KEY,
+    id_admin VARCHAR(20) NOT NULL UNIQUE,
+    nombre_admin VARCHAR(100) NOT NULL,
+    apellido_admin VARCHAR(100) NOT NULL,
+    correo_admin VARCHAR(100) NOT NULL UNIQUE,
+    password_admin VARCHAR(255) NOT NULL,
+    rol VARCHAR(50) NOT NULL DEFAULT 'ADMIN',
+    activo BOOLEAN DEFAULT TRUE,
+    INDEX idx_id_admin (id_admin),
+    INDEX idx_correo_admin (correo_admin)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================
+-- 4. TABLA: doctor
 -- ============================================
 CREATE TABLE IF NOT EXISTS doctor (
     id_doctor INT AUTO_INCREMENT PRIMARY KEY,
@@ -51,7 +80,7 @@ CREATE TABLE IF NOT EXISTS doctor (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
--- 3. TABLA: disponibilidad (Calendario)
+-- 5. TABLA: disponibilidad (Calendario)
 -- ============================================
 CREATE TABLE IF NOT EXISTS disponibilidad (
     id_disponibilidad INT AUTO_INCREMENT PRIMARY KEY,
@@ -70,7 +99,7 @@ CREATE TABLE IF NOT EXISTS disponibilidad (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
--- 4. TABLA: cita
+-- 6. TABLA: cita
 -- ============================================
 CREATE TABLE IF NOT EXISTS cita (
     id_cita INT AUTO_INCREMENT PRIMARY KEY,
@@ -81,12 +110,16 @@ CREATE TABLE IF NOT EXISTS cita (
     observacion_cita TEXT,
     id_especialidad INT NOT NULL,
     id_doctor INT,
+    id_estudiante INT,
     fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (id_especialidad) REFERENCES especialidad(id_especialidad)
         ON DELETE RESTRICT
         ON UPDATE CASCADE,
     FOREIGN KEY (id_doctor) REFERENCES doctor(id_doctor)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE,
+    FOREIGN KEY (id_estudiante) REFERENCES estudiante(id_estudiante)
         ON DELETE SET NULL
         ON UPDATE CASCADE,
     INDEX idx_fecha_cita (fecha_cita),
@@ -175,6 +208,25 @@ INSERT INTO doctor (cedula, nombre, apellido, email, telefono, descripcion, id_e
 INSERT INTO doctor (cedula, nombre, apellido, email, telefono, descripcion, id_especialidad) VALUES
 ('1234567898', 'Sofía', 'Morales', 'sofia.morales@epn.edu.ec', '0987654329', 
  'Enfermera profesional especializada en cuidados intensivos y emergencias.', 5);
+
+-- ============================================
+-- DATOS: Estudiantes (5 estudiantes de ejemplo)
+-- ============================================
+INSERT INTO estudiante (id_paciente, nombre_estudiante, apellido_estudiante, correo_estudiante) VALUES
+('1725896347', 'Juan', 'Pérez', 'juan.perez@epn.edu.ec'),
+('1723456789', 'María', 'López', 'maria.lopez@epn.edu.ec'),
+('1726789012', 'Carlos', 'Martínez', 'carlos.martinez@epn.edu.ec'),
+('1724567890', 'Ana', 'García', 'ana.garcia@epn.edu.ec'),
+('1727890123', 'Luis', 'Rodríguez', 'luis.rodriguez@epn.edu.ec');
+
+-- ============================================
+-- DATOS: Administradores (2 administradores de ejemplo)
+-- ============================================
+-- NOTA: Las contraseñas están en texto plano por simplicidad
+-- En producción se deben usar hash (BCrypt, SHA-256, etc.)
+INSERT INTO administrador (id_admin, nombre_admin, apellido_admin, correo_admin, password_admin, rol, activo) VALUES
+('admin001', 'Pedro', 'Sánchez', 'admin@epn.edu.ec', 'admin123', 'SUPER_ADMIN', TRUE),
+('admin002', 'Lucía', 'Fernández', 'lucia.fernandez@epn.edu.ec', 'lucia123', 'ADMIN', TRUE);
 
 -- ============================================
 -- DATOS: Disponibilidad (Horarios para los próximos 15 días)

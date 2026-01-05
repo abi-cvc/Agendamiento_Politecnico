@@ -1000,6 +1000,343 @@ footer {
     text-transform: uppercase;
 }
 
+/* ===== CALENDARIO VISUAL ===== */
+.calendario-container {
+    background: var(--color-6);
+    border: 2px solid var(--color-5);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-md);
+    margin-top: var(--spacing-sm);
+}
+
+.calendario-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 2px solid var(--color-5);
+}
+
+.calendario-header h3 {
+    margin: 0;
+    color: var(--color-2);
+    font-size: 1.1rem;
+}
+
+.btn-mes {
+    background: var(--color-7);
+    border: 2px solid var(--color-5);
+    border-radius: var(--radius-sm);
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: var(--color-2);
+    transition: all var(--transition-fast);
+}
+
+.btn-mes:hover {
+    background: var(--color-3);
+    color: var(--color-7);
+    border-color: var(--color-3);
+}
+
+.calendario-dias-semana {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    margin-bottom: var(--spacing-sm);
+}
+
+.calendario-dias-semana div {
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--color-2);
+    padding: 8px 0;
+}
+
+.calendario-dias {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+.dia-calendario {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid transparent;
+    border-radius: var(--radius-sm);
+    background: var(--color-7);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all var(--transition-fast);
+    position: relative;
+}
+
+.dia-calendario:hover:not(.deshabilitado):not(.otro-mes) {
+    background: rgba(60, 141, 188, 0.1);
+    border-color: var(--color-3);
+    transform: scale(1.05);
+}
+
+.dia-calendario.seleccionado {
+    background: var(--gradient-accent);
+    color: var(--color-7);
+    border-color: var(--color-3);
+    font-weight: 700;
+}
+
+.dia-calendario.hoy {
+    border-color: var(--color-4);
+    font-weight: 700;
+}
+
+.dia-calendario.deshabilitado {
+    background: var(--color-5);
+    color: var(--color-8);
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.dia-calendario.otro-mes {
+    color: var(--color-8);
+    opacity: 0.4;
+}
+
+.dia-calendario.con-disponibilidad::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--color-4);
+}
+
+.fecha-seleccionada {
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: rgba(60, 141, 188, 0.1);
+    border-left: 4px solid var(--color-3);
+    border-radius: var(--radius-sm);
+    color: var(--color-2);
+}
+
+.fecha-seleccionada span {
+    color: var(--color-3);
+    font-weight: 600;
+}
+
+/* ===== PESTAÑAS (TABS) ===== */
+.tabs-container {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+    border-bottom: 2px solid var(--color-5);
+}
+
+.tab-btn {
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--color-8);
+    transition: all var(--transition-fast);
+    font-size: 0.95rem;
+}
+
+.tab-btn:hover {
+    color: var(--color-3);
+    background: rgba(60, 141, 188, 0.05);
+}
+
+.tab-btn.active {
+    color: var(--color-3);
+    border-bottom-color: var(--color-3);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== TARJETAS DE CITAS ===== */
+.citas-container {
+    min-height: 400px;
+}
+
+.no-citas {
+    text-align: center;
+    color: var(--color-8);
+    padding: var(--spacing-xl);
+    font-style: italic;
+}
+
+.no-citas small {
+    display: block;
+    margin-top: var(--spacing-sm);
+    font-size: 0.85rem;
+}
+
+.lista-citas {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    max-height: 600px;
+    overflow-y: auto;
+    padding-right: var(--spacing-sm);
+}
+
+.cita-card {
+    background: var(--color-7);
+    border: 2px solid var(--color-5);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    transition: all var(--transition-normal);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.cita-card:hover {
+    border-color: var(--color-3);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.cita-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--color-6);
+}
+
+.cita-fecha {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--gradient-accent);
+    color: var(--color-7);
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-md);
+    min-width: 60px;
+}
+
+.fecha-dia {
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.fecha-mes {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.cita-estado {
+    padding: 6px 14px;
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.estado-agendada {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.estado-confirmada {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.estado-cancelada {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.estado-completada {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+.cita-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.cita-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    padding: 8px 0;
+}
+
+.cita-info strong {
+    color: var(--color-2);
+    font-size: 0.9rem;
+    min-width: 140px;
+}
+
+.cita-info span {
+    color: var(--color-9);
+    text-align: right;
+    flex: 1;
+}
+
+.cita-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--color-6);
+}
+
+.text-muted {
+    color: var(--color-8);
+    font-size: 0.85rem;
+}
+
+.btn-cancelar {
+    padding: 8px 16px;
+    background: #fee2e2;
+    color: #dc2626;
+    border: 2px solid #fca5a5;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-size: 0.85rem;
+}
+
+.btn-cancelar:hover {
+    background: #fca5a5;
+    color: #7f1d1d;
+    transform: translateY(-1px);
+}
+
 /* Estilos antiguos de citas - mantener por compatibilidad */
 .mis-citas {
     background: var(--color-7);
@@ -1710,669 +2047,340 @@ body.header-is-hidden .especialidades-menu {
 /* ===== PÁGINA DE CONSULTAR CITAS ===== */
 .consultar-citas-page {
     padding: var(--spacing-xl) var(--spacing-lg);
-    max-width: 1200px;
-    margin: 0 auto;
+    min-height: calc(100vh - 200px);
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
 }
 
 .consultar-container {
-    background: var(--color-7);
-    padding: var(--spacing-2xl);
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-lg);
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--spacing-xl);
 }
 
 .citas-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: var(--spacing-xl);
+    margin-bottom: var(--spacing-2xl);
     padding-bottom: var(--spacing-lg);
-    border-bottom: 2px solid var(--color-5);
+    border-bottom: 3px solid var(--color-3);
 }
 
 .citas-header h2 {
     color: var(--color-2);
-    font-size: 1.8rem;
+    font-size: 2rem;
     margin: 0;
 }
 
-.filtro-select {
-    padding: 10px 15px;
+.filtros .filtro-select {
+    padding: 12px 20px;
     border: 2px solid var(--color-5);
-    border-radius: var(--radius-md);
-    font-size: 0.95rem;
-    background: var(--color-6);
+    border-radius: var(--radius-lg);
+    font-size: 1rem;
+    font-weight: 600;
     color: var(--color-2);
+    background: var(--color-7);
     cursor: pointer;
     transition: all var(--transition-normal);
 }
 
-.filtro-select:focus {
-    outline: none;
+.filtros .filtro-select:hover,
+.filtros .filtro-select:focus {
     border-color: var(--color-3);
     box-shadow: 0 0 0 4px rgba(60, 141, 188, 0.1);
+    outline: none;
 }
 
+/* Tarjetas de citas mejoradas */
 .lista-citas-consulta {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-lg);
-}
-
-.cita-card-consulta {
-    background: var(--color-6);
-    border: 2px solid var(--color-5);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-xl);
-    transition: all var(--transition-normal);
-}
-
-.cita-card-consulta:hover {
-    border-color: var(--color-3);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-}
-
-.cita-card-consulta.cita-pasada {
-    opacity: 0.7;
-    background: var(--color-7);
-}
-
-.cita-header-consulta {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: var(--spacing-lg);
-}
-
-.cita-info-principal h3 {
-    color: var(--color-2);
-    font-size: 1.5rem;
-    margin: 0 0 8px 0;
-}
-
-.cita-doctor {
-    color: var(--color-8);
-    font-size: 1rem;
-    margin: 0;
-}
-
-.cita-detalles-consulta {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--spacing-lg);
-    margin-bottom: var(--spacing-lg);
-}
-
-.cita-dato {
-    display: flex;
-    gap: var(--spacing-sm);
-    align-items: flex-start;
-}
-
-.cita-dato .icono {
-    font-size: 1.5rem;
-}
-
-.cita-dato small {
-    display: block;
-    color: var(--color-8);
-    font-size: 0.85rem;
-    margin-bottom: 4px;
-}
-
-.cita-dato strong {
-    color: var(--color-2);
-    font-size: 1rem;
-}
-
-.cita-dato-motivo {
-    grid-column: 1 / -1;
-    display: flex;
-    gap: var(--spacing-sm);
-}
-
-.cita-dato-motivo p {
-    color: var(--color-8);
-    line-height: 1.6;
-    margin: 0;
-}
-
-.cita-acciones {
-    display: flex;
-    gap: var(--spacing-sm);
-    justify-content: flex-end;
-    padding-top: var(--spacing-md);
-    border-top: 1px solid var(--color-5);
-}
-
-.btn-cancelar-consulta {
-    background: transparent;
-    border: 2px solid #dc2626;
-    color: #dc2626;
-    padding: 10px 20px;
-    border-radius: var(--radius-md);
-    font-weight: 600;
-    cursor: pointer;
-    transition: all var(--transition-normal);
-}
-
-.btn-cancelar-consulta:hover {
-    background: #dc2626;
-    color: var(--color-7);
-}
-
-/* ===== PÁGINA DE CITAS AGENDADAS DOCTOR ===== */
-.citas-agendadas-doctor-page {
-    padding: var(--spacing-xl) var(--spacing-lg);
-    min-height: calc(100vh - 200px);
-}
-
-.citas-agendadas-doctor-page .page-header {
-    text-align: center;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: var(--spacing-xl);
     margin-bottom: var(--spacing-2xl);
 }
 
-.citas-agendadas-doctor-page .page-header h1 {
-    color: var(--color-2);
-    font-size: 2.2rem;
-    margin-bottom: var(--spacing-sm);
-}
-
-.citas-agendadas-doctor-page .page-header p {
-    color: var(--color-8);
-    font-size: 1.1rem;
-}
-
-.filtros-section {
+.lista-citas-consulta .cita-card {
     background: var(--color-7);
-    padding: var(--spacing-xl);
+    border: 2px solid var(--color-5);
     border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-sm);
-    margin-bottom: var(--spacing-2xl);
-    display: flex;
-    gap: var(--spacing-xl);
-    flex-wrap: wrap;
-}
-
-.filtro-group {
-    flex: 1;
-    min-width: 250px;
-}
-
-.filtro-group label {
-    display: block;
-    color: var(--color-2);
-    font-weight: 600;
-    margin-bottom: var(--spacing-sm);
-    font-size: 0.95rem;
-}
-
-.filtro-group .filtro-select {
-    width: 100%;
-}
-
-.citas-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: var(--spacing-xl);
-    margin-bottom: var(--spacing-2xl);
-}
-
-.cita-card {
-    background: var(--color-7);
-    border: 2px solid var(--color-5);
-    border-radius: var(--radius-lg);
     padding: var(--spacing-xl);
-    transition: all var(--transition-normal);
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-md);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
 }
 
-.cita-card:hover {
+.lista-citas-consulta .cita-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--color-3);
+    transition: width 0.3s ease;
+}
+
+.lista-citas-consulta .cita-card:hover {
     border-color: var(--color-3);
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 31, 63, 0.15);
 }
 
+.lista-citas-consulta .cita-card:hover::before {
+    width: 8px;
+}
+
+/* Header de la cita */
 .cita-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding-bottom: var(--spacing-md);
+    align-items: flex-start;
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-lg);
     border-bottom: 2px solid var(--color-5);
 }
 
-.cita-estudiante {
+.cita-fecha {
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-md);
+}
+
+.fecha-icon {
+    font-size: 2.5rem;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.fecha-principal {
+    font-size: 1.4rem;
+    font-weight: 700;
     color: var(--color-2);
+    letter-spacing: -0.5px;
+}
+
+.hora-cita {
+    font-size: 1rem;
+    color: var(--color-3);
     font-weight: 600;
-    font-size: 1.1rem;
+    margin-top: 4px;
 }
 
-.cita-estudiante svg {
-    stroke: var(--color-3);
-}
-
-.cita-estado {
-    padding: 6px 12px;
+/* Badges de estado */
+.badge-estado {
+    padding: 8px 16px;
     border-radius: var(--radius-full);
     font-size: 0.85rem;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.cita-estado.pendiente {
-    background: #fef3c7;
-    color: #92400e;
+.badge-Agendada {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    color: #78350f;
 }
 
-.cita-estado.completada {
-    background: #d1fae5;
-    color: #065f46;
+.badge-Completada {
+    background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+    color: #064e3b;
 }
 
-.cita-estado.cancelada {
-    background: #fee2e2;
-    color: #991b1b;
+.badge-Cancelada {
+    background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+    color: #7f1d1d;
 }
 
+.badge-Confirmada {
+    background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+    color: #1e3a8a;
+}
+
+.badge-Pendiente {
+    background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+    color: #4c1d95;
+}
+
+/* Información de la cita */
 .cita-info {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
 }
 
-.info-item {
+.info-row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm) 0;
+    align-items: flex-start;
+}
+
+.info-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-8);
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
-    color: var(--color-8);
-    font-size: 0.95rem;
+    gap: 6px;
 }
 
-.info-item svg {
-    stroke: var(--color-3);
-    flex-shrink: 0;
-}
-
-.info-item strong {
+.info-value {
+    font-size: 1rem;
     color: var(--color-2);
+    font-weight: 500;
+    line-height: 1.5;
 }
 
-.cita-motivo {
+.info-row.motivo-consulta {
+    grid-template-columns: 1fr;
     background: var(--color-6);
     padding: var(--spacing-md);
     border-radius: var(--radius-md);
     border-left: 4px solid var(--color-3);
+    margin-top: var(--spacing-sm);
 }
 
-.cita-motivo strong {
-    display: block;
+.info-row.motivo-consulta .info-label {
+    margin-bottom: 6px;
     color: var(--color-2);
-    margin-bottom: var(--spacing-xs);
-    font-size: 0.9rem;
 }
 
-.cita-motivo p {
+.info-row.motivo-consulta .info-value {
     color: var(--color-8);
-    line-height: 1.6;
-    margin: 0;
-    font-size: 0.95rem;
+    line-height: 1.7;
 }
 
-.cita-acciones {
+.info-row.observacion {
+    grid-template-columns: 1fr;
+    background: #fef3c7;
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    border-left: 4px solid #f59e0b;
+}
+
+.info-row.observacion .info-label {
+    margin-bottom: 6px;
+    color: #78350f;
+}
+
+.info-row.observacion .info-value {
+    color: #92400e;
+    line-height: 1.7;
+}
+
+/* Footer de la cita */
+.cita-footer {
     display: flex;
-    gap: var(--spacing-sm);
+    justify-content: space-between;
+    align-items: center;
     padding-top: var(--spacing-md);
     border-top: 2px solid var(--color-5);
 }
 
-.btn-cancelar {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--spacing-xs);
-    background: transparent;
-    border: 2px solid #dc2626;
-    color: #dc2626;
-    padding: 12px 20px;
-    border-radius: var(--radius-md);
-    font-weight: 600;
-    cursor: pointer;
-    transition: all var(--transition-normal);
-    font-size: 0.95rem;
+.cita-id {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--color-3);
+    padding: 4px 10px;
+    background: rgba(60, 141, 188, 0.1);
+    border-radius: var(--radius-sm);
 }
 
-.btn-cancelar:hover {
-    background: #dc2626;
+.fecha-registro {
+    font-size: 0.8rem;
+    color: var(--color-8);
+    font-style: italic;
+}
+
+/* Contador de citas */
+.citas-contador {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: var(--spacing-xl);
+    background: linear-gradient(135deg, var(--color-2) 0%, #2c6d8a 100%);
+    border-radius: var(--radius-xl);
     color: var(--color-7);
-    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 31, 63, 0.2);
 }
 
-.mensaje-vacio {
+.citas-contador p {
+    font-size: 1.3rem;
+    margin: 0;
+}
+
+.citas-contador strong {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--color-4);
+}
+
+/* Mensaje sin citas */
+.no-citas {
+    grid-column: 1 / -1;
     text-align: center;
     padding: var(--spacing-3xl);
     background: var(--color-7);
     border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-sm);
-}
-
-.mensaje-vacio svg {
-    stroke: var(--color-5);
-    margin-bottom: var(--spacing-lg);
-}
-
-.mensaje-vacio p {
+    border: 3px dashed var(--color-5);
     color: var(--color-8);
-    font-size: 1.1rem;
-    margin: 0;
-}
-
-.btn-atender {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--spacing-xs);
-    background: var(--color-3);
-    border: 2px solid var(--color-3);
-    color: var(--color-7);
-    padding: 12px 20px;
-    border-radius: var(--radius-md);
-    font-weight: 600;
-    cursor: pointer;
-    transition: all var(--transition-normal);
-    font-size: 0.95rem;
-}
-
-.btn-atender:hover {
-    background: #2c6d8a;
-    border-color: #2c6d8a;
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-}
-
-/* ===== MODAL ===== */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 2000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.6);
-    align-items: center;
-    justify-content: center;
-}
-
-.modal-content {
-    background: var(--color-7);
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-xl);
-    width: 90%;
-    max-width: 600px;
-    max-height: 90vh;
-    overflow-y: auto;
-    animation: modalSlideIn 0.3s ease-out;
-}
-
-@keyframes modalSlideIn {
-    from {
-        transform: translateY(-50px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: var(--spacing-xl);
-    border-bottom: 2px solid var(--color-5);
-}
-
-.modal-header h2 {
-    color: var(--color-2);
-    margin: 0;
-    font-size: 1.5rem;
-}
-
-.modal-close {
-    background: transparent;
-    border: none;
-    font-size: 2rem;
-    color: var(--color-8);
-    cursor: pointer;
-    padding: 0;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all var(--transition-normal);
-}
-
-.modal-close:hover {
-    color: var(--color-2);
-    transform: scale(1.1);
-}
-
-.modal-body {
-    padding: var(--spacing-xl);
-}
-
-.modal-footer {
-    display: flex;
-    gap: var(--spacing-md);
-    justify-content: flex-end;
-    padding: var(--spacing-xl);
-    border-top: 2px solid var(--color-5);
-}
-
-.cita-info-detalle {
-    background: var(--color-6);
-    padding: var(--spacing-lg);
-    border-radius: var(--radius-md);
-    border-left: 4px solid var(--color-3);
-}
-
-.cita-info-detalle h3 {
-    color: var(--color-2);
-}
-
-.detalle-item {
-    padding: var(--spacing-sm) 0;
-    color: var(--color-8);
-    line-height: 1.6;
-}
-
-.detalle-item strong {
-    color: var(--color-2);
-    display: inline-block;
-    min-width: 120px;
-}
-
-.form-group {
-    margin-bottom: var(--spacing-lg);
-}
-
-.form-group label {
-    display: block;
-    color: var(--color-2);
-    margin-bottom: var(--spacing-sm);
-    font-size: 0.95rem;
-}
-
-.form-control {
-    width: 100%;
-    padding: var(--spacing-md);
-    border: 2px solid var(--color-5);
-    border-radius: var(--radius-md);
-    font-size: 0.95rem;
-    font-family: inherit;
-    color: var(--color-2);
-    background: var(--color-6);
-    transition: all var(--transition-normal);
-    resize: vertical;
-}
-
-.form-control:focus {
-    outline: none;
-    border-color: var(--color-3);
-    box-shadow: 0 0 0 4px rgba(60, 141, 188, 0.1);
-}
-
-.btn-primary {
-    background: var(--color-3);
-    border: 2px solid var(--color-3);
-    color: var(--color-7);
-    padding: 12px 24px;
-    border-radius: var(--radius-md);
-    font-weight: 600;
-    cursor: pointer;
-    transition: all var(--transition-normal);
-    font-size: 0.95rem;
-}
-
-.btn-primary:hover {
-    background: #2c6d8a;
-    border-color: #2c6d8a;
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-}
-
-.btn-secondary {
-    background: transparent;
-    border: 2px solid var(--color-5);
-    color: var(--color-2);
-    padding: 12px 24px;
-    border-radius: var(--radius-md);
-    font-weight: 600;
-    cursor: pointer;
-    transition: all var(--transition-normal);
-    font-size: 0.95rem;
-}
-
-.btn-secondary:hover {
-    background: var(--color-5);
-    border-color: var(--color-8);
+    font-size: 1.3rem;
 }
 
 /* Responsive */
-@media (max-width: 900px) {
-    .citas-grid {
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    }
-}
-
 @media (max-width: 768px) {
-    .resenas-container {
+    .lista-citas-consulta {
         grid-template-columns: 1fr;
     }
     
-    .resena-form-card {
-        position: relative;
-        top: 0;
+    .citas-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-md);
     }
     
-    .resenas-header {
+    .citas-header h2 {
+        font-size: 1.6rem;
+    }
+    
+    .info-row {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-xs);
+    }
+    
+    .cita-header {
         flex-direction: column;
         gap: var(--spacing-md);
     }
     
-    .citas-agendadas-doctor-page .page-header h1 {
-        font-size: 1.8rem;
-    }
-    
-    .filtros-section {
+    .cita-footer {
         flex-direction: column;
-        gap: var(--spacing-lg);
+        gap: var(--spacing-sm);
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .fecha-principal {
+        font-size: 1.1rem;
     }
     
-    .filtro-group {
-        min-width: 100%;
+    .hora-cita {
+        font-size: 0.9rem;
     }
     
-    .citas-grid {
-        grid-template-columns: 1fr;
+    .badge-estado {
+        font-size: 0.75rem;
+        padding: 6px 12px;
     }
 }
-
-/* ===== MODAL PARA CITAS ===== */
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    z-index: 9999;
-    overflow-y: auto;
-}
-
-.modal .modal-content {
-    box-shadow: var(--shadow-xl);
-    animation: modalFadeIn 0.3s ease;
-}
-
-@keyframes modalFadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Estilos para citas completadas */
-.cita-completada {
-    background-color: #f0fdf4;
-    border-left: 4px solid #22c55e;
-    margin-bottom: 25px;
-}
-
-.badge-completada {
-    background-color: #22c55e;
-    color: white;
-    padding: 4px 12px;
-    border-radius: 12px;
-    font-size: 0.875rem;
-    font-weight: 600;
-}
-
-.atender-cita-observaciones {
-    padding: 15px;
-    background-color: white;
-    border-radius: 8px;
-    margin-top: 10px;
-}
-
-.observaciones-header {
-    color: #22c55e;
-    margin-bottom: 8px;
-    font-size: 0.9rem;
-}
-
-.observaciones-contenido {
-    padding: 12px;
-    background-color: #f9fafb;
-    border-radius: 6px;
-    border-left: 3px solid #22c55e;
-    color: #374151;
-    line-height: 1.6;
-    white-space: pre-wrap;
-}
-

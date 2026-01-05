@@ -120,6 +120,97 @@ public class CitaDAO {
 	}
 	
 	/**
+	 * Obtiene citas por estudiante (según diagrama de robustez)
+	 * 2: obtenerCitasPorEstudiante(idEstudiante): citasAgendadas[]
+	 * @param idEstudiante ID del estudiante
+	 * @return Lista de citas del estudiante ordenadas por fecha
+	 */
+	public List<Cita> obtenerPorEstudiante(int idEstudiante) {
+		EntityManager em = JPAUtil.getEntityManager();
+		try {
+			TypedQuery<Cita> query = em.createQuery(
+				"SELECT c FROM Cita c WHERE c.estudiante.idEstudiante = :idEstudiante ORDER BY c.fechaCita DESC, c.horaCita DESC", 
+				Cita.class
+			);
+			query.setParameter("idEstudiante", idEstudiante);
+			return query.getResultList();
+		} finally {
+			em.close();
+		}
+	}
+	
+	/**
+	 * Obtiene citas por doctor y fecha específica
+	 * 5: obtenerCitasDoctorDia(fechaActual): citasDia[]
+	 * @param idDoctor ID del doctor
+	 * @param fecha Fecha específica
+	 * @return Lista de citas del doctor en esa fecha
+	 */
+	public List<Cita> obtenerPorDoctorYFecha(int idDoctor, LocalDate fecha) {
+		EntityManager em = JPAUtil.getEntityManager();
+		try {
+			TypedQuery<Cita> query = em.createQuery(
+				"SELECT c FROM Cita c WHERE c.doctor.idDoctor = :idDoctor AND c.fechaCita = :fecha ORDER BY c.horaCita", 
+				Cita.class
+			);
+			query.setParameter("idDoctor", idDoctor);
+			query.setParameter("fecha", fecha);
+			return query.getResultList();
+		} finally {
+			em.close();
+		}
+	}
+	
+	/**
+	 * Obtiene citas por doctor y mes
+	 * 2: obtenerCitasAgendadasDoctorMes(idDoctor): citasMes[]
+	 * @param idDoctor ID del doctor
+	 * @param mesActual Mes a consultar (YearMonth)
+	 * @return Lista de citas del doctor en ese mes
+	 */
+	public List<Cita> obtenerPorDoctorYMes(int idDoctor, java.time.YearMonth mesActual) {
+		EntityManager em = JPAUtil.getEntityManager();
+		try {
+			LocalDate primerDia = mesActual.atDay(1);
+			LocalDate ultimoDia = mesActual.atEndOfMonth();
+			
+			TypedQuery<Cita> query = em.createQuery(
+				"SELECT c FROM Cita c WHERE c.doctor.idDoctor = :idDoctor AND c.fechaCita BETWEEN :inicio AND :fin ORDER BY c.fechaCita, c.horaCita", 
+				Cita.class
+			);
+			query.setParameter("idDoctor", idDoctor);
+			query.setParameter("inicio", primerDia);
+			query.setParameter("fin", ultimoDia);
+			return query.getResultList();
+		} finally {
+			em.close();
+		}
+	}
+	
+	/**
+	 * Obtiene todas las citas de un mes específico
+	 * @param mesActual Mes a consultar (YearMonth)
+	 * @return Lista de citas del mes
+	 */
+	public List<Cita> obtenerPorMes(java.time.YearMonth mesActual) {
+		EntityManager em = JPAUtil.getEntityManager();
+		try {
+			LocalDate primerDia = mesActual.atDay(1);
+			LocalDate ultimoDia = mesActual.atEndOfMonth();
+			
+			TypedQuery<Cita> query = em.createQuery(
+				"SELECT c FROM Cita c WHERE c.fechaCita BETWEEN :inicio AND :fin ORDER BY c.fechaCita, c.horaCita", 
+				Cita.class
+			);
+			query.setParameter("inicio", primerDia);
+			query.setParameter("fin", ultimoDia);
+			return query.getResultList();
+		} finally {
+			em.close();
+		}
+	}
+	
+	/**
 	 * Actualiza una cita existente usando ORM
 	 * @param cita Cita a actualizar
 	 */

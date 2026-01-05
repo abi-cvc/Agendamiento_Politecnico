@@ -18,6 +18,8 @@
         <class>model.entity.Doctor</class>
         <class>model.entity.Disponibilidad</class>
         <class>model.entity.Cita</class>
+        <class>model.entity.Estudiante</class>
+        <class>model.entity.Administrador</class>
 
         <properties>
             <!-- ============================================ -->
@@ -37,7 +39,7 @@
             <property name="jakarta.persistence.jdbc.user" value="root"/>
             
             <!-- Contraseña de XAMPP MySQL (Default: vacía) -->
-            <property name="jakarta.persistence.jdbc.password" value=""/>
+            <property name="jakarta.persistence.jdbc.password" value="peysi123"/>
 
             <!-- ============================================ -->
             <!-- ESTRATEGIA DE ESQUEMA -->

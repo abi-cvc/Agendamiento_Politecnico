@@ -1,4 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
+<%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
+
+<%--
+    =========================================
+    VISTA: atender-cita.jsp
+    =========================================
+    Esta página SOLO muestra datos.
+    Los datos son cargados por ConsultarCitaAsignadaController
+    
+    Según diagrama de robustez:
+    3: mostrar(citasMes)
+    7: mostrar(citasDiaDetallada)
+--%>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -41,23 +56,38 @@
 
 <!-- Main Content -->
 <main class="atender-cita-page">
-    <h1 class="text-center mb-lg" id="nombreDoctor">
-        ${doctor != null ? doctor : "Doctor"}
+    <h1 class="text-center mb-lg">
+        ${nombreDoctor}
     </h1>
 
     <p class="text-center subtitle-text mb-2xl">
         Atiende y completa las citas programadas
     </p>
+    
+    <c:if test="${not empty error}">
+        <div class="alert alert-error text-center mb-xl">
+            <strong>Error:</strong> ${error}
+        </div>
+    </c:if>
 
     <!-- Selector de fecha -->
     <div class="container-sm mb-2xl">
         <div class="date-selector-card">
-            <input type="date" id="filtroFechaAtencion" class="date-input-hidden">
-            <div id="fechaDisplay" class="date-display-box">
+            <form action="${pageContext.request.contextPath}/ConsultarCitaAsignadaController" method="GET" style="display:inline;">
+                <input type="date" 
+                       name="fecha" 
+                       id="filtroFechaAtencion" 
+                       class="date-input-hidden"
+                       value="${fechaSeleccionada}"
+                       onchange="this.form.submit()">
+            </form>
+            <div class="date-display-box" onclick="document.getElementById('filtroFechaAtencion').showPicker()">
                 <div class="date-display-content">
-                    <span id="diaNumero" class="date-day">22</span>
-                    <span id="mesTexto" class="date-month">diciembre</span>
-                    <span id="numeroCitas" class="date-count">5 citas</span>
+                    <fmt:formatDate value="${fechaSeleccionadaDate}" pattern="d" var="dia"/>
+                    <fmt:formatDate value="${fechaSeleccionadaDate}" pattern="MMMM" var="mes"/>
+                    <span class="date-day">${dia}</span>
+                    <span class="date-month">${mes}</span>
+                    <span class="date-count">${citas.size()} cita${citas.size() != 1 ? 's' : ''}</span>
                 </div>
             </div>
         </div>
@@ -65,22 +95,127 @@
 
     <!-- Listado de Citas -->
     <div class="container-sm">
-        <div id="listadoCitasAtencion" class="atender-citas-list">
-            <!-- JS cargará las citas aquí -->
-        </div>
-
-        <!-- Mensaje vacío -->
-        <div id="mensajeSinCitasAtencion" class="mensaje-vacio card">
-            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-            </svg>
-            <p class="text-center mt-lg">
-                No hay citas pendientes para la fecha seleccionada
-            </p>
-        </div>
+        
+        <c:choose>
+            <c:when test="${empty citas}">
+                <!-- Mensaje vacío -->
+                <div class="mensaje-vacio card">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <p class="text-center mt-lg">
+                        No hay citas para la fecha seleccionada
+                    </p>
+                </div>
+            </c:when>
+            
+            <c:otherwise>
+                <!-- Lista de citas -->
+                <div class="atender-citas-list">
+                    
+                    <c:forEach var="cita" items="${citas}">
+                        <div class="cita-card atender-card" data-id="${cita.idCita}" data-estado="${cita.estadoCita}">
+                            
+                            <!-- Header -->
+                            <div class="cita-header">
+                                <div class="cita-info-principal">
+                                    <h3>
+                                        <c:choose>
+                                            <c:when test="${not empty cita.estudiante}">
+                                                ${cita.estudiante.nombreEstudiante} ${cita.estudiante.apellidoEstudiante}
+                                            </c:when>
+                                            <c:otherwise>
+                                                Paciente no asignado
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </h3>
+                                    <p class="cita-especialidad">
+                                        ${not empty cita.especialidad ? cita.especialidad.titulo : 'Sin especialidad'}
+                                    </p>
+                                </div>
+                                
+                                <!-- Badge de estado -->
+                                <span class="badge-estado badge-${cita.estadoCita}">
+                                    ${cita.estadoCita}
+                                </span>
+                            </div>
+                            
+                            <!-- Detalles -->
+                            <div class="cita-detalles">
+                                <div class="cita-dato">
+                                    <span class="icono">🕐</span>
+                                    <div>
+                                        <small>Hora</small>
+                                        <strong>${cita.horaCita}</strong>
+                                    </div>
+                                </div>
+                                
+                                <div class="cita-dato">
+                                    <span class="icono">👨‍⚕️</span>
+                                    <div>
+                                        <small>Doctor Asignado</small>
+                                        <strong>
+                                            <c:choose>
+                                                <c:when test="${not empty cita.doctor}">
+                                                    Dr(a). ${cita.doctor.nombre} ${cita.doctor.apellido}
+                                                </c:when>
+                                                <c:otherwise>
+                                                    Por asignar
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </strong>
+                                    </div>
+                                </div>
+                                
+                                <div class="cita-dato">
+                                    <span class="icono">📧</span>
+                                    <div>
+                                        <small>Correo Estudiante</small>
+                                        <strong>
+                                            ${not empty cita.estudiante ? cita.estudiante.correoEstudiante : 'N/A'}
+                                        </strong>
+                                    </div>
+                                </div>
+                                
+                                <div class="cita-dato-motivo">
+                                    <span class="icono">📝</span>
+                                    <div>
+                                        <small>Motivo de consulta</small>
+                                        <p>${cita.motivoConsulta}</p>
+                                    </div>
+                                </div>
+                                
+                                <c:if test="${not empty cita.observacionCita}">
+                                    <div class="cita-observacion">
+                                        <strong>Observaciones:</strong>
+                                        <p>${cita.observacionCita}</p>
+                                    </div>
+                                </c:if>
+                            </div>
+                            
+                            <!-- Acciones -->
+                            <c:if test="${cita.estadoCita == 'Agendada' || cita.estadoCita == 'Confirmada'}">
+                                <div class="cita-acciones">
+                                    <button class="btn btn-primary btn-atender" 
+                                            onclick="atenderCita(${cita.idCita})">
+                                        Atender Cita
+                                    </button>
+                                    <button class="btn btn-secondary btn-cancelar" 
+                                            onclick="cancelarCita(${cita.idCita}, 'atender')">
+                                        Cancelar
+                                    </button>
+                                </div>
+                            </c:if>
+                        </div>
+                    </c:forEach>
+                    
+                </div>
+            </c:otherwise>
+        </c:choose>
+        
     </div>
 </main>
 
@@ -98,8 +233,8 @@
 </footer>
 
 <!-- JS -->
-<script src="${pageContext.request.contextPath}/js/auth.js"></script>
-<script src="${pageContext.request.contextPath}/js/atender-cita.js"></script>
+<script src="${pageContext.request.contextPath}/js/atender-cita-nuevo.js"></script>
+<script src="${pageContext.request.contextPath}/js/cancelar-cita.js"></script>
 
 </body>
 </html>

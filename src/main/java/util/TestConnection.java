@@ -5,6 +5,8 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import model.entity.Especialidad;
 import model.entity.Doctor;
+import model.entity.Estudiante;
+import model.entity.Administrador;
 
 import java.sql.Connection;
 import java.util.List;

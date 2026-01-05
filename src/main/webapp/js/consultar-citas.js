@@ -1,23 +1,50 @@
-// ===== PROTEGER PÁGINA Y CARGAR DATOS =====
+o// ===== FILTRADO DE CITAS EN TIEMPO REAL =====
 document.addEventListener('DOMContentLoaded', function() {
-    // Verificar sesión - si no hay, guardar página actual y redirigir
-    const usuario = verificarSesion();
+    const filtroEstado = document.getElementById('filtroEstado');
     
-    if (!usuario) {
-        sessionStorage.setItem('paginaAnterior', 'consultar-citas.html');
-        window.location.href = 'index.html';
-        return;
+    if (filtroEstado) {
+        filtroEstado.addEventListener('change', function() {
+            filtrarCitas(this.value);
+        });
     }
-
-    // Mostrar nombre del usuario
-    document.getElementById('userName').textContent = usuario.nombre;
-    
-    // Configurar filtro
-    document.getElementById('filtroEstado').addEventListener('change', cargarCitas);
-    
-    // Cargar citas al inicio
-    cargarCitas();
 });
+
+// ===== FUNCIÓN PARA FILTRAR CITAS =====
+function filtrarCitas(estadoSeleccionado) {
+    const todasLasCitas = document.querySelectorAll('.cita-card');
+    
+    todasLasCitas.forEach(function(cita) {
+        const estadoCita = cita.getAttribute('data-estado');
+        
+        if (estadoSeleccionado === 'todas') {
+            cita.style.display = '';
+        } else {
+            if (estadoCita === estadoSeleccionado) {
+                cita.style.display = '';
+            } else {
+                cita.style.display = 'none';
+            }
+        }
+    });
+    
+    // Verificar si hay citas visibles
+    const citasVisibles = Array.from(todasLasCitas).filter(cita => cita.style.display !== 'none');
+    const listaCitas = document.getElementById('listaCitas');
+    const noResultadosMensaje = document.querySelector('.no-resultados-filtro');
+    
+    if (citasVisibles.length === 0) {
+        if (!noResultadosMensaje) {
+            const mensaje = document.createElement('p');
+            mensaje.className = 'no-citas no-resultados-filtro';
+            mensaje.textContent = `No hay citas con estado "${estadoSeleccionado}"`;
+            listaCitas.appendChild(mensaje);
+        }
+    } else {
+        if (noResultadosMensaje) {
+            noResultadosMensaje.remove();
+        }
+    }
+}
 
 // ===== VERIFICAR SI SE PUEDE CANCELAR LA CITA =====
 function puedeCancelar(fecha, hora) {

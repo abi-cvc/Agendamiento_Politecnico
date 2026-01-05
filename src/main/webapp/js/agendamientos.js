@@ -1,4 +1,7 @@
-// ===== BASE DE DATOS DE DOCTORES (PREPARADO PARA BDD) =====
+// ===== BASE DE DATOS DE DOCTORES (AHORA SE CARGA DESDE BD VÍA JSP) =====
+// Los doctores ahora se cargan dinámicamente desde la base de datos
+// Esto está comentado porque ya no es necesario
+/*
 const doctoresDB = [
     {
         id: 5,
@@ -7,35 +10,9 @@ const doctoresDB = [
         especialidad: "nutricion",
         especialidadNombre: "Nutrición"
     },
-    {
-        id: 6,
-        nombre: "Dra. Ana Martínez",
-        email: "doctor.odontologia@epn.edu.ec",
-        especialidad: "odontologia",
-        especialidadNombre: "Odontología"
-    },
-    {
-        id: 7,
-        nombre: "Dr. Luis Fernández",
-        email: "doctor.psicologia@epn.edu.ec",
-        especialidad: "psicologia",
-        especialidadNombre: "Psicología"
-    },
-    {
-        id: 8,
-        nombre: "Dra. María Sánchez",
-        email: "doctor.medicina@epn.edu.ec",
-        especialidad: "medicina-general",
-        especialidadNombre: "Medicina General"
-    },
-    {
-        id: 9,
-        nombre: "Enf. Patricia Ruiz",
-        email: "doctor.enfermeria@epn.edu.ec",
-        especialidad: "enfermeria",
-        especialidadNombre: "Enfermería"
-    }
+    // ... más doctores
 ];
+*/
 
 // ===== HORARIOS DISPONIBLES (8:00am - 5:00pm, rangos de una hora) =====
 const horariosBase = [
@@ -45,6 +22,8 @@ const horariosBase = [
 
 // Variables globales
 let horaSeleccionada = null;
+let mesActual = new Date();
+let fechaSeleccionada = null;
 
 // ===== PROTEGER PÁGINA Y CARGAR DATOS =====
 document.addEventListener('DOMContentLoaded', function() {
@@ -52,8 +31,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const usuario = verificarSesion();
     
     if (!usuario) {
-        sessionStorage.setItem('paginaAnterior', 'agendamientos.html');
-        window.location.href = 'index.html';
+        sessionStorage.setItem('paginaAnterior', 'views/agendamientos.jsp');
+        window.location.href = '../index.jsp';
         return;
     }
 
@@ -76,23 +55,43 @@ document.addEventListener('DOMContentLoaded', function() {
             horariosSection.style.display = 'none';
         }
     } else {
-        // Configurar fecha mínima (hoy)
-        const fechaInput = document.getElementById('fecha');
-        const hoy = new Date().toISOString().split('T')[0];
-        fechaInput.min = hoy;
+        // Verificar si la especialidad viene preseleccionada desde JSP
+        const especialidadSelect = document.getElementById('especialidad');
+        const doctorSelect = document.getElementById('doctor');
+        const especialidadBloqueada = especialidadSelect.disabled;
         
-        // Detectar y pre-seleccionar especialidad desde URL
-        preseleccionarEspecialidad();
+        // Si la especialidad está bloqueada y hay doctores disponibles, habilitar el select
+        if (especialidadBloqueada && doctorSelect.options.length > 1) {
+            doctorSelect.disabled = false;
+            // Aplicar estilo de bloqueado a la especialidad
+            especialidadSelect.style.background = 'rgba(60, 141, 188, 0.1)';
+            especialidadSelect.style.cursor = 'not-allowed';
+            especialidadSelect.style.opacity = '0.8';
+        }
         
         // Event listeners
-        document.getElementById('especialidad').addEventListener('change', cargarDoctoresPorEspecialidad);
-        document.getElementById('doctor').addEventListener('change', habilitarFecha);
-        document.getElementById('fecha').addEventListener('change', cargarHorariosDisponibles);
+        if (!especialidadBloqueada) {
+            especialidadSelect.addEventListener('change', cargarDoctoresPorEspecialidad);
+        }
+        doctorSelect.addEventListener('change', function() {
+            if (this.value) {
+                mostrarCalendario();
+            } else {
+                ocultarCalendario();
+            }
+        });
+        
+        // Event listeners del calendario
+        document.getElementById('mesAnterior').addEventListener('click', () => cambiarMes(-1));
+        document.getElementById('mesSiguiente').addEventListener('click', () => cambiarMes(1));
+        
         document.getElementById('agendamientoForm').addEventListener('submit', agendarCita);
     }
 });
 
 // ===== PRE-SELECCIONAR ESPECIALIDAD DESDE URL =====
+// Ahora se maneja directamente en JSP, esta función ya no es necesaria
+/*
 function preseleccionarEspecialidad() {
     const urlParams = new URLSearchParams(window.location.search);
     const especialidad = urlParams.get('especialidad');
@@ -114,10 +113,14 @@ function preseleccionarEspecialidad() {
         }
     }
 }
+*/
 
 // ===== CARGAR DOCTORES POR ESPECIALIDAD =====
+// Esta función solo se usa cuando el usuario cambia manualmente la especialidad
+// Si la especialidad viene preseleccionada desde URL, los doctores ya vienen cargados desde JSP
 function cargarDoctoresPorEspecialidad() {
     const especialidadSeleccionada = document.getElementById('especialidad').value;
+    const especialidadId = document.getElementById('especialidad').selectedOptions[0]?.dataset.id;
     const selectDoctor = document.getElementById('doctor');
     const fechaInput = document.getElementById('fecha');
     const btnSubmit = document.querySelector('.btn-agendar');
@@ -138,47 +141,12 @@ function cargarDoctoresPorEspecialidad() {
         return;
     }
     
-    // Filtrar doctores por especialidad
-    const doctoresFiltrados = doctoresDB.filter(d => d.especialidad === especialidadSeleccionada);
-    
-    if (doctoresFiltrados.length === 0) {
-        selectDoctor.innerHTML = '<option value="">No hay doctores disponibles</option>';
-        return;
-    }
-    
-    // Agregar doctores al select
-    doctoresFiltrados.forEach(doctor => {
-        const option = document.createElement('option');
-        option.value = doctor.id;
-        option.textContent = doctor.nombre;
-        option.dataset.especialidad = doctor.especialidad;
-        option.dataset.especialidadNombre = doctor.especialidadNombre;
-        selectDoctor.appendChild(option);
-    });
-    
-    selectDoctor.disabled = false;
+    // Hacer petición AJAX para obtener doctores de esta especialidad
+    // Por ahora, recargamos la página con el parámetro de especialidad
+    window.location.href = `agendamientos.jsp?especialidad=${especialidadSeleccionada}`;
 }
 
-// ===== HABILITAR FECHA CUANDO SE SELECCIONA DOCTOR =====
-function habilitarFecha() {
-    const doctorSeleccionado = document.getElementById('doctor').value;
-    const fechaInput = document.getElementById('fecha');
-    
-    if (doctorSeleccionado) {
-        fechaInput.disabled = false;
-        fechaInput.value = '';
-        horaSeleccionada = null;
-        document.getElementById('horariosContainer').innerHTML = '<p class="no-horarios">Seleccione una fecha para ver los horarios disponibles</p>';
-    } else {
-        fechaInput.disabled = true;
-        fechaInput.value = '';
-        document.getElementById('horariosContainer').innerHTML = '<p class="no-horarios">Seleccione un doctor y fecha para ver los horarios disponibles</p>';
-    }
-    
-    document.querySelector('.btn-agendar').disabled = true;
-}
-
-// ===== CARGAR HORARIOS DISPONIBLES =====
+// ===== CARGAR HORARIOS DISPONIBLES DESDE BD =====
 function cargarHorariosDisponibles() {
     const doctorId = document.getElementById('doctor').value;
     const fecha = document.getElementById('fecha').value;
@@ -188,67 +156,111 @@ function cargarHorariosDisponibles() {
         return;
     }
     
-    // Obtener citas existentes desde localStorage (no sessionStorage)
-    const citasExistentes = JSON.parse(localStorage.getItem('citas')) || [];
+    // Mostrar mensaje de carga
+    horariosContainer.innerHTML = '<p class="no-horarios">⏳ Cargando horarios disponibles...</p>';
     
-    console.log('=== DEBUG HORARIOS ===');
-    console.log('Doctor ID:', doctorId, 'tipo:', typeof doctorId);
+    // Construir URL de la API
+    const contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf("/", 2));
+    const apiUrl = `${contextPath}/api/disponibilidad?idDoctor=${doctorId}&fecha=${fecha}`;
+    
+    console.log('=== CARGANDO HORARIOS DESDE BD ===');
+    console.log('Doctor ID:', doctorId);
     console.log('Fecha:', fecha);
-    console.log('Todas las citas:', citasExistentes);
+    console.log('API URL:', apiUrl);
     
-    // Filtrar citas del doctor en la fecha seleccionada (usar == para comparar sin tipo)
-    const citasOcupadas = citasExistentes.filter(c => {
-        console.log('Comparando - Cita doctorId:', c.doctorId, 'tipo:', typeof c.doctorId, 'vs', doctorId, 'tipo:', typeof doctorId);
-        console.log('Fecha cita:', c.fecha, 'vs fecha seleccionada:', fecha);
-        console.log('Estado:', c.estado);
-        // Solo bloquear citas pendientes
-        return c.doctorId == doctorId && c.fecha === fecha && c.estado === 'Pendiente';
-    }).map(c => c.hora);
-    
-    console.log('Horarios ocupados:', citasOcupadas);
-    
-    // Generar horarios disponibles
-    let html = '<div class="horarios-grid">';
-    
-    horariosBase.forEach(hora => {
-        const ocupado = citasOcupadas.includes(hora);
-        const claseOcupado = ocupado ? 'ocupado' : '';
-        const deshabilitado = ocupado ? 'disabled' : '';
-        
-        html += `
-            <button type="button" 
-                    class="horario-btn ${claseOcupado}" 
-                    data-hora="${hora}" 
-                    ${deshabilitado}
-                    onclick="seleccionarHorario('${hora}')">
-                ${formatearHora(hora)}
-                ${ocupado ? '<span class="ocupado-badge">Ocupado</span>' : ''}
-            </button>
-        `;
-    });
-    
-    html += '</div>';
-    horariosContainer.innerHTML = html;
-    
-    // Resetear selección
-    horaSeleccionada = null;
-    document.querySelector('.btn-agendar').disabled = true;
+    // Hacer petición AJAX a la API
+    fetch(apiUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la respuesta del servidor');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Respuesta de la API:', data);
+            
+            if (!data.success) {
+                throw new Error(data.error || 'Error desconocido');
+            }
+            
+            if (!data.horarios || data.horarios.length === 0) {
+                horariosContainer.innerHTML = `
+                    <p class="no-horarios">
+                        ℹ️ No hay horarios disponibles para esta fecha.<br>
+                        Por favor, seleccione otra fecha.
+                    </p>
+                `;
+                return;
+            }
+            
+            // Renderizar horarios disponibles
+            let html = '<div class="horarios-grid">';
+            
+            data.horarios.forEach(horario => {
+                const disponible = horario.disponible === 'true' || horario.disponible === true;
+                const claseEstado = disponible ? '' : 'ocupado';
+                const deshabilitado = disponible ? '' : 'disabled';
+                
+                html += `
+                    <button type="button" 
+                            class="horario-btn ${claseEstado}" 
+                            data-hora="${horario.horaInicio}" 
+                            data-id-disponibilidad="${horario.id}"
+                            ${deshabilitado}
+                            onclick="seleccionarHorario('${horario.horaInicio}', '${horario.horaFin}', ${horario.id})">
+                        ${horario.horarioFormateado}
+                        ${!disponible ? '<span class="ocupado-badge">Ocupado</span>' : ''}
+                    </button>
+                `;
+            });
+            
+            html += '</div>';
+            horariosContainer.innerHTML = html;
+            
+            // Resetear selección
+            horaSeleccionada = null;
+            document.querySelector('.btn-agendar').disabled = true;
+        })
+        .catch(error => {
+            console.error('Error al cargar horarios:', error);
+            horariosContainer.innerHTML = `
+                <p class="no-horarios error">
+                    ❌ Error al cargar horarios: ${error.message}<br>
+                    Por favor, intente nuevamente.
+                </p>
+            `;
+        });
 }
 
 // ===== SELECCIONAR HORARIO =====
-function seleccionarHorario(hora) {
+function seleccionarHorario(horaInicio, horaFin, idDisponibilidad) {
     // Remover selección anterior
     document.querySelectorAll('.horario-btn').forEach(btn => {
         btn.classList.remove('seleccionado');
     });
     
     // Marcar como seleccionado
-    const btnSeleccionado = document.querySelector(`[data-hora="${hora}"]`);
-    btnSeleccionado.classList.add('seleccionado');
+    const btnSeleccionado = document.querySelector(`[data-hora="${horaInicio}"]`);
+    if (btnSeleccionado) {
+        btnSeleccionado.classList.add('seleccionado');
+    }
     
-    horaSeleccionada = hora;
+    // Guardar horario seleccionado (ahora incluye más info)
+    horaSeleccionada = {
+        inicio: horaInicio,
+        fin: horaFin,
+        idDisponibilidad: idDisponibilidad
+    };
+    
+    console.log('Horario seleccionado:', horaSeleccionada);
+    
+    // Actualizar input de hora (formato HH:MM para el input type="time")
+    const horaInput = document.getElementById('hora');
+    horaInput.value = horaInicio;
     
     // Habilitar botón de agendar
+    document.querySelector('.btn-agendar').disabled = false;
+}
     document.querySelector('.btn-agendar').disabled = false;
 }
 
@@ -333,4 +345,151 @@ function formatearFecha(fechaStr) {
 function formatearHora(hora) {
     // Los horarios ya vienen en el formato correcto
     return hora;
+}
+
+// ===== CALENDARIO VISUAL =====
+
+/**
+ * Muestra el calendario cuando se selecciona un doctor
+ */
+function mostrarCalendario() {
+    const calendario = document.getElementById('calendario');
+    calendario.style.display = 'block';
+    generarCalendario();
+}
+
+/**
+ * Oculta el calendario
+ */
+function ocultarCalendario() {
+    const calendario = document.getElementById('calendario');
+    calendario.style.display = 'none';
+    fechaSeleccionada = null;
+    document.getElementById('fecha').value = '';
+    document.getElementById('fechaSeleccionadaTexto').style.display = 'none';
+    // Limpiar horarios
+    document.getElementById('horariosContainer').innerHTML = '<p class="no-horarios">Seleccione un doctor y fecha para ver los horarios disponibles</p>';
+}
+
+/**
+ * Cambia el mes del calendario
+ */
+function cambiarMes(direccion) {
+    mesActual.setMonth(mesActual.getMonth() + direccion);
+    generarCalendario();
+}
+
+/**
+ * Genera el calendario del mes actual
+ */
+function generarCalendario() {
+    const year = mesActual.getFullYear();
+    const month = mesActual.getMonth();
+    
+    // Actualizar título del mes
+    const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+                   'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    document.getElementById('mesActual').textContent = `${meses[month]} ${year}`;
+    
+    // Obtener primer y último día del mes
+    const primerDia = new Date(year, month, 1);
+    const ultimoDia = new Date(year, month + 1, 0);
+    const diasEnMes = ultimoDia.getDate();
+    const primerDiaSemana = primerDia.getDay();
+    
+    // Obtener último día del mes anterior
+    const ultimoDiaMesAnterior = new Date(year, month, 0).getDate();
+    
+    // Generar días
+    const calendarioDias = document.getElementById('calendarioDias');
+    calendarioDias.innerHTML = '';
+    
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    
+    // Días del mes anterior
+    for (let i = primerDiaSemana - 1; i >= 0; i--) {
+        const dia = ultimoDiaMesAnterior - i;
+        const diaDiv = crearDiaCalendario(dia, 'otro-mes');
+        calendarioDias.appendChild(diaDiv);
+    }
+    
+    // Días del mes actual
+    for (let dia = 1; dia <= diasEnMes; dia++) {
+        const fecha = new Date(year, month, dia);
+        fecha.setHours(0, 0, 0, 0);
+        
+        let clases = '';
+        
+        // Marcar hoy
+        if (fecha.getTime() === hoy.getTime()) {
+            clases += ' hoy';
+        }
+        
+        // Deshabilitar fechas pasadas
+        if (fecha < hoy) {
+            clases += ' deshabilitado';
+        }
+        
+        // Marcar día seleccionado
+        if (fechaSeleccionada && 
+            fecha.getFullYear() === fechaSeleccionada.getFullYear() &&
+            fecha.getMonth() === fechaSeleccionada.getMonth() &&
+            fecha.getDate() === fechaSeleccionada.getDate()) {
+            clases += ' seleccionado';
+        }
+        
+        const diaDiv = crearDiaCalendario(dia, clases, fecha);
+        calendarioDias.appendChild(diaDiv);
+    }
+    
+    // Días del mes siguiente
+    const diasRestantes = 42 - (primerDiaSemana + diasEnMes); // 6 filas × 7 días
+    for (let dia = 1; dia <= diasRestantes; dia++) {
+        const diaDiv = crearDiaCalendario(dia, 'otro-mes');
+        calendarioDias.appendChild(diaDiv);
+    }
+}
+
+/**
+ * Crea un elemento de día del calendario
+ */
+function crearDiaCalendario(dia, clases, fecha) {
+    const diaDiv = document.createElement('div');
+    diaDiv.className = 'dia-calendario' + (clases ? ' ' + clases : '');
+    diaDiv.textContent = dia;
+    
+    // Si es un día válido y no del otro mes, agregar evento click
+    if (fecha && !clases.includes('otro-mes') && !clases.includes('deshabilitado')) {
+        diaDiv.addEventListener('click', () => seleccionarFecha(fecha));
+    }
+    
+    return diaDiv;
+}
+
+/**
+ * Selecciona una fecha del calendario
+ */
+function seleccionarFecha(fecha) {
+    fechaSeleccionada = fecha;
+    
+    // Formatear fecha para el input (YYYY-MM-DD)
+    const year = fecha.getFullYear();
+    const month = String(fecha.getMonth() + 1).padStart(2, '0');
+    const day = String(fecha.getDate()).padStart(2, '0');
+    const fechaFormateada = `${year}-${month}-${day}`;
+    
+    document.getElementById('fecha').value = fechaFormateada;
+    
+    // Mostrar fecha seleccionada
+    const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const fechaTexto = fecha.toLocaleDateString('es-EC', opciones);
+    document.getElementById('fechaTexto').textContent = fechaTexto;
+    document.getElementById('fechaSeleccionadaTexto').style.display = 'block';
+    
+    // Regenerar calendario para actualizar selección
+    generarCalendario();
+    
+    // Cargar horarios disponibles
+    cargarHorariosDisponibles();
 }

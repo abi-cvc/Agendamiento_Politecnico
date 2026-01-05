@@ -26,7 +26,7 @@
         <ul>
             <li class="flex"><a href="<%= request.getContextPath() %>/inicio.jsp" class="font-bold">Inicio</a></li>
             <li class="flex"><a href="<%= request.getContextPath() %>/especialidades.jsp" class="font-bold">Especialidades</a></li>
-            <li class="flex"><a href="<%= request.getContextPath() %>/consultar-citas.jsp" class="font-bold">Mis Citas</a></li>
+            <li class="flex"><a href="<%= request.getContextPath() %>/ConsultarCitasAgendadasController" class="font-bold">Mis Citas</a></li>
             <li class="flex"><a href="<%= request.getContextPath() %>/reseñas.jsp" class="font-bold">Reseñas</a></li>
             <li class="login mt-2 mb-2">
                 <a href="<%= request.getContextPath() %>/index.jsp" class="font-bold">Cerrar Sesión</a>

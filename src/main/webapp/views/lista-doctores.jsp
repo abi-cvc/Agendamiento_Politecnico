@@ -107,7 +107,7 @@
             <ul>
                 <li><a href="../inicio.jsp" class="font-bold">Inicio</a></li>
                 <li><a href="../especialidades.jsp" class="font-bold">Especialidades</a></li>
-                <li><a href="../consultar-citas.jsp" class="font-bold">Mis Citas</a></li>
+                <li><a href="../ConsultarCitasAgendadasController" class="font-bold">Mis Citas</a></li>
                 <li><a href="../reseñas.jsp" class="font-bold">Reseñas</a></li>
                 <li class="login mt-2 mb-2" id="authButton">
                     <a href="../index.jsp" class="font-bold">Login</a>
@@ -189,7 +189,7 @@
                 <ul class="footer-links">
                     <li><a href="../inicio.jsp">Inicio</a></li>
                     <li><a href="../especialidades.jsp">Especialidades</a></li>
-                    <li><a href="../consultar-citas.jsp">Mis Citas</a></li>
+                    <li><a href="../ConsultarCitasAgendadasController">Mis Citas</a></li>
                 </ul>
             </div>
             <div class="footer-section">

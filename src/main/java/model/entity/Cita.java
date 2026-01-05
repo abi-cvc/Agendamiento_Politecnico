@@ -10,6 +10,7 @@ import java.time.LocalTime;
  * Entidad Cita - Representa una cita médica agendada
  * Relación: ManyToOne con Especialidad
  * Relación: ManyToOne con Doctor
+ * Relación: ManyToOne con Estudiante
  */
 @Entity
 @Table(name = "cita")
@@ -52,6 +53,11 @@ public class Cita implements Serializable {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_doctor")
 	private Doctor doctor;
+	
+	// ===== RELACIÓN ORM CON ESTUDIANTE =====
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "id_estudiante")
+	private Estudiante estudiante;
 	
 	// ===== MÉTODOS DE CICLO DE VIDA JPA =====
 	@PrePersist
@@ -219,6 +225,15 @@ public class Cita implements Serializable {
 		this.doctor = doctor;
 	}
 	
+	// ===== GETTERS Y SETTERS PARA ESTUDIANTE =====
+	public Estudiante getEstudiante() {
+		return estudiante;
+	}
+
+	public void setEstudiante(Estudiante estudiante) {
+		this.estudiante = estudiante;
+	}
+	
 	@Override
 	public String toString() {
 		return "Cita{" +
@@ -229,6 +244,7 @@ public class Cita implements Serializable {
 			   ", estadoCita='" + estadoCita + '\'' + 
 			   ", especialidad=" + (especialidad != null ? especialidad.getTitulo() : "null") + 
 			   ", doctor=" + (doctor != null ? doctor.getNombreCompleto() : "null") + 
+			   ", estudiante=" + (estudiante != null ? estudiante.getNombreCompleto() : "null") + 
 			   ", fechaRegistro=" + fechaRegistro +
 			   ", fechaActualizacion=" + fechaActualizacion +
 			   '}';

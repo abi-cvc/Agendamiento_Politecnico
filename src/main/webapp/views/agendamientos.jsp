@@ -1,5 +1,34 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="model.dao.EspecialidadDAO" %>
+<%@ page import="model.dao.DoctorDAO" %>
+<%@ page import="model.entity.Especialidad" %>
+<%@ page import="model.entity.Doctor" %>
+<%@ page import="java.util.List" %>
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
+
+<%
+    // ===== CARGA DINÁMICA DESDE BD USANDO JPA =====
+    EspecialidadDAO especialidadDAO = new EspecialidadDAO();
+    DoctorDAO doctorDAO = new DoctorDAO();
+    
+    List<Especialidad> especialidades = especialidadDAO.obtenerEspecialidades();
+    request.setAttribute("especialidades", especialidades);
+    
+    // Obtener especialidad desde parámetro URL
+    String especialidadParam = request.getParameter("especialidad");
+    request.setAttribute("especialidadSeleccionada", especialidadParam);
+    
+    // Si hay especialidad seleccionada, cargar sus doctores
+    if (especialidadParam != null && !especialidadParam.trim().isEmpty()) {
+        Especialidad espSeleccionada = especialidadDAO.obtenerPorNombre(especialidadParam);
+        if (espSeleccionada != null) {
+            List<Doctor> doctores = doctorDAO.obtenerPorEspecialidad(espSeleccionada);
+            request.setAttribute("doctoresDisponibles", doctores);
+            request.setAttribute("especialidadObj", espSeleccionada);
+        }
+    }
+%>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -9,9 +38,9 @@
     <title>Agendar Cita Médica - Bienestar Politécnico</title>
 
     <!-- CSS -->
-    <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/logo_epn.png">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/framework.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles.css">
+    <link rel="icon" type="image/png" href="../images/logo_epn.png">
+    <link rel="stylesheet" href="../framework.css">
+    <link rel="stylesheet" href="../styles.css">
 
     <!-- Google Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,16 +53,16 @@
 <!-- ================= HEADER ================= -->
 <header>
     <div class="logo">
-        <img src="${pageContext.request.contextPath}/images/logo.svg" alt="Logo">
+        <img src="../images/logo.svg" alt="Logo">
     </div>
     <nav>
         <ul>
-            <li><a href="${pageContext.request.contextPath}/inicio.jsp" class="font-bold">Inicio</a></li>
-            <li><a href="${pageContext.request.contextPath}/especialidades.jsp" class="font-bold">Especialidades</a></li>
-            <li><a href="${pageContext.request.contextPath}/consultar-citas.jsp" class="font-bold">Mis Citas</a></li>
-            <li><a href="${pageContext.request.contextPath}/reseñas.jsp" class="font-bold">Reseñas</a></li>
+            <li><a href="../inicio.jsp" class="font-bold">Inicio</a></li>
+            <li><a href="../especialidades.jsp" class="font-bold">Especialidades</a></li>
+            <li><a href="../ConsultarCitasAgendadasController" class="font-bold">Mis Citas</a></li>
+            <li><a href="../reseñas.jsp" class="font-bold">Reseñas</a></li>
             <li class="login mt-2 mb-2" id="authButton">
-                <a href="${pageContext.request.contextPath}/index.jsp" class="font-bold">Login</a>
+                <a href="../index.jsp" class="font-bold">Login</a>
             </li>
         </ul>
     </nav>
@@ -55,36 +84,84 @@
             <div id="formMessage" class="form-message"></div>
 
             <form id="agendamientoForm"
-                  action="${pageContext.request.contextPath}/agendarCita?accion=agendarCita"
+                  action="../AgendarCitasController"
                   method="post">
+                  
+                <input type="hidden" name="accion" value="agendarCita">
 
                 <div class="form-group">
                     <label for="especialidad">Especialidad</label>
-                    <select id="especialidad" name="especialidad" required>
+                    <select id="especialidad" name="especialidad" required 
+                            <c:if test="${not empty especialidadSeleccionada}">disabled</c:if>>
                         <option value="">Seleccione una especialidad</option>
-                        <option value="nutricion">Nutrición</option>
-                        <option value="odontologia">Odontología</option>
-                        <option value="psicologia">Psicología</option>
-                        <option value="medicina-general">Medicina General</option>
-                        <option value="enfermeria">Enfermería</option>
+                        <c:forEach var="esp" items="${especialidades}">
+                            <option value="${esp.nombre}" 
+                                    data-id="${esp.idEspecialidad}"
+                                    <c:if test="${esp.nombre eq especialidadSeleccionada}">selected</c:if>>
+                                ${esp.icono} ${esp.titulo}
+                            </option>
+                        </c:forEach>
                     </select>
+                    <c:if test="${not empty especialidadSeleccionada}">
+                        <input type="hidden" name="especialidad" value="${especialidadSeleccionada}">
+                        <small class="text-muted">✅ Especialidad preseleccionada</small>
+                    </c:if>
                 </div>
 
                 <div class="form-group">
                     <label for="doctor">Doctor</label>
-                    <select id="doctor" name="doctor" required disabled>
-                        <option value="">Primero seleccione una especialidad</option>
+                    <select id="doctor" name="doctor" required 
+                            <c:if test="${empty doctoresDisponibles}">disabled</c:if>>
+                        <c:choose>
+                            <c:when test="${empty doctoresDisponibles}">
+                                <option value="">Primero seleccione una especialidad</option>
+                            </c:when>
+                            <c:otherwise>
+                                <option value="">Seleccione un doctor</option>
+                                <c:forEach var="doc" items="${doctoresDisponibles}">
+                                    <option value="${doc.idDoctor}" 
+                                            data-email="${doc.email}"
+                                            data-especialidad="${doc.especialidad.nombre}">
+                                        ${doc.nombreCompleto}
+                                    </option>
+                                </c:forEach>
+                            </c:otherwise>
+                        </c:choose>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="fecha">Fecha</label>
-                    <input type="date" id="fecha" name="fecha" required disabled>
+                    <label for="fecha">Seleccione una fecha</label>
+                    <input type="hidden" id="fecha" name="fecha" required>
+                    
+                    <!-- Calendario Visual -->
+                    <div id="calendario" class="calendario-container" style="display: none;">
+                        <div class="calendario-header">
+                            <button type="button" class="btn-mes" id="mesAnterior">‹</button>
+                            <h3 id="mesActual">Mes</h3>
+                            <button type="button" class="btn-mes" id="mesSiguiente">›</button>
+                        </div>
+                        <div class="calendario-dias-semana">
+                            <div>Dom</div>
+                            <div>Lun</div>
+                            <div>Mar</div>
+                            <div>Mié</div>
+                            <div>Jue</div>
+                            <div>Vie</div>
+                            <div>Sáb</div>
+                        </div>
+                        <div id="calendarioDias" class="calendario-dias">
+                            <!-- Días generados por JavaScript -->
+                        </div>
+                    </div>
+                    <p class="fecha-seleccionada" id="fechaSeleccionadaTexto" style="display: none;">
+                        <strong>Fecha seleccionada:</strong> <span id="fechaTexto"></span>
+                    </p>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" style="display: none;">
                     <label for="hora">Hora</label>
-                    <input type="time" id="hora" name="hora" required disabled>
+                    <input type="time" id="hora" name="hora" required>
                 </div>
 
                 <div class="form-group">
@@ -133,8 +210,8 @@
 </footer>
 
 <!-- ================= JS ================= -->
-<script src="${pageContext.request.contextPath}/js/auth.js"></script>
-<script src="${pageContext.request.contextPath}/js/agendamientos.js"></script>
+<script src="../js/auth-temporal.js"></script>
+<script src="../js/agendamientos-calendario.js"></script>
 
 </body>
 </html>
