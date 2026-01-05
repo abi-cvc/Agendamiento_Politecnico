@@ -168,11 +168,16 @@ public class CitaDAO {
 	 * @param mesActual Mes a consultar (YearMonth)
 	 * @return Lista de citas del doctor en ese mes
 	 */
-	public List<Cita> obtenerPorDoctorYMes(int idDoctor, java.time.YearMonth mesActual) {
+los	public List<Cita> obtenerPorDoctorYMes(int idDoctor, java.time.YearMonth mesActual) {
 		EntityManager em = JPAUtil.getEntityManager();
 		try {
 			LocalDate primerDia = mesActual.atDay(1);
 			LocalDate ultimoDia = mesActual.atEndOfMonth();
+			
+			System.out.println("🔍 [CitaDAO] obtenerPorDoctorYMes:");
+			System.out.println("   - idDoctor: " + idDoctor);
+			System.out.println("   - Mes: " + mesActual);
+			System.out.println("   - Rango: " + primerDia + " a " + ultimoDia);
 			
 			TypedQuery<Cita> query = em.createQuery(
 				"SELECT c FROM Cita c WHERE c.doctor.idDoctor = :idDoctor AND c.fechaCita BETWEEN :inicio AND :fin ORDER BY c.fechaCita, c.horaCita", 
@@ -181,7 +186,19 @@ public class CitaDAO {
 			query.setParameter("idDoctor", idDoctor);
 			query.setParameter("inicio", primerDia);
 			query.setParameter("fin", ultimoDia);
-			return query.getResultList();
+			
+			List<Cita> resultado = query.getResultList();
+			System.out.println("   - Resultados: " + resultado.size() + " citas");
+			
+			if (!resultado.isEmpty()) {
+				System.out.println("   - Citas encontradas:");
+				for (int i = 0; i < Math.min(3, resultado.size()); i++) {
+					Cita c = resultado.get(i);
+					System.out.println("     * Cita #" + c.getIdCita() + ": " + c.getFechaCita() + " " + c.getHoraCita());
+				}
+			}
+			
+			return resultado;
 		} finally {
 			em.close();
 		}

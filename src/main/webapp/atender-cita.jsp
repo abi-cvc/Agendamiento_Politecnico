@@ -42,13 +42,22 @@
     <nav>
         <ul>
             <li class="flex">
-                <a href="${pageContext.request.contextPath}/inicio.jsp" class="font-bold">Inicio</a>
+                <a href="${pageContext.request.contextPath}/inicio.html" class="font-bold">Inicio</a>
             </li>
             <li class="flex">
-                <a href="${pageContext.request.contextPath}/citas-agendadas.jsp" class="font-bold">Citas Agendadas</a>
+                <a href="${pageContext.request.contextPath}/ConsultarCitaAsignadaController?vista=calendario" class="font-bold">Citas Agendadas</a>
+            </li>
+            <li class="flex">
+                <a href="${pageContext.request.contextPath}/ConsultarCitaAsignadaController" class="font-bold">Atender Cita</a>
             </li>
             <li class="login mt-2 mb-2" id="authButton">
-                <a href="${pageContext.request.contextPath}/index.jsp" class="font-bold">Login</a>
+                <a href="${pageContext.request.contextPath}/index.html" class="font-bold">Login</a>
+            </li>
+        </ul>
+    </nav>
+            </li>
+        </ul>
+    </nav>
             </li>
         </ul>
     </nav>
@@ -233,8 +242,37 @@
 </footer>
 
 <!-- JS -->
+<script src="${pageContext.request.contextPath}/js/auth-temporal.js"></script>
 <script src="${pageContext.request.contextPath}/js/atender-cita-nuevo.js"></script>
 <script src="${pageContext.request.contextPath}/js/cancelar-cita.js"></script>
+
+<!-- Debug: Mostrar citas en consola -->
+<script>
+    console.log('========================================');
+    console.log('🔍 DEBUG ATENDER-CITA: Citas cargadas desde la BDD');
+    console.log('========================================');
+    
+    // Información general
+    console.log('📊 Total de citas del DÍA: ${citas.size()}');
+    console.log('📅 Fecha seleccionada: ${fechaSeleccionada}');
+    
+    // Mostrar citas del día
+    console.log('\n--- CITAS DEL DÍA ---');
+    <c:forEach var="cita" items="${citas}" varStatus="status">
+        console.log('\n📋 CITA DÍA #${status.index + 1}:');
+        console.log('  ID: ${cita.idCita}');
+        console.log('  Fecha: ${cita.fechaCita}');
+        console.log('  Hora: ${cita.horaCita}');
+        console.log('  Estado: ${cita.estadoCita}');
+        console.log('  Estudiante: ${not empty cita.estudiante ? cita.estudiante.nombreEstudiante : "N/A"} ${not empty cita.estudiante ? cita.estudiante.apellidoEstudiante : ""}');
+        console.log('  Doctor: ${not empty cita.doctor ? cita.doctor.nombre : "N/A"} ${not empty cita.doctor ? cita.doctor.apellido : ""}');
+        console.log('  Especialidad: ${not empty cita.especialidad ? cita.especialidad.titulo : "N/A"}');
+    </c:forEach>
+    
+    console.log('\n========================================');
+    console.log('✅ Fin del debug ATENDER-CITA');
+    console.log('========================================\n');
+</script>
 
 </body>
 </html>

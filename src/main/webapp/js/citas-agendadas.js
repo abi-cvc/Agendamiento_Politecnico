@@ -27,28 +27,31 @@ function cargarCitasDelDoctor() {
         return;
     }
 
-    // Obtener todas las citas del localStorage
-    todasLasCitas = JSON.parse(localStorage.getItem('citas')) || [];
-    
-    console.log('=== DEBUG CARGAR CITAS DEL DOCTOR ===');
+    console.log('=== CARGANDO CITAS DEL DOCTOR DESDE SERVIDOR ===');
     console.log('Usuario doctor:', usuario);
-    console.log('Usuario doctor ID:', usuario.id, 'tipo:', typeof usuario.id);
-    console.log('Todas las citas:', todasLasCitas);
+    
+    // Usar las citas que ya vienen del servidor (cargadas en el JSP)
+    if (typeof citasDelMes !== 'undefined' && citasDelMes) {
+        todasLasCitas = citasDelMes;
+        console.log('✅ Citas cargadas desde el servidor:', todasLasCitas.length);
+    } else {
+        console.log('⚠️ No hay citas en el servidor, usando array vacío');
+        todasLasCitas = [];
+    }
     
     // Filtrar solo las citas de este doctor
+    // TODO: Cuando el login esté completo, filtrar por doctor
     citasDelDoctor = todasLasCitas.filter(cita => {
-        console.log('Comparando - Cita doctorId:', cita.doctorId, 'tipo:', typeof cita.doctorId, 'vs Usuario ID:', usuario.id, 'tipo:', typeof usuario.id);
-        console.log('¿Son iguales?', cita.doctorId === usuario.id);
-        console.log('¿Son iguales con ==?', cita.doctorId == usuario.id);
-        return cita.doctorId == usuario.id; // Usar == en lugar de === para comparar sin tipo
+        // Por ahora mostrar todas las citas (modo sin login completo)
+        return true;
     });
     
-    console.log('Citas del doctor filtradas:', citasDelDoctor);
+    console.log('Citas del doctor filtradas:', citasDelDoctor.length);
     
-    // Ordenar por fecha y hora (más recientes primero)
+    // Ordenar por fecha (más recientes primero)
     citasDelDoctor.sort((a, b) => {
-        const fechaA = new Date(a.fecha + ' ' + a.hora.split('-')[0]);
-        const fechaB = new Date(b.fecha + ' ' + b.hora.split('-')[0]);
+        const fechaA = parseFecha(a.fecha);
+        const fechaB = parseFecha(b.fecha);
         return fechaB - fechaA;
     });
     
@@ -56,21 +59,42 @@ function cargarCitasDelDoctor() {
     mostrarCalendario();
 }
 
+// Función auxiliar para parsear fechas que vienen del backend
+function parseFecha(fecha) {
+    if (Array.isArray(fecha)) {
+        // Formato: [año, mes, día]
+        return new Date(fecha[0], fecha[1] - 1, fecha[2]);
+    } else if (typeof fecha === 'string') {
+        // Formato string: "2024-01-05"
+        return new Date(fecha + 'T00:00:00');
+    } else {
+        return new Date();
+    }
+}
+
 // Configurar el calendario
 function configurarCalendario() {
+    const contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf('/', 1));
+    
     document.getElementById('prevMonth').addEventListener('click', () => {
         mesActual.setMonth(mesActual.getMonth() - 1);
-        mostrarCalendario();
+        const mes = mesActual.getMonth() + 1;
+        const anio = mesActual.getFullYear();
+        // Recargar página con nuevo mes a través del controller
+        window.location.href = `${contextPath}/ConsultarCitaAsignadaController?vista=calendario&mes=${mes}&anio=${anio}`;
     });
     
     document.getElementById('nextMonth').addEventListener('click', () => {
         mesActual.setMonth(mesActual.getMonth() + 1);
-        mostrarCalendario();
+        const mes = mesActual.getMonth() + 1;
+        const anio = mesActual.getFullYear();
+        // Recargar página con nuevo mes a través del controller
+        window.location.href = `${contextPath}/ConsultarCitaAsignadaController?vista=calendario&mes=${mes}&anio=${anio}`;
     });
     
     document.getElementById('todayBtn').addEventListener('click', () => {
-        mesActual = new Date();
-        mostrarCalendario();
+        // Recargar página con mes actual
+        window.location.href = `${contextPath}/ConsultarCitaAsignadaController?vista=calendario`;
     });
 }
 
@@ -102,9 +126,10 @@ function mostrarCalendario() {
     const citasPorDia = {};
     citasDelDoctor.forEach(cita => {
         // Solo contar citas pendientes
-        if (cita.estado !== 'Pendiente') return;
+        if (cita.estadoCita !== 'Pendiente') return;
 
-        const fechaCita = new Date(cita.fecha + 'T00:00:00');
+        const fechaCita = parseFecha(cita.fecha);
+        
         if (fechaCita.getMonth() === mesActual.getMonth() && 
             fechaCita.getFullYear() === mesActual.getFullYear()) {
             const dia = fechaCita.getDate();
@@ -173,13 +198,28 @@ function mostrarCalendario() {
 
 // Mostrar citas de un día específico
 function mostrarCitasDia(dia, citas) {
+    console.log('=== MOSTRAR CITAS DEL DÍA ===');
+    console.log('Día:', dia);
+    console.log('Citas recibidas:', citas);
+    console.log('Número de citas:', citas?.length || 0);
+    
     const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
                    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
     
     const tituloModal = document.getElementById('tituloModal');
+    if (!tituloModal) {
+        console.error('❌ No se encontró el elemento tituloModal');
+        return;
+    }
+    
     tituloModal.textContent = `Citas del ${dia} de ${meses[mesActual.getMonth()]} de ${mesActual.getFullYear()}`;
     
     const listadoCitasDia = document.getElementById('listadoCitasDia');
+    if (!listadoCitasDia) {
+        console.error('❌ No se encontró el elemento listadoCitasDia');
+        return;
+    }
+    
     listadoCitasDia.innerHTML = '';
     
     // Si las citas vienen como string (desde onclick), parsear
@@ -187,12 +227,24 @@ function mostrarCitasDia(dia, citas) {
         citas = JSON.parse(citas);
     }
     
-    citas.forEach(cita => {
-        const citaCard = crearTarjetaCita(cita);
-        listadoCitasDia.appendChild(citaCard);
-    });
+    if (!citas || citas.length === 0) {
+        listadoCitasDia.innerHTML = '<p class="text-center">No hay citas para este día</p>';
+    } else {
+        citas.forEach((cita, index) => {
+            console.log(`Creando tarjeta para cita ${index + 1}:`, cita);
+            const citaCard = crearTarjetaCita(cita);
+            listadoCitasDia.appendChild(citaCard);
+        });
+    }
     
-    document.getElementById('modalCitas').style.display = 'block';
+    const modal = document.getElementById('modalCitas');
+    if (!modal) {
+        console.error('❌ No se encontró el elemento modalCitas');
+        return;
+    }
+    
+    modal.style.display = 'block';
+    console.log('✅ Modal mostrado correctamente');
 }
 
 // Cerrar modal
@@ -204,20 +256,39 @@ function cerrarModal() {
 function crearTarjetaCita(cita) {
     const card = document.createElement('div');
     card.className = 'cita-card';
-    card.setAttribute('data-id', cita.id);
+    card.setAttribute('data-id', cita.idCita || cita.id);
     
     // Determinar la clase de estado
     let estadoClass = 'pendiente';
-    if (cita.estado === 'Completada') {
+    const estado = cita.estadoCita || cita.estado || 'Pendiente';
+    if (estado === 'Completada') {
         estadoClass = 'completada';
-    } else if (cita.estado === 'Cancelada') {
+    } else if (estado === 'Cancelada') {
         estadoClass = 'cancelada';
     }
     
     // Formatear la fecha
-    const fecha = new Date(cita.fecha + 'T00:00:00');
+    const fecha = parseFecha(cita.fecha);
     const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const fechaFormateada = fecha.toLocaleDateString('es-ES', opciones);
+    
+    // Obtener nombre del estudiante
+    const nombreEstudiante = cita.estudiante?.nombreCompleto || cita.usuarioNombre || 'Estudiante';
+    
+    // Obtener hora (puede venir como objeto Hora con horaInicio y horaFin)
+    let horaTexto = '';
+    if (cita.hora) {
+        if (typeof cita.hora === 'object' && cita.hora.horaInicio) {
+            horaTexto = `${cita.hora.horaInicio} - ${cita.hora.horaFin}`;
+        } else {
+            horaTexto = cita.hora;
+        }
+    } else {
+        horaTexto = 'Hora no especificada';
+    }
+    
+    // Obtener motivo
+    const motivo = cita.motivoCita || cita.motivo || 'Sin motivo especificado';
     
     card.innerHTML = `
         <div class="cita-header">
@@ -226,9 +297,9 @@ function crearTarjetaCita(cita) {
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                     <circle cx="12" cy="7" r="4"></circle>
                 </svg>
-                <span>${cita.usuarioNombre}</span>
+                <span>${nombreEstudiante}</span>
             </div>
-            <span class="cita-estado ${estadoClass}">${cita.estado}</span>
+            <span class="cita-estado ${estadoClass}">${estado}</span>
         </div>
         
         <div class="cita-info">
@@ -247,7 +318,7 @@ function crearTarjetaCita(cita) {
                     <circle cx="12" cy="12" r="10"></circle>
                     <polyline points="12 6 12 12 16 14"></polyline>
                 </svg>
-                <span>${cita.hora}</span>
+                <span>${horaTexto}</span>
             </div>
             
             <div class="info-item">
@@ -258,18 +329,18 @@ function crearTarjetaCita(cita) {
                     <line x1="16" y1="17" x2="8" y2="17"></line>
                     <polyline points="10 9 9 9 8 9"></polyline>
                 </svg>
-                <span><strong>Especialidad:</strong> ${cita.especialidad}</span>
+                <span><strong>Especialidad:</strong> ${cita.especialidad?.titulo || cita.especialidad || 'No especificada'}</span>
             </div>
         </div>
         
         <div class="cita-motivo">
             <strong>Motivo de consulta:</strong>
-            <p>${cita.motivo}</p>
+            <p>${motivo}</p>
         </div>
         
-        ${cita.estado === 'Pendiente' ? `
+        ${estado === 'Pendiente' ? `
             <div class="cita-acciones">
-                <button class="btn-cancelar" onclick="cancelarCita('${cita.id}')">
+                <button class="btn-cancelar" onclick="cancelarCita('${cita.idCita || cita.id}')">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="10"></circle>
                         <line x1="15" y1="9" x2="9" y2="15"></line>

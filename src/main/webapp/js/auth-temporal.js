@@ -164,10 +164,12 @@ function actualizarHeader() {
     
     if (usuario) {
         const primerNombre = usuario.nombre.split(' ')[0];
+        // Obtener la ruta base del contexto
+        const contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf('/', 1));
         authButton.className = 'user-logged';
         authButton.innerHTML = `
             <div class="user-menu">
-                <img src="images/user.svg" alt="Usuario" class="user-avatar">
+                <img src="${contextPath}/images/user.svg" alt="Usuario" class="user-avatar">
                 <span class="user-name">${primerNombre}</span>
                 <div class="user-dropdown">
                     <div class="dropdown-header">
@@ -265,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (errorDiv) {
                     errorDiv.classList.remove('show');
                 }
-                // Redirigir a página anterior o inicio
+                // Redirigir a página anterior o inicio.html
                 const urlAnterior = sessionStorage.getItem('paginaAnterior');
                 window.location.href = urlAnterior || 'inicio.html';
                 sessionStorage.removeItem('paginaAnterior');

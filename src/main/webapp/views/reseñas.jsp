@@ -33,12 +33,12 @@
 
     <nav>
         <ul>
-            <li><a href="${pageContext.request.contextPath}/views/inicio.jsp" class="font-bold">Inicio</a></li>
+            <li><a href="${pageContext.request.contextPath}/inicio.html" class="font-bold">Inicio</a></li>
             <li><a href="${pageContext.request.contextPath}/views/especialidades.jsp" class="font-bold">Especialidades</a></li>
             <li><a href="${pageContext.request.contextPath}/ConsultarCitasAgendadasController" class="font-bold">Mis Citas</a></li>
-            <li><a href="${pageContext.request.contextPath}/views/reseñas.jsp" class="font-bold">Reseñas</a></li>
+            <li><a href="${pageContext.request.contextPath}/reseñas.jsp" class="font-bold">Reseñas</a></li>
             <li class="login mt-2 mb-2" id="authButton">
-                <a href="${pageContext.request.contextPath}/index.jsp" class="font-bold">Login</a>
+                <a href="${pageContext.request.contextPath}/index.html" class="font-bold">Login</a>
             </li>
         </ul>
     </nav>
@@ -108,7 +108,7 @@
 </footer>
 
 <!-- JS -->
-<script src="${pageContext.request.contextPath}/js/auth.js"></script>
+<script src="${pageContext.request.contextPath}/js/auth-temporal.js"></script>
 <script src="${pageContext.request.contextPath}/js/resenas.js"></script>
 
 </body>

@@ -17,9 +17,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bienestar Politécnico - Especialidades</title>
-    <link rel="icon" type="image/png" href="../images/logo_epn.png">
-    <link rel="stylesheet" href="../framework.css">
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="icon" type="image/png" href="<%= request.getContextPath() %>/images/logo_epn.png">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/framework.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/styles.css">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,16 +30,16 @@
 <body>
     <header>
         <div class="logo">
-            <img src="../images/logo.svg" alt="Logo">
+            <img src="<%= request.getContextPath() %>/images/logo.svg" alt="Logo">
         </div>
         <nav>
             <ul>
-                <li><a href="../inicio.jsp" class="font-bold">Inicio</a></li>
-                <li><a href="especialidades.jsp" class="font-bold">Especialidades</a></li>
-                <li><a href="../ConsultarCitasAgendadasController" class="font-bold">Mis Citas</a></li>
-                <li><a href="../reseñas.jsp" class="font-bold">Reseñas</a></li>
+                <li><a href="<%= request.getContextPath() %>/inicio.html" class="font-bold">Inicio</a></li>
+                <li><a href="<%= request.getContextPath() %>/views/especialidades.jsp" class="font-bold">Especialidades</a></li>
+                <li><a href="<%= request.getContextPath() %>/ConsultarCitasAgendadasController" class="font-bold">Mis Citas</a></li>
+                <li><a href="<%= request.getContextPath() %>/reseñas.jsp" class="font-bold">Reseñas</a></li>
                 <li class="login mt-2 mb-2" id="authButton">
-                    <a href="../index.jsp" class="font-bold">Login</a>
+                    <a href="<%= request.getContextPath() %>/index.html" class="font-bold">Login</a>
                 </li>
             </ul>
         </nav>
@@ -124,10 +124,10 @@
             <div class="footer-section">
                 <h3>Enlaces Rápidos</h3>
                 <ul class="footer-links">
-                    <li><a href="inicio.jsp">Inicio</a></li>
-                    <li><a href="especialidades.jsp">Especialidades</a></li>
-                    <li><a href="../ConsultarCitasAgendadasController">Mis Citas</a></li>
-                    <li><a href="reseñas.jsp">Reseñas</a></li>
+                    <li><a href="<%= request.getContextPath() %>/inicio.html">Inicio</a></li>
+                    <li><a href="<%= request.getContextPath() %>/views/especialidades.jsp">Especialidades</a></li>
+                    <li><a href="<%= request.getContextPath() %>/ConsultarCitasAgendadasController">Mis Citas</a></li>
+                    <li><a href="<%= request.getContextPath() %>/reseñas.jsp">Reseñas</a></li>
                 </ul>
             </div>
 
@@ -169,8 +169,8 @@
         </div>
     </footer>
 
-    <script src="../js/auth-temporal.js"></script>
-    <script src="../js/especialidades.js"></script>
+    <script src="<%= request.getContextPath() %>/js/auth-temporal.js"></script>
+    <script src="<%= request.getContextPath() %>/js/especialidades.js"></script>
     
 </body>
 </html>
