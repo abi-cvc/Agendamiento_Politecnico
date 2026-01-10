@@ -1,18 +1,23 @@
-Listado de rutas de carpetas para el volumen Respaldos
-El n£mero de serie del volumen es F876-62DB
-D:.
+Listado de rutas de carpetas para el volumen Windos
+El n£mero de serie del volumen es 148F-B2F0
+C:.
 |   .classpath
 |   .gitignore
 |   .project
+|   .project.backup
 |   estructura.txt
+|   limpiar_caches.bat
 |   pom.xml
 |   README.md
 |   
 +---.settings
 |       .jsdtscope
+|       org.eclipse.core.resources.prefs
 |       org.eclipse.jdt.core.prefs
+|       org.eclipse.jpt.core.prefs
 |       org.eclipse.m2e.core.prefs
 |       org.eclipse.wst.common.component
+|       org.eclipse.wst.common.project.facet.core.prefs.xml
 |       org.eclipse.wst.common.project.facet.core.xml
 |       org.eclipse.wst.jsdt.ui.superType.container
 |       org.eclipse.wst.jsdt.ui.superType.name
@@ -21,105 +26,314 @@ D:.
 +---.vscode
 |       settings.json
 |       
-+---ADOO
-|       1. Caso de Uso - Agendamiento Polit‚cnico.png
-|       2. Descripcion formal de los CU.docx
-|       3. Diagrama de clases - Agendamiento Polit‚cnico.png
-|       4.1. Diagrama de robustez de agendar cita.png
-|       
-+---build
-|   \---classes
 +---src
-|   \---main
+|   +---main
+|   |   +---java
+|   |   |   +---controller
+|   |   |   |       AgendarCitasController.java
+|   |   |   |       AtenderCitaController.java
+|   |   |   |       CancelarCitaController.java
+|   |   |   |       ConsultarCitaAsignadaController.java
+|   |   |   |       ConsultarCitasAgendadasController.java
+|   |   |   |       DisponibilidadServlet.java
+|   |   |   |       DoctorController.java
+|   |   |   |       EspecialidadController.java
+|   |   |   |       LoginServlet.java
+|   |   |   |       LogoutServlet.java
+|   |   |   |       
+|   |   |   +---model
+|   |   |   |   +---dao
+|   |   |   |   |       AdministradorDAO.java
+|   |   |   |   |       CitaDAO.java
+|   |   |   |   |       DAOFactory.java
+|   |   |   |   |       DisponibilidadDAO.java
+|   |   |   |   |       DoctorDAO.java
+|   |   |   |   |       EspecialidadDAO.java
+|   |   |   |   |       EstudianteDAO.java
+|   |   |   |   |       GenericDAO.java
+|   |   |   |   |       ICitaDAO.java
+|   |   |   |   |       IDisponibilidadDAO.java
+|   |   |   |   |       IDoctorDAO.java
+|   |   |   |   |       IEspecialidadDAO.java
+|   |   |   |   |       JPADAOFactory.java
+|   |   |   |   |       JPAGenericDAO.java
+|   |   |   |   |       
+|   |   |   |   \---entity
+|   |   |   |           Administrador.java
+|   |   |   |           Cita.java
+|   |   |   |           Disponibilidad.java
+|   |   |   |           Doctor.java
+|   |   |   |           Especialidad.java
+|   |   |   |           Estudiante.java
+|   |   |   |           
+|   |   |   \---util
+|   |   |           DatabaseConnection.java
+|   |   |           JPAUtil.java
+|   |   |           TestConnection.java
+|   |   |           
+|   |   +---resources
+|   |   |   |   add_passwords.sql
+|   |   |   |   crear_usuario_prueba.sql
+|   |   |   |   doctores_disponibilidad.sql
+|   |   |   |   especialidades.sql
+|   |   |   |   init_database.sql
+|   |   |   |   insert_citas_prueba.sql
+|   |   |   |   insert_disponibilidades.sql
+|   |   |   |   update_database.sql
+|   |   |   |   
+|   |   |   \---META-INF
+|   |   |           persistence.xml
+|   |   |           
+|   |   \---webapp
+|   |       |   agendamientos.html
+|   |       |   atender-cita.html
+|   |       |   atender-cita.jsp
+|   |       |   citas-agendadas.html
+|   |       |   citas-agendadas.jsp
+|   |       |   consultar-citas.html
+|   |       |   consultar-citas.jsp
+|   |       |   especialidades.html
+|   |       |   estructura.txt
+|   |       |   framework.css
+|   |       |   index.html
+|   |       |   index.jsp
+|   |       |   inicio.html
+|   |       |   login-success.jsp
+|   |       |   rese¤as.html
+|   |       |   styles.css
+|   |       |   test-login.jsp
+|   |       |   
+|   |       +---images
+|   |       |       logo.svg
+|   |       |       logo_epn.png
+|   |       |       user.svg
+|   |       |       
+|   |       +---js
+|   |       |       agendamientos-calendario.js
+|   |       |       agendamientos.js
+|   |       |       atender-cita-nuevo.js
+|   |       |       atender-cita.js
+|   |       |       auth-session.js
+|   |       |       auth-temporal.js
+|   |       |       auth.js
+|   |       |       cancelar-cita.js
+|   |       |       citas-agendadas.js
+|   |       |       consultar-citas.js
+|   |       |       especialidades.js
+|   |       |       resenas.js
+|   |       |       
+|   |       +---META-INF
+|   |       |       MANIFEST.MF
+|   |       |       
+|   |       \---views
+|   |               agendamientos.jsp
+|   |               calendario.jsp
+|   |               confirmacion.jsp
+|   |               especialidades.jsp
+|   |               lista-doctores.jsp
+|   |               rese¤as.jsp
+|   |               
+|   \---test
 |       +---java
-|       |   +---controller
-|       |   |       AgendarCitasController.java
-|       |   |       
-|       |   +---model
-|       |   |   +---dao
-|       |   |   |       CitaDAO.java
-|       |   |   |       
-|       |   |   \---entity
-|       |   |           Cita.java
-|       |   |           
-|       |   \---util
-|       |           JPAUtil.java
-|       |           
-|       +---resources
-|       |   \---META-INF
-|       |           persistence.xml
-|       |           
-|       \---webapp
-|           |   agendamientos.html
-|           |   agendamientos.jsp
-|           |   atender-cita.html
-|           |   atender-cita.jsp
-|           |   citas-agendadas.html
-|           |   citas-agendadas.jsp
-|           |   consultar-citas.html
-|           |   consultar-citas.jsp
-|           |   especialidades.html
-|           |   especialidades.jsp
-|           |   estructura.txt
-|           |   framework.css
-|           |   index.html
-|           |   index.jsp
-|           |   inicio.html
-|           |   inicio.jsp
-|           |   rese¤as.html
-|           |   rese¤as.jsp
-|           |   styles.css
-|           |   
-|           +---images
-|           |       logo.svg
-|           |       logo_epn.png
-|           |       user.svg
-|           |       
-|           +---js
-|           |       agendamientos.js
-|           |       atender-cita.js
-|           |       auth.js
-|           |       citas-agendadas.js
-|           |       consultar-citas.js
-|           |       especialidades.js
-|           |       resenas.js
-|           |       
-|           +---META-INF
-|           |       MANIFEST.MF
-|           |       
-|           +---views
-|           |       agendarCita.jsp
-|           |       confirmacion.jsp
-|           |       
-|           \---WEB-INF
-|               \---lib
+|       \---resources
 \---target
+    |   01_MiProyecto-0.0.1-SNAPSHOT.war
+    |   
+    +---01_MiProyecto-0.0.1-SNAPSHOT
+    |   |   agendamientos.html
+    |   |   atender-cita.html
+    |   |   atender-cita.jsp
+    |   |   citas-agendadas.html
+    |   |   citas-agendadas.jsp
+    |   |   consultar-citas.html
+    |   |   consultar-citas.jsp
+    |   |   especialidades.html
+    |   |   estructura.txt
+    |   |   framework.css
+    |   |   index.html
+    |   |   index.jsp
+    |   |   inicio.html
+    |   |   login-success.jsp
+    |   |   rese¤as.html
+    |   |   styles.css
+    |   |   test-login.jsp
+    |   |   
+    |   +---images
+    |   |       logo.svg
+    |   |       logo_epn.png
+    |   |       user.svg
+    |   |       
+    |   +---js
+    |   |       agendamientos-calendario.js
+    |   |       agendamientos.js
+    |   |       atender-cita-nuevo.js
+    |   |       atender-cita.js
+    |   |       auth-session.js
+    |   |       auth-temporal.js
+    |   |       auth.js
+    |   |       cancelar-cita.js
+    |   |       citas-agendadas.js
+    |   |       consultar-citas.js
+    |   |       especialidades.js
+    |   |       resenas.js
+    |   |       
+    |   +---META-INF
+    |   |       MANIFEST.MF
+    |   |       
+    |   +---views
+    |   |       agendamientos.jsp
+    |   |       calendario.jsp
+    |   |       confirmacion.jsp
+    |   |       especialidades.jsp
+    |   |       lista-doctores.jsp
+    |   |       rese¤as.jsp
+    |   |       
+    |   \---WEB-INF
+    |       +---classes
+    |       |   |   add_passwords.sql
+    |       |   |   crear_usuario_prueba.sql
+    |       |   |   doctores_disponibilidad.sql
+    |       |   |   especialidades.sql
+    |       |   |   init_database.sql
+    |       |   |   insert_citas_prueba.sql
+    |       |   |   insert_disponibilidades.sql
+    |       |   |   update_database.sql
+    |       |   |   
+    |       |   +---controller
+    |       |   |       AgendarCitasController.class
+    |       |   |       AtenderCitaController.class
+    |       |   |       CancelarCitaController.class
+    |       |   |       ConsultarCitaAsignadaController.class
+    |       |   |       ConsultarCitasAgendadasController.class
+    |       |   |       DisponibilidadServlet.class
+    |       |   |       DoctorController.class
+    |       |   |       EspecialidadController.class
+    |       |   |       LoginServlet.class
+    |       |   |       LogoutServlet.class
+    |       |   |       
+    |       |   +---META-INF
+    |       |   |       persistence.xml
+    |       |   |       
+    |       |   +---model
+    |       |   |   +---dao
+    |       |   |   |       AdministradorDAO.class
+    |       |   |   |       CitaDAO.class
+    |       |   |   |       DAOFactory.class
+    |       |   |   |       DisponibilidadDAO.class
+    |       |   |   |       DoctorDAO.class
+    |       |   |   |       EspecialidadDAO.class
+    |       |   |   |       EstudianteDAO.class
+    |       |   |   |       GenericDAO.class
+    |       |   |   |       ICitaDAO.class
+    |       |   |   |       IDisponibilidadDAO.class
+    |       |   |   |       IDoctorDAO.class
+    |       |   |   |       IEspecialidadDAO.class
+    |       |   |   |       JPADAOFactory.class
+    |       |   |   |       JPAGenericDAO.class
+    |       |   |   |       
+    |       |   |   \---entity
+    |       |   |           Administrador.class
+    |       |   |           Cita.class
+    |       |   |           Disponibilidad.class
+    |       |   |           Doctor.class
+    |       |   |           Especialidad.class
+    |       |   |           Estudiante.class
+    |       |   |           
+    |       |   \---util
+    |       |           DatabaseConnection.class
+    |       |           JPAUtil.class
+    |       |           TestConnection.class
+    |       |           
+    |       \---lib
+    |               angus-activation-2.0.1.jar
+    |               eclipselink-4.0.2.jar
+    |               gson-2.10.1.jar
+    |               jakarta.activation-api-2.1.2.jar
+    |               jakarta.el-api-6.0.0.jar
+    |               jakarta.servlet.jsp.jstl-3.0.1.jar
+    |               jakarta.servlet.jsp.jstl-api-3.0.0.jar
+    |               jakarta.xml.bind-api-4.0.0.jar
+    |               jaxb-core-4.0.3.jar
+    |               jaxb-xjc-4.0.3.jar
+    |               mysql-connector-j-8.3.0.jar
+    |               protobuf-java-3.25.1.jar
+    |               
     +---classes
+    |   |   add_passwords.sql
+    |   |   crear_usuario_prueba.sql
+    |   |   doctores_disponibilidad.sql
+    |   |   especialidades.sql
+    |   |   init_database.sql
+    |   |   insert_citas_prueba.sql
+    |   |   insert_disponibilidades.sql
+    |   |   update_database.sql
+    |   |   
     |   +---controller
     |   |       AgendarCitasController.class
+    |   |       AtenderCitaController.class
+    |   |       CancelarCitaController.class
+    |   |       ConsultarCitaAsignadaController.class
+    |   |       ConsultarCitasAgendadasController.class
+    |   |       DisponibilidadServlet.class
+    |   |       DoctorController.class
+    |   |       EspecialidadController.class
+    |   |       LoginServlet.class
+    |   |       LogoutServlet.class
     |   |       
     |   +---META-INF
     |   |       persistence.xml
     |   |       
     |   +---model
     |   |   +---dao
+    |   |   |       AdministradorDAO.class
     |   |   |       CitaDAO.class
+    |   |   |       DAOFactory.class
+    |   |   |       DisponibilidadDAO.class
+    |   |   |       DoctorDAO.class
+    |   |   |       EspecialidadDAO.class
+    |   |   |       EstudianteDAO.class
+    |   |   |       GenericDAO.class
+    |   |   |       ICitaDAO.class
+    |   |   |       IDisponibilidadDAO.class
+    |   |   |       IDoctorDAO.class
+    |   |   |       IEspecialidadDAO.class
+    |   |   |       JPADAOFactory.class
+    |   |   |       JPAGenericDAO.class
     |   |   |       
     |   |   \---entity
+    |   |           Administrador.class
     |   |           Cita.class
+    |   |           Disponibilidad.class
+    |   |           Doctor.class
+    |   |           Especialidad.class
+    |   |           Estudiante.class
     |   |           
     |   \---util
+    |           DatabaseConnection.class
     |           JPAUtil.class
+    |           TestConnection.class
     |           
+    +---generated-sources
+    |   \---annotations
     +---m2e-wtp
     |   \---web-resources
     |       \---META-INF
     |           |   MANIFEST.MF
     |           |   
     |           \---maven
-    |               \---Agendamiento_Politecnico
-    |                   \---Agendamiento_Politecnico
+    |               \---01_MiProyecto
+    |                   \---01_MiProyecto
     |                           pom.properties
     |                           pom.xml
     |                           
+    +---maven-archiver
+    |       pom.properties
+    |       
+    +---maven-status
+    |   \---maven-compiler-plugin
+    |       \---compile
+    |           \---default-compile
+    |                   createdFiles.lst
+    |                   inputFiles.lst
+    |                   
     \---test-classes

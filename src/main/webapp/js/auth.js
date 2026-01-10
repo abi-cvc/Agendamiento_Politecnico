@@ -81,12 +81,21 @@ const usuariosDB = [
     // Administrador
     {
         id: 10,
-        nombre: "Admin Bienestar",
+        nombre: "Pedro Sánchez",
         email: "admin@epn.edu.ec",
         password: "admin123",
         carrera: "Administración",
         rol: "admin"
     }
+	
+	{
+		id: 11,
+		nombre: "Lucía Fernandez",
+		email: "lucia.fernandez@epn.edu.ec",
+		password: "lucia.123",
+		carrera: "Ingeniería en Sistemas",
+		rol: "admin"
+	}
 ];
 
 // ===== FUNCIONES DE AUTENTICACIÓN =====
