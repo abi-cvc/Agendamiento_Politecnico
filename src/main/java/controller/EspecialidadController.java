@@ -219,7 +219,7 @@ public class EspecialidadController extends HttpServlet {
 		// No hay especialidad (modo creación)
 		request.setAttribute("especialidad", null);
 		request.setAttribute("accion", "crear");
-		request.getRequestDispatcher("views/admin/form-especialidad.jsp").forward(request, response);
+		request.getRequestDispatcher("/views/admin/form-especialidad.jsp").forward(request, response);
 	}
 	
 	/**
@@ -228,13 +228,13 @@ public class EspecialidadController extends HttpServlet {
 	private void mostrarFormularioEditar(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		int id = Integer.parseInt(request. getParameter("id"));
+		int id = Integer.parseInt(request.getParameter("id"));
 		Especialidad especialidad = factory.getEspecialidadDAO().getById(id);
 		
 		if (especialidad != null) {
 			request.setAttribute("especialidad", especialidad);
 			request.setAttribute("accion", "editar");
-			request.getRequestDispatcher("views/admin/form-especialidad.jsp").forward(request, response);
+			request.getRequestDispatcher("/views/admin/form-especialidad.jsp").forward(request, response);
 		} else {
 			response.sendRedirect(request.getContextPath() + "/especialidades?accion=listarAdmin");
 		}
@@ -266,7 +266,7 @@ public class EspecialidadController extends HttpServlet {
 	private void actualizarEspecialidad(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		int id = Integer.parseInt(request. getParameter("id"));
+		int id = Integer.parseInt(request.getParameter("id"));
 		Especialidad especialidad = factory.getEspecialidadDAO().getById(id);
 		
 		if (especialidad != null) {
