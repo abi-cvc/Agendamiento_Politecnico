@@ -5,8 +5,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.dao.CitaDAO;
-import model.dao.DisponibilidadDAO;
+import model.dao.DAOFactory;
+import model.dao.ICitaDAO;
+import model.dao.IDisponibilidadDAO;
 import model.entity.Cita;
 import model.entity.Disponibilidad;
 
@@ -15,6 +16,7 @@ import java.io.IOException;
 /**
  * CancelarCitaController - Según diagrama de robustez
  * Maneja la cancelación de citas médicas
+ * ACTUALIZADO: Usa DAOFactory para obtener instancias de DAOs
  * 
  * FLUJO SEGÚN DIAGRAMA:
  * 1: cancelarCita(idCita)
@@ -29,14 +31,12 @@ import java.io.IOException;
 public class CancelarCitaController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     
-    private CitaDAO citaDAO;
-    private DisponibilidadDAO disponibilidadDAO;
+    private DAOFactory factory;
     
     @Override
     public void init() throws ServletException {
-        citaDAO = new CitaDAO();
-        disponibilidadDAO = new DisponibilidadDAO();
-        System.out.println("✅ CancelarCitaController inicializado");
+        factory = DAOFactory.getFactory();
+        System.out.println("✅ CancelarCitaController inicializado con Factory");
     }
 
     @Override
@@ -64,8 +64,8 @@ public class CancelarCitaController extends HttpServlet {
             if ("true".equals(confirmar)) {
                 System.out.println("📋 Procesando cancelación de cita ID: " + idCita);
                 
-                // Obtener la cita
-                Cita cita = citaDAO.obtenerPorId(idCita);
+                // Obtener la cita usando Factory
+                Cita cita = factory.getCitaDAO().getById(idCita);
                 
                 if (cita == null) {
                     enviarError(request, response, "Cita no encontrada", vieneDesde);
@@ -91,13 +91,13 @@ public class CancelarCitaController extends HttpServlet {
                     "Cita cancelada. Estado anterior: " + estadoAnterior
                 );
                 
-                citaDAO.actualizar(cita);
+                factory.getCitaDAO().update(cita);
                 System.out.println("✅ Estado de cita actualizado a: Cancelada");
                 
                 // ===== 5. LIBERAR HORARIO (si existe disponibilidad asociada) =====
                 if (cita.getDoctor() != null) {
                     try {
-                        Disponibilidad disponibilidad = disponibilidadDAO.obtenerPorDoctorYFechaYHora(
+                        Disponibilidad disponibilidad = factory.getDisponibilidadDAO().obtenerPorDoctorYFechaYHora(
                             cita.getDoctor().getIdDoctor(),
                             cita.getFechaCita(),
                             cita.getHoraCita()
@@ -105,7 +105,7 @@ public class CancelarCitaController extends HttpServlet {
                         
                         if (disponibilidad != null) {
                             disponibilidad.setDisponible(true);
-                            disponibilidadDAO.actualizar(disponibilidad);
+                            factory.getDisponibilidadDAO().update(disponibilidad);
                             System.out.println("✅ Horario liberado: " + cita.getFechaCita() + " " + cita.getHoraCita());
                         }
                     } catch (Exception e) {

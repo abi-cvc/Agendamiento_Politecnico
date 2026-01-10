@@ -6,7 +6,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import model.dao.CitaDAO;
+import model.dao.DAOFactory;
+import model.dao.ICitaDAO;
 import model.entity.Cita;
 
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.util.List;
 /**
  * ConsultarCitasAgendadasController - Según diagrama de robustez
  * Maneja la consulta de citas agendadas por estudiante
+ * ACTUALIZADO: Usa DAOFactory para obtener instancias de DAOs
  * 
  * FLUJO SEGÚN DIAGRAMA:
  * 1: consultarCitasAgendadas(idEstudiante)
@@ -27,12 +29,12 @@ import java.util.List;
 public class ConsultarCitasAgendadasController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     
-    private CitaDAO citaDAO;
+    private DAOFactory factory;
     
     @Override
     public void init() throws ServletException {
-        citaDAO = new CitaDAO();
-        System.out.println("✅ ConsultarCitasAgendadasController inicializado");
+        factory = DAOFactory.getFactory();
+        System.out.println("✅ ConsultarCitasAgendadasController inicializado con Factory");
     }
 
     @Override
@@ -62,7 +64,7 @@ public class ConsultarCitasAgendadasController extends HttpServlet {
             // TODO: Filtrar por estudiante cuando esté en producción
             System.out.println("📊 Consultando citas en la base de datos...");
             
-            List<Cita> citasAgendadas = citaDAO.obtenerTodas();
+            List<Cita> citasAgendadas = factory.getCitaDAO().getAll();
             
             // ===== 3 y 4. ORM CARGA AUTOMÁTICAMENTE =====
             // Las relaciones Doctor y Especialidad se cargan con FetchType.EAGER

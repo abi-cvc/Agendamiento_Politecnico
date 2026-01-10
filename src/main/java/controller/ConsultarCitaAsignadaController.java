@@ -6,7 +6,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import model.dao.CitaDAO;
+import model.dao.DAOFactory;
+import model.dao.ICitaDAO;
 import model.entity.Cita;
 import model.entity.Doctor;
 
@@ -18,6 +19,7 @@ import java.util.List;
 /**
  * ConsultarCitaAsignadaController - Según diagrama de robustez
  * Maneja las citas asignadas a un doctor
+ * ACTUALIZADO: Usa DAOFactory para obtener instancias de DAOs
  * 
  * FLUJO SEGÚN DIAGRAMA:
  * 1: consultarCitasAgendadasMes(idDoctor) + seleccionarDiaMes(fecha)
@@ -32,12 +34,12 @@ import java.util.List;
 public class ConsultarCitaAsignadaController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     
-    private CitaDAO citaDAO;
+    private DAOFactory factory;
     
     @Override
     public void init() throws ServletException {
-        citaDAO = new CitaDAO();
-        System.out.println("✅ ConsultarCitaAsignadaController inicializado");
+        factory = DAOFactory.getFactory();
+        System.out.println("✅ ConsultarCitaAsignadaController inicializado con Factory");
     }
 
     @Override
@@ -94,8 +96,8 @@ public class ConsultarCitaAsignadaController extends HttpServlet {
                 System.out.println("📅 Primer día del mes: " + mesActual.atDay(1));
                 System.out.println("📅 Último día del mes: " + mesActual.atEndOfMonth());
                 
-                // Usar el método del DAO que filtra por doctor y mes
-                List<Cita> citasDoctor = citaDAO.obtenerPorDoctorYMes(9, mesActual);
+                // Usar el método del DAO que filtra por doctor y mes - USANDO FACTORY
+                List<Cita> citasDoctor = factory.getCitaDAO().obtenerPorDoctorYMes(9, mesActual);
                 
                 System.out.println("📊 Total citas del doctor ID 9 en " + mesActual + ": " + citasDoctor.size());
                 
@@ -148,7 +150,7 @@ public class ConsultarCitaAsignadaController extends HttpServlet {
                 // ===== MODO ATENDER CITA: Obtener citas del día =====
                 // ===== 5. OBTENER TODAS LAS CITAS DEL DÍA =====
                 System.out.println("\n🔍 Consultando citas del día " + fechaSeleccionada + " en la BD...");
-                List<Cita> citasDia = citaDAO.obtenerPorFecha(fechaSeleccionada);
+                List<Cita> citasDia = factory.getCitaDAO().obtenerPorFecha(fechaSeleccionada);
                 System.out.println("📊 Total citas del día " + fechaSeleccionada + ": " + citasDia.size());
                 
                 // ===== 6. ORM CARGA AUTOMÁTICAMENTE =====

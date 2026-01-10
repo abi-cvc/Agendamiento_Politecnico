@@ -7,32 +7,21 @@ import util.JPAUtil;
 
 import java.util.List;
 
-public class EspecialidadDAO {
+/**
+ * DAO para la entidad Especialidad
+ * Extiende JPAGenericDAO e implementa IEspecialidadDAO según el patrón del diagrama de arquitectura
+ */
+public class EspecialidadDAO extends JPAGenericDAO<Especialidad, Integer> implements IEspecialidadDAO {
 	
-	/**
-	 * Obtiene todas las especialidades de la base de datos
-	 * @return Lista de especialidades
-	 */
-	public List<Especialidad> obtenerEspecialidades() {
-		EntityManager em = JPAUtil.getEntityManager();
-		try {
-			TypedQuery<Especialidad> query = em.createQuery(
-				"SELECT e FROM Especialidad e ORDER BY e.nombre", 
-				Especialidad.class
-			);
-			return query.getResultList();
-		} finally {
-			em.close();
-		}
+	public EspecialidadDAO() {
+		super(Especialidad.class);
 	}
 	
-	/**
-	 * Obtiene una especialidad por su nombre
-	 * @param nombre Nombre de la especialidad
-	 * @return Especialidad encontrada o null
-	 */
+	// ===== IMPLEMENTACIÓN DE IEspecialidadDAO =====
+	
+	@Override
 	public Especialidad obtenerPorNombre(String nombre) {
-		EntityManager em = JPAUtil.getEntityManager();
+		EntityManager em = getEntityManager();
 		try {
 			TypedQuery<Especialidad> query = em.createQuery(
 				"SELECT e FROM Especialidad e WHERE e.nombre = :nombre", 
@@ -46,38 +35,59 @@ public class EspecialidadDAO {
 		}
 	}
 	
-	/**
-	 * Obtiene una especialidad por su ID
-	 * @param id ID de la especialidad
-	 * @return Especialidad encontrada o null
-	 */
-	public Especialidad obtenerPorId(int id) {
-		EntityManager em = JPAUtil.getEntityManager();
+	@Override
+	public List<Especialidad> obtenerEspecialidadesActivas() {
+		// Si tienes un campo 'activo' en la entidad, usarlo
+		// Por ahora retorna todas
+		return getAll();
+	}
+	
+	@Override
+	public boolean existenEspecialidades() {
+		EntityManager em = getEntityManager();
 		try {
-			return em.find(Especialidad.class, id);
+			TypedQuery<Long> query = em.createQuery(
+				"SELECT COUNT(e) FROM Especialidad e", 
+				Long.class
+			);
+			Long count = query.getSingleResult();
+			return count > 0;
 		} finally {
 			em.close();
 		}
 	}
 	
+	// ===== MÉTODOS ESPECÍFICOS ADICIONALES =====
+	
+	/**
+	 * Obtiene todas las especialidades de la base de datos
+	 * @return Lista de especialidades
+	 * @deprecated Usar getAll() del GenericDAO
+	 */
+	@Deprecated
+	public List<Especialidad> obtenerEspecialidades() {
+		return getAll();
+	}
+	
+	/**
+	 * Obtiene una especialidad por su ID
+	 * @param id ID de la especialidad
+	 * @return Especialidad encontrada o null
+	 * @deprecated Usar getById(Integer) del GenericDAO
+	 */
+	@Deprecated
+	public Especialidad obtenerPorId(int id) {
+		return getById(id);
+	}
+	
 	/**
 	 * Guarda una nueva especialidad en la base de datos
 	 * @param especialidad Especialidad a guardar
+	 * @deprecated Usar create(Especialidad) del GenericDAO
 	 */
+	@Deprecated
 	public void guardar(Especialidad especialidad) {
-		EntityManager em = JPAUtil.getEntityManager();
-		try {
-			em.getTransaction().begin();
-			em.persist(especialidad);
-			em.getTransaction().commit();
-		} catch (Exception e) {
-			if (em.getTransaction().isActive()) {
-				em.getTransaction().rollback();
-			}
-			throw e;
-		} finally {
-			em.close();
-		}
+		create(especialidad);
 	}
 	
 	/**
@@ -118,23 +128,6 @@ public class EspecialidadDAO {
 				em.getTransaction().rollback();
 			}
 			throw e;
-		} finally {
-			em.close();
-		}
-	}
-	
-	/**
-	 * Verifica si existe al menos una especialidad en la base de datos
-	 * @return true si hay especialidades, false en caso contrario
-	 */
-	public boolean existenEspecialidades() {
-		EntityManager em = JPAUtil.getEntityManager();
-		try {
-			Long count = em.createQuery(
-				"SELECT COUNT(e) FROM Especialidad e", 
-				Long.class
-			).getSingleResult();
-			return count > 0;
 		} finally {
 			em.close();
 		}

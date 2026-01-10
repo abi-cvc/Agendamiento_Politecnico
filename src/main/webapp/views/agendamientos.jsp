@@ -1,34 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="model.dao.EspecialidadDAO" %>
-<%@ page import="model.dao.DoctorDAO" %>
-<%@ page import="model.entity.Especialidad" %>
-<%@ page import="model.entity.Doctor" %>
-<%@ page import="java.util.List" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 
-<%
-    // ===== CARGA DINÁMICA DESDE BD USANDO JPA =====
-    EspecialidadDAO especialidadDAO = new EspecialidadDAO();
-    DoctorDAO doctorDAO = new DoctorDAO();
-    
-    List<Especialidad> especialidades = especialidadDAO.obtenerEspecialidades();
-    request.setAttribute("especialidades", especialidades);
-    
-    // Obtener especialidad desde parámetro URL
-    String especialidadParam = request.getParameter("especialidad");
-    request.setAttribute("especialidadSeleccionada", especialidadParam);
-    
-    // Si hay especialidad seleccionada, cargar sus doctores
-    if (especialidadParam != null && !especialidadParam.trim().isEmpty()) {
-        Especialidad espSeleccionada = especialidadDAO.obtenerPorNombre(especialidadParam);
-        if (espSeleccionada != null) {
-            List<Doctor> doctores = doctorDAO.obtenerPorEspecialidad(espSeleccionada);
-            request.setAttribute("doctoresDisponibles", doctores);
-            request.setAttribute("especialidadObj", espSeleccionada);
-        }
-    }
-%>
+<%-- 
+  Agendamientos JSP - Según diagrama de robustez
+  Paso 6: mostrar(doctores)
+  Los datos vienen desde AgendarCitasController.solicitarCita()
+  que ejecuta: obtenerPorEspecialidad(idEspecialidad): doctores[] (paso 5)
+  
+  También muestra horarios (paso 9: mostrar(horarios))
+--%>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -58,9 +39,9 @@
     <nav>
         <ul>
             <li><a href="<%= request.getContextPath() %>/inicio.html" class="font-bold">Inicio</a></li>
-            <li><a href="<%= request.getContextPath() %>/views/especialidades.jsp" class="font-bold">Especialidades</a></li>
+            <li><a href="<%= request.getContextPath() %>/AgendarCitasController" class="font-bold">Especialidades</a></li>
             <li><a href="<%= request.getContextPath() %>/ConsultarCitasAgendadasController" class="font-bold">Mis Citas</a></li>
-            <li><a href="<%= request.getContextPath() %>/reseñas.jsp" class="font-bold">Reseñas</a></li>
+            <li><a href="<%= request.getContextPath() %>/inicio.html#reseñas" class="font-bold">Reseñas</a></li>
             <li class="login mt-2 mb-2" id="authButton">
                 <a href="<%= request.getContextPath() %>/index.html" class="font-bold">Login</a>
             </li>
@@ -87,7 +68,8 @@
                   action="../AgendarCitasController"
                   method="post">
                   
-                <input type="hidden" name="accion" value="agendarCita">
+                <%-- Paso 7 del diagrama: crearCita(idDoctor, fecha, motivo) --%>
+                <input type="hidden" name="accion" value="crearCita">
 
                 <div class="form-group">
                     <label for="especialidad">Especialidad</label>

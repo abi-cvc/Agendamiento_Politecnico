@@ -1,9 +1,10 @@
 package controller;
 
-import model.dao.CitaDAO;
-import model.dao.DoctorDAO;
-import model.dao.DisponibilidadDAO;
-import model.dao.EspecialidadDAO;
+import model.dao.DAOFactory;
+import model.dao.ICitaDAO;
+import model.dao.IDoctorDAO;
+import model.dao.IDisponibilidadDAO;
+import model.dao.IEspecialidadDAO;
 import model.entity.Cita;
 import model.entity.Doctor;
 import model.entity.Disponibilidad;
@@ -21,23 +22,19 @@ import java.util.List;
 /**
  * AgendarCitasController - Según diagrama de robustez
  * Maneja todo el flujo de agendamiento de citas
+ * ACTUALIZADO: Usa DAOFactory para obtener instancias de DAOs
  */
 @WebServlet("/AgendarCitasController")
 public class AgendarCitasController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	// DAOs - Según diagrama de robustez
-	private CitaDAO citaDAO;
-	private EspecialidadDAO especialidadDAO;
-	private DoctorDAO doctorDAO;
-	private DisponibilidadDAO disponibilidadDAO;
+	// Factory para obtener DAOs - Patrón Factory
+	private DAOFactory factory;
 	
 	@Override
 	public void init() throws ServletException {
-		citaDAO = new CitaDAO();
-		especialidadDAO = new EspecialidadDAO();
-		doctorDAO = new DoctorDAO();
-		disponibilidadDAO = new DisponibilidadDAO();
+		// Obtener factory una sola vez al inicializar el servlet
+		factory = DAOFactory.getFactory();
 	}
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -46,22 +43,22 @@ public class AgendarCitasController extends HttpServlet {
         String accion = request.getParameter("accion");
         
         if (accion == null) {
-            accion = "mostrarEspecialidades";
+            accion = "agendarCita"; // 1: agendarCita() - Método inicial según diagrama
         }
 
         try {
             switch (accion) {
-                case "mostrarEspecialidades":
-                    mostrarEspecialidades(request, response);
+                case "agendarCita":
+                    agendarCita(request, response); // 1: Método principal del diagrama
                     break;
                 case "solicitarCita":
-                    solicitarCita(request, response);
+                    solicitarCita(request, response); // 4: solicitarCita(idEspecialidad)
                     break;
                 case "obtenerDoctores":
-                    obtenerPorEspecialidad(request, response);
+                    obtenerPorEspecialidad(request, response); // 5: obtenerPorEspecialidad
                     break;
                 default:
-                    mostrarEspecialidades(request, response);
+                    agendarCita(request, response);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -76,10 +73,14 @@ public class AgendarCitasController extends HttpServlet {
         String accion = request.getParameter("accion");
 
         try {
-            if ("agendarCita".equals(accion)) {
-                procesarAgendamiento(request, response);
+            if ("crearCita".equals(accion)) {
+                // 7: crearCita(idDoctor, fecha, motivo) - Según diagrama de secuencia
+                crearCita(request, response);
+            } else if ("confirmar".equals(accion)) {
+                // 10: confirmar(idHorario) - Confirmación final
+                confirmarCita(request, response);
             } else {
-                response.sendRedirect(request.getContextPath() + "/especialidades.jsp");
+                response.sendRedirect(request.getContextPath() + "/AgendarCitasController?accion=agendarCita");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -91,15 +92,19 @@ public class AgendarCitasController extends HttpServlet {
     // ===== OPERACIONES SEGÚN DIAGRAMA DE ROBUSTEZ =====
     
     /**
-     * 3: mostrar(especialidades)
+     * 1: agendarCita() - Método inicial según diagrama de robustez
      * 2: obtener(): especialidades[]
+     * 3: mostrar(especialidades)
      */
-    private void mostrarEspecialidades(HttpServletRequest request, HttpServletResponse response) 
+    private void agendarCita(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
-        List<Especialidad> especialidades = especialidadDAO.obtenerEspecialidades();
+        // 2: obtener(): especialidades[] - Usando DAOFactory
+        List<Especialidad> especialidades = factory.getEspecialidadDAO().getAll();
+        
+        // 3: mostrar(especialidades) - Enviar a la vista
         request.setAttribute("especialidades", especialidades);
-        request.getRequestDispatcher("/especialidades.jsp").forward(request, response);
+        request.getRequestDispatcher("/views/especialidades.jsp").forward(request, response);
     }
 
     /**
@@ -113,15 +118,15 @@ public class AgendarCitasController extends HttpServlet {
         String nombreEspecialidad = request.getParameter("especialidad");
         
         // 2: obtener(): especialidades[]
-        List<Especialidad> especialidades = especialidadDAO.obtenerEspecialidades();
+        List<Especialidad> especialidades = factory.getEspecialidadDAO().getAll();
         request.setAttribute("especialidades", especialidades);
         
         if (nombreEspecialidad != null && !nombreEspecialidad.trim().isEmpty()) {
-            Especialidad espSeleccionada = especialidadDAO.obtenerPorNombre(nombreEspecialidad);
+            Especialidad espSeleccionada = factory.getEspecialidadDAO().obtenerPorNombre(nombreEspecialidad);
             
             if (espSeleccionada != null) {
                 // 5: obtenerPorEspecialidad(idEspecialidad): doctores[]
-                List<Doctor> doctores = doctorDAO.obtenerPorEspecialidad(espSeleccionada);
+                List<Doctor> doctores = factory.getDoctorDAO().obtenerPorEspecialidad(espSeleccionada);
                 
                 request.setAttribute("especialidadSeleccionada", nombreEspecialidad);
                 request.setAttribute("especialidadObj", espSeleccionada);
@@ -142,10 +147,10 @@ public class AgendarCitasController extends HttpServlet {
         String especialidadNombre = request.getParameter("especialidad");
         
         if (especialidadNombre != null && !especialidadNombre.trim().isEmpty()) {
-            Especialidad especialidad = especialidadDAO.obtenerPorNombre(especialidadNombre);
+            Especialidad especialidad = factory.getEspecialidadDAO().obtenerPorNombre(especialidadNombre);
             
             if (especialidad != null) {
-                List<Doctor> doctores = doctorDAO.obtenerPorEspecialidad(especialidad);
+                List<Doctor> doctores = factory.getDoctorDAO().obtenerPorEspecialidad(especialidad);
                 request.setAttribute("doctores", doctores);
             }
         }
@@ -154,15 +159,16 @@ public class AgendarCitasController extends HttpServlet {
     }
 
     /**
-     * 7: crear(idDoctor, fecha, motivo)
-     * 11: crearCita(cita)
-     * Según diagrama de robustez
+     * 7: crearCita(idDoctor, fecha, motivo) - Según diagrama de secuencia
+     * 8: obtenerHorariosDisponiblesPorDoctor(idDoctor): horarios[]
+     * 9: mostrar(horarios)
+     * 11: crearCita(cita) - Persistir en BD
      */
-    private void procesarAgendamiento(HttpServletRequest request, HttpServletResponse response)
+    private void crearCita(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         try {
-            // Obtener parámetros del formulario
+            // 7: crearCita(idDoctor, fecha, motivo) - Obtener parámetros
             String idDoctorStr = request.getParameter("doctor");
             String especialidadNombre = request.getParameter("especialidad");
             String fechaStr = request.getParameter("fecha");
@@ -180,50 +186,52 @@ public class AgendarCitasController extends HttpServlet {
             LocalDate fecha = LocalDate.parse(fechaStr);
             LocalTime hora = LocalTime.parse(horaStr);
             
-            // Obtener entidades relacionadas
-            Especialidad especialidad = especialidadDAO.obtenerPorNombre(especialidadNombre);
-            Doctor doctor = doctorDAO.obtenerPorId(idDoctor);
+            // Obtener entidades relacionadas usando Factory
+            Especialidad especialidad = factory.getEspecialidadDAO().obtenerPorNombre(especialidadNombre);
+            Doctor doctor = factory.getDoctorDAO().getById(idDoctor);
             
             if (especialidad == null || doctor == null) {
                 throw new IllegalArgumentException("Especialidad o doctor no encontrado");
             }
             
-            // Verificar disponibilidad (8: obtenerHorariosDisponiblesPorDoctor)
-            boolean disponible = disponibilidadDAO.verificarDisponibilidad(idDoctor, fecha, hora);
+            // 8: obtenerHorariosDisponiblesPorDoctor(idDoctor): horarios[]
+            // Verificar disponibilidad
+            boolean disponible = factory.getDisponibilidadDAO().verificarDisponibilidad(idDoctor, fecha, hora);
             
             if (!disponible) {
                 request.setAttribute("error", "El horario seleccionado ya no está disponible");
-                solicitarCita(request, response);
+                // 9: mostrar(horarios) - Mostrar horarios disponibles
+                mostrarHorarios(request, response, idDoctor);
                 return;
             }
             
-            // 11: crearCita(cita)
+            // 11: crearCita(cita) - Crear objeto Cita
             Cita cita = new Cita(fecha, hora, motivo, especialidad, doctor);
             
-            // 7: crear(idDoctor, fecha, motivo)
+            // Validar la cita
             boolean creada = cita.crear();
             
             if (!creada) {
                 throw new Exception("No se pudo validar la cita");
             }
             
-            // Guardar en BD usando ORM
-            citaDAO.guardar(cita);
+            // Guardar en BD usando Factory + GenericDAO
+            factory.getCitaDAO().create(cita);
             
             // ===== MARCAR HORARIO COMO NO DISPONIBLE (ORM) =====
             System.out.println("🔒 Bloqueando horario: " + fecha + " " + hora);
             
             // Buscar la disponibilidad exacta
-            Disponibilidad disponibilidadOcupada = disponibilidadDAO.obtenerPorDoctorYFechaYHora(
+            Disponibilidad disponibilidadOcupada = factory.getDisponibilidadDAO().obtenerPorDoctorYFechaYHora(
                 idDoctor, 
                 fecha, 
                 hora
             );
             
             if (disponibilidadOcupada != null) {
-                // Marcar como NO disponible usando ORM
+                // Marcar como NO disponible usando Factory + GenericDAO
                 disponibilidadOcupada.setDisponible(false);
-                disponibilidadDAO.actualizar(disponibilidadOcupada);
+                factory.getDisponibilidadDAO().update(disponibilidadOcupada);
                 System.out.println("✅ Horario bloqueado exitosamente - disponible = false");
             } else {
                 System.out.println("⚠️ No se encontró disponibilidad para bloquear");
@@ -243,42 +251,19 @@ public class AgendarCitasController extends HttpServlet {
     }
 
     /**
-     * 7: crear(idDoctor, fecha, motivo)
-     * Crea el objeto Cita según los parámetros
+     * 9: mostrar(horarios) - Mostrar horarios disponibles
+     * 8: obtenerHorariosDisponiblesPorDoctor(idDoctor): horarios[]
      */
-    private Cita crearCita(HttpServletRequest request) {
-
-        Cita cita = new Cita();
-        cita.setFechaCita(LocalDate.parse(request.getParameter("fecha")));
-        cita.setHoraCita(LocalTime.parse(request.getParameter("hora")));
-        cita.setMotivoConsulta(request.getParameter("motivo"));
-        cita.setEstadoCita("Agendada");
-        cita.setObservacionCita("Sin observaciones");
+    private void mostrarHorarios(HttpServletRequest request, HttpServletResponse response, int idDoctor)
+            throws ServletException, IOException {
         
-        // ===== RELACIÓN ORM CON ESPECIALIDAD =====
-        String nombreEspecialidad = request.getParameter("especialidad");
-        if (nombreEspecialidad != null && !nombreEspecialidad.isEmpty()) {
-        	Especialidad especialidad = especialidadDAO.obtenerPorNombre(nombreEspecialidad);
-        	if (especialidad != null) {
-        		cita.setEspecialidad(especialidad);  // ← Relación ORM
-        	}
-        }
+        // 8: obtenerHorariosDisponiblesPorDoctor(idDoctor): horarios[]
+        List<Disponibilidad> horarios = factory.getDisponibilidadDAO().obtenerPorDoctor(idDoctor);
         
-        // ===== RELACIÓN ORM CON DOCTOR =====
-        String idDoctorStr = request.getParameter("doctor");
-        if (idDoctorStr != null && !idDoctorStr.isEmpty()) {
-            try {
-                int idDoctor = Integer.parseInt(idDoctorStr);
-                Doctor doctor = doctorDAO.obtenerPorId(idDoctor);
-                if (doctor != null) {
-                    cita.setDoctor(doctor); // ← Relación ORM
-                }
-            } catch (NumberFormatException e) {
-                // Ignorar si el ID no es válido
-            }
-        }
-
-        return cita;
+        // 9: mostrar(horarios)
+        request.setAttribute("horariosDisponibles", horarios);
+        request.setAttribute("idDoctor", idDoctor);
+        request.getRequestDispatcher("/views/agendamientos.jsp").forward(request, response);
     }
 
     /**
@@ -292,6 +277,34 @@ public class AgendarCitasController extends HttpServlet {
         request.setAttribute("cita", cita);
         
         // Redirigir a consultar citas
-        response.sendRedirect(request.getContextPath() + "/consultar-citas.jsp?exito=true");
+        response.sendRedirect(request.getContextPath() + "/ConsultarCitasAgendadasController");
+    }
+    
+    /**
+     * 10: confirmar(idHorario) - Confirmación final desde formulario
+     */
+    private void confirmarCita(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        String idHorarioStr = request.getParameter("idHorario");
+        
+        if (idHorarioStr != null) {
+            int idHorario = Integer.parseInt(idHorarioStr);
+            
+            // Obtener la disponibilidad y confirmar
+            Disponibilidad horario = factory.getDisponibilidadDAO().getById(idHorario);
+            
+            if (horario != null && horario.isDisponible()) {
+                // Marcar como no disponible
+                horario.setDisponible(false);
+                factory.getDisponibilidadDAO().update(horario);
+                
+                request.setAttribute("mensaje", "Horario confirmado exitosamente");
+            } else {
+                request.setAttribute("error", "El horario ya no está disponible");
+            }
+        }
+        
+        response.sendRedirect(request.getContextPath() + "/ConsultarCitasAgendadasController");
     }
 }

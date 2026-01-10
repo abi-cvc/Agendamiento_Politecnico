@@ -14,66 +14,63 @@ import java.util.List;
 
 /**
  * DAO para la entidad Disponibilidad
- * Maneja operaciones de calendario según diagrama de robustez
+ * Extiende JPAGenericDAO e implementa IDisponibilidadDAO según el patrón del diagrama de arquitectura
  */
-public class DisponibilidadDAO {
+public class DisponibilidadDAO extends JPAGenericDAO<Disponibilidad, Integer> implements IDisponibilidadDAO {
     
-    /**
-     * Obtiene todas las disponibilidades
-     */
-    public List<Disponibilidad> obtenerTodas() {
-        EntityManager em = JPAUtil.getEntityManager();
-        List<Disponibilidad> disponibilidades = new ArrayList<>();
-        
-        try {
-            TypedQuery<Disponibilidad> query = em.createQuery(
-                "SELECT d FROM Disponibilidad d ORDER BY d.fecha, d.horaInicio",
-                Disponibilidad.class
-            );
-            disponibilidades = query.getResultList();
-        } catch (Exception e) {
-            System.err.println("Error al obtener disponibilidades: " + e.getMessage());
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
-        
-        return disponibilidades;
-    }
-    
-    /**
-     * Obtiene disponibilidades por doctor (según diagrama de robustez)
-     */
-    public List<Disponibilidad> obtenerPorDoctor(int idDoctor) {
-        EntityManager em = JPAUtil.getEntityManager();
-        List<Disponibilidad> disponibilidades = new ArrayList<>();
-        
+	public DisponibilidadDAO() {
+		super(Disponibilidad.class);
+	}
+	
+	// ===== IMPLEMENTACIÓN DE IDisponibilidadDAO =====
+	
+	@Override
+	public List<Disponibilidad> obtenerPorDoctor(int idDoctor) {
+		EntityManager em = getEntityManager();
         try {
             TypedQuery<Disponibilidad> query = em.createQuery(
                 "SELECT d FROM Disponibilidad d WHERE d.doctor.idDoctor = :idDoctor " +
-                "AND d.disponible = true AND d.fecha >= :hoy ORDER BY d.fecha, d.horaInicio",
+                "ORDER BY d.fecha, d.horaInicio",
                 Disponibilidad.class
             );
             query.setParameter("idDoctor", idDoctor);
-            query.setParameter("hoy", LocalDate.now());
-            disponibilidades = query.getResultList();
+            return query.getResultList();
         } catch (Exception e) {
             System.err.println("Error al obtener disponibilidades por doctor: " + e.getMessage());
             e.printStackTrace();
+            return new ArrayList<>();
         } finally {
             em.close();
         }
-        
-        return disponibilidades;
-    }
-    
-    /**
-     * Obtiene disponibilidades por doctor y fecha
-     */
-    public List<Disponibilidad> obtenerPorDoctorYFecha(int idDoctor, LocalDate fecha) {
-        EntityManager em = JPAUtil.getEntityManager();
-        List<Disponibilidad> disponibilidades = new ArrayList<>();
-        
+	}
+	
+	@Override
+	public boolean verificarDisponibilidad(int idDoctor, LocalDate fecha, LocalTime hora) {
+		EntityManager em = getEntityManager();
+        try {
+            TypedQuery<Long> query = em.createQuery(
+                "SELECT COUNT(d) FROM Disponibilidad d WHERE d.doctor.idDoctor = :idDoctor " +
+                "AND d.fecha = :fecha AND d.horaInicio = :hora AND d.disponible = true",
+                Long.class
+            );
+            query.setParameter("idDoctor", idDoctor);
+            query.setParameter("fecha", fecha);
+            query.setParameter("hora", hora);
+            
+            Long count = query.getSingleResult();
+            return count > 0;
+        } catch (Exception e) {
+            System.err.println("Error al verificar disponibilidad: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        } finally {
+            em.close();
+        }
+	}
+	
+	@Override
+	public List<Disponibilidad> obtenerPorDoctorYFecha(int idDoctor, LocalDate fecha) {
+		EntityManager em = getEntityManager();
         try {
             TypedQuery<Disponibilidad> query = em.createQuery(
                 "SELECT d FROM Disponibilidad d WHERE d.doctor.idDoctor = :idDoctor " +
@@ -82,23 +79,56 @@ public class DisponibilidadDAO {
             );
             query.setParameter("idDoctor", idDoctor);
             query.setParameter("fecha", fecha);
-            disponibilidades = query.getResultList();
+            return query.getResultList();
         } catch (Exception e) {
             System.err.println("Error al obtener disponibilidades por doctor y fecha: " + e.getMessage());
             e.printStackTrace();
+            return new ArrayList<>();
         } finally {
             em.close();
         }
-        
-        return disponibilidades;
+	}
+	
+	@Override
+	public Disponibilidad obtenerPorDoctorYFechaYHora(int idDoctor, LocalDate fecha, LocalTime hora) {
+		EntityManager em = getEntityManager();
+        try {
+            TypedQuery<Disponibilidad> query = em.createQuery(
+                "SELECT d FROM Disponibilidad d WHERE d.doctor.idDoctor = :idDoctor " +
+                "AND d.fecha = :fecha AND d.horaInicio = :hora",
+                Disponibilidad.class
+            );
+            query.setParameter("idDoctor", idDoctor);
+            query.setParameter("fecha", fecha);
+            query.setParameter("hora", hora);
+            
+            List<Disponibilidad> resultados = query.getResultList();
+            return resultados.isEmpty() ? null : resultados.get(0);
+        } catch (Exception e) {
+            System.err.println("Error al obtener disponibilidad específica: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        } finally {
+            em.close();
+        }
+	}
+	
+	// ===== MÉTODOS ESPECÍFICOS ADICIONALES =====
+	
+    /**
+     * Obtiene todas las disponibilidades
+     * @deprecated Usar getAll() del GenericDAO
+     */
+	@Deprecated
+    public List<Disponibilidad> obtenerTodas() {
+    	return getAll();
     }
     
     /**
      * Obtiene fechas disponibles de un doctor (para el calendario)
      */
     public List<LocalDate> obtenerFechasDisponibles(int idDoctor) {
-        EntityManager em = JPAUtil.getEntityManager();
-        List<LocalDate> fechas = new ArrayList<>();
+        EntityManager em = getEntityManager();
         
         try {
             TypedQuery<LocalDate> query = em.createQuery(
@@ -109,43 +139,14 @@ public class DisponibilidadDAO {
             );
             query.setParameter("idDoctor", idDoctor);
             query.setParameter("hoy", LocalDate.now());
-            fechas = query.getResultList();
+            return query.getResultList();
         } catch (Exception e) {
             System.err.println("Error al obtener fechas disponibles: " + e.getMessage());
             e.printStackTrace();
+            return new ArrayList<>();
         } finally {
             em.close();
         }
-        
-        return fechas;
-    }
-    
-    /**
-     * Verifica si un horario está disponible
-     */
-    public boolean verificarDisponibilidad(int idDoctor, LocalDate fecha, LocalTime hora) {
-        EntityManager em = JPAUtil.getEntityManager();
-        boolean disponible = false;
-        
-        try {
-            TypedQuery<Long> query = em.createQuery(
-                "SELECT COUNT(d) FROM Disponibilidad d WHERE d.doctor.idDoctor = :idDoctor " +
-                "AND d.fecha = :fecha AND d.horaInicio <= :hora AND d.horaFin > :hora " +
-                "AND d.disponible = true",
-                Long.class
-            );
-            query.setParameter("idDoctor", idDoctor);
-            query.setParameter("fecha", fecha);
-            query.setParameter("hora", hora);
-            disponible = query.getSingleResult() > 0;
-        } catch (Exception e) {
-            System.err.println("Error al verificar disponibilidad: " + e.getMessage());
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
-        
-        return disponible;
     }
     
     /**
@@ -169,88 +170,29 @@ public class DisponibilidadDAO {
     
     /**
      * Guarda una nueva disponibilidad
+     * @deprecated Usar create(Disponibilidad) del GenericDAO
      */
+    @Deprecated
     public void guardar(Disponibilidad disponibilidad) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        
-        try {
-            tx.begin();
-            em.persist(disponibilidad);
-            tx.commit();
-            System.out.println("Disponibilidad guardada exitosamente");
-        } catch (Exception e) {
-            if (tx.isActive()) {
-                tx.rollback();
-            }
-            System.err.println("Error al guardar disponibilidad: " + e.getMessage());
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+        create(disponibilidad);
+        System.out.println("Disponibilidad guardada exitosamente");
     }
     
     /**
      * Actualiza una disponibilidad existente
+     * @deprecated Usar update(Disponibilidad) del GenericDAO
      */
+    @Deprecated
     public void actualizar(Disponibilidad disponibilidad) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        
-        try {
-            tx.begin();
-            em.merge(disponibilidad);
-            tx.commit();
-            System.out.println("Disponibilidad actualizada exitosamente");
-        } catch (Exception e) {
-            if (tx.isActive()) {
-                tx.rollback();
-            }
-            System.err.println("Error al actualizar disponibilidad: " + e.getMessage());
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
-    }
-    
-    /**
-     * Obtiene una disponibilidad por doctor, fecha y hora específica
-     * 5: liberarHorario(idHorario)
-     * @param idDoctor ID del doctor
-     * @param fecha Fecha de la cita
-     * @param hora Hora de la cita
-     * @return Disponibilidad encontrada o null
-     */
-    public Disponibilidad obtenerPorDoctorYFechaYHora(int idDoctor, LocalDate fecha, LocalTime hora) {
-        EntityManager em = JPAUtil.getEntityManager();
-        
-        try {
-            TypedQuery<Disponibilidad> query = em.createQuery(
-                "SELECT d FROM Disponibilidad d WHERE d.doctor.idDoctor = :idDoctor " +
-                "AND d.fecha = :fecha " +
-                "AND d.horaInicio <= :hora " +
-                "AND d.horaFin > :hora",
-                Disponibilidad.class
-            );
-            query.setParameter("idDoctor", idDoctor);
-            query.setParameter("fecha", fecha);
-            query.setParameter("hora", hora);
-            
-            List<Disponibilidad> resultados = query.getResultList();
-            return resultados.isEmpty() ? null : resultados.get(0);
-        } catch (Exception e) {
-            System.err.println("Error al obtener disponibilidad: " + e.getMessage());
-            return null;
-        } finally {
-            em.close();
-        }
+        update(disponibilidad);
+        System.out.println("Disponibilidad actualizada exitosamente");
     }
     
     /**
      * Marca una disponibilidad como no disponible (cuando se agenda una cita)
      */
     public void marcarNoDisponible(int idDisponibilidad) {
-        EntityManager em = JPAUtil.getEntityManager();
+        EntityManager em = getEntityManager();
         EntityTransaction tx = em.getTransaction();
         
         try {

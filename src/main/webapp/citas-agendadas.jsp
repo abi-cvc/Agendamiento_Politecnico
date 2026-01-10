@@ -243,10 +243,6 @@
                             <!-- Acciones -->
                             <c:if test="${cita.estadoCita == 'Agendada' || cita.estadoCita == 'Confirmada'}">
                                 <div class="cita-acciones">
-                                    <button class="btn btn-primary btn-atender" 
-                                            onclick="atenderCita(${cita.idCita})">
-                                        Atender Cita
-                                    </button>
                                     <button class="btn btn-secondary btn-cancelar" 
                                             onclick="cancelarCita(${cita.idCita}, 'calendario')">
                                         Cancelar

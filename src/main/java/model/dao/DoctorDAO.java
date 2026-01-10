@@ -12,39 +12,70 @@ import java.util.List;
 
 /**
  * DAO para la entidad Doctor
- * Maneja todas las operaciones CRUD con JPA/ORM
+ * Extiende JPAGenericDAO e implementa IDoctorDAO según el patrón del diagrama de arquitectura
  */
-public class DoctorDAO {
+public class DoctorDAO extends JPAGenericDAO<Doctor, Integer> implements IDoctorDAO {
     
-    /**
-     * Obtiene todos los doctores activos
-     */
-    public List<Doctor> obtenerDoctores() {
-        EntityManager em = JPAUtil.getEntityManager();
-        List<Doctor> doctores = new ArrayList<>();
-        
+	public DoctorDAO() {
+		super(Doctor.class);
+	}
+	
+	// ===== IMPLEMENTACIÓN DE IDoctorDAO =====
+	
+	@Override
+	public List<Doctor> obtenerDoctoresActivos() {
+		EntityManager em = getEntityManager();
         try {
             TypedQuery<Doctor> query = em.createQuery(
                 "SELECT d FROM Doctor d WHERE d.activo = true ORDER BY d.apellido", 
                 Doctor.class
             );
-            doctores = query.getResultList();
+            return query.getResultList();
         } catch (Exception e) {
             System.err.println("Error al obtener doctores: " + e.getMessage());
             e.printStackTrace();
+            return new ArrayList<>();
         } finally {
             em.close();
         }
-        
-        return doctores;
+	}
+	
+	@Override
+	public List<Doctor> obtenerPorEspecialidad(Especialidad especialidad) {
+		EntityManager em = getEntityManager();
+        try {
+            TypedQuery<Doctor> query = em.createQuery(
+                "SELECT d FROM Doctor d WHERE d.especialidad = :especialidad AND d.activo = true ORDER BY d.apellido",
+                Doctor.class
+            );
+            query.setParameter("especialidad", especialidad);
+            return query.getResultList();
+        } catch (Exception e) {
+            System.err.println("Error al obtener doctores por especialidad: " + e.getMessage());
+            e.printStackTrace();
+            return new ArrayList<>();
+        } finally {
+            em.close();
+        }
+	}
+	
+	// ===== MÉTODOS ESPECÍFICOS ADICIONALES =====
+	
+    /**
+     * Obtiene todos los doctores activos
+     * @deprecated Usar obtenerDoctoresActivos() de IDoctorDAO
+     */
+	@Deprecated
+    public List<Doctor> obtenerDoctores() {
+    	return obtenerDoctoresActivos();
     }
     
     /**
      * Obtiene doctores por especialidad (según diagrama de robustez)
      */
+    @Override
     public List<Doctor> obtenerPorEspecialidad(String nombreEspecialidad) {
-        EntityManager em = JPAUtil.getEntityManager();
-        List<Doctor> doctores = new ArrayList<>();
+        EntityManager em = getEntityManager();
         
         try {
             TypedQuery<Doctor> query = em.createQuery(
@@ -52,47 +83,21 @@ public class DoctorDAO {
                 Doctor.class
             );
             query.setParameter("nombre", nombreEspecialidad);
-            doctores = query.getResultList();
+            return query.getResultList();
         } catch (Exception e) {
             System.err.println("Error al obtener doctores por especialidad: " + e.getMessage());
             e.printStackTrace();
+            return new ArrayList<>();
         } finally {
             em.close();
         }
-        
-        return doctores;
-    }
-    
-    /**
-     * Obtiene doctores por objeto Especialidad
-     */
-    public List<Doctor> obtenerPorEspecialidad(Especialidad especialidad) {
-        EntityManager em = JPAUtil.getEntityManager();
-        List<Doctor> doctores = new ArrayList<>();
-        
-        try {
-            TypedQuery<Doctor> query = em.createQuery(
-                "SELECT d FROM Doctor d WHERE d.especialidad = :especialidad AND d.activo = true ORDER BY d.apellido",
-                Doctor.class
-            );
-            query.setParameter("especialidad", especialidad);
-            doctores = query.getResultList();
-        } catch (Exception e) {
-            System.err.println("Error al obtener doctores por especialidad: " + e.getMessage());
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
-        
-        return doctores;
     }
     
     /**
      * Obtiene doctores por ID de especialidad
      */
     public List<Doctor> obtenerPorEspecialidad(int idEspecialidad) {
-        EntityManager em = JPAUtil.getEntityManager();
-        List<Doctor> doctores = new ArrayList<>();
+        EntityManager em = getEntityManager();
         
         try {
             TypedQuery<Doctor> query = em.createQuery(
@@ -100,42 +105,30 @@ public class DoctorDAO {
                 Doctor.class
             );
             query.setParameter("idEspecialidad", idEspecialidad);
-            doctores = query.getResultList();
+            return query.getResultList();
         } catch (Exception e) {
             System.err.println("Error al obtener doctores por ID de especialidad: " + e.getMessage());
             e.printStackTrace();
+            return new ArrayList<>();
         } finally {
             em.close();
         }
-        
-        return doctores;
     }
     
     /**
      * Obtiene un doctor por ID
+     * @deprecated Usar getById(Integer) del GenericDAO
      */
+    @Deprecated
     public Doctor obtenerPorId(int idDoctor) {
-        EntityManager em = JPAUtil.getEntityManager();
-        Doctor doctor = null;
-        
-        try {
-            doctor = em.find(Doctor.class, idDoctor);
-        } catch (Exception e) {
-            System.err.println("Error al obtener doctor por ID: " + e.getMessage());
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
-        
-        return doctor;
+        return getById(idDoctor);
     }
     
     /**
      * Obtiene un doctor por cédula
      */
     public Doctor obtenerPorCedula(String cedula) {
-        EntityManager em = JPAUtil.getEntityManager();
-        Doctor doctor = null;
+        EntityManager em = getEntityManager();
         
         try {
             TypedQuery<Doctor> query = em.createQuery(
@@ -144,70 +137,43 @@ public class DoctorDAO {
             );
             query.setParameter("cedula", cedula);
             List<Doctor> resultados = query.getResultList();
-            if (!resultados.isEmpty()) {
-                doctor = resultados.get(0);
-            }
+            return resultados.isEmpty() ? null : resultados.get(0);
         } catch (Exception e) {
             System.err.println("Error al obtener doctor por cédula: " + e.getMessage());
             e.printStackTrace();
+            return null;
         } finally {
             em.close();
         }
-        
-        return doctor;
     }
     
     /**
      * Guarda un nuevo doctor
+     * @deprecated Usar create(Doctor) del GenericDAO
      */
+    @Deprecated
     public void guardar(Doctor doctor) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        
-        try {
-            tx.begin();
-            em.persist(doctor);
-            tx.commit();
-            System.out.println("Doctor guardado exitosamente: " + doctor.getNombreCompleto());
-        } catch (Exception e) {
-            if (tx.isActive()) {
-                tx.rollback();
-            }
-            System.err.println("Error al guardar doctor: " + e.getMessage());
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+        create(doctor);
+        System.out.println("Doctor guardado exitosamente: " + doctor.getNombreCompleto());
     }
     
     /**
      * Actualiza un doctor existente
+     * @deprecated Usar update(Doctor) del GenericDAO
      */
+    @Deprecated
     public void actualizar(Doctor doctor) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        
-        try {
-            tx.begin();
-            em.merge(doctor);
-            tx.commit();
-            System.out.println("Doctor actualizado exitosamente: " + doctor.getNombreCompleto());
-        } catch (Exception e) {
-            if (tx.isActive()) {
-                tx.rollback();
-            }
-            System.err.println("Error al actualizar doctor: " + e.getMessage());
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+        update(doctor);
+        System.out.println("Doctor actualizado exitosamente: " + doctor.getNombreCompleto());
     }
     
     /**
      * Elimina (desactiva) un doctor
+     * @deprecated Usar delete(Integer) del GenericDAO o el método específico eliminarLogico
      */
+    @Deprecated
     public void eliminar(int idDoctor) {
-        EntityManager em = JPAUtil.getEntityManager();
+        EntityManager em = getEntityManager();
         EntityTransaction tx = em.getTransaction();
         
         try {
@@ -234,8 +200,7 @@ public class DoctorDAO {
      * Cuenta doctores por especialidad
      */
     public long contarPorEspecialidad(String nombreEspecialidad) {
-        EntityManager em = JPAUtil.getEntityManager();
-        long count = 0;
+        EntityManager em = getEntityManager();
         
         try {
             TypedQuery<Long> query = em.createQuery(
@@ -243,14 +208,13 @@ public class DoctorDAO {
                 Long.class
             );
             query.setParameter("nombre", nombreEspecialidad);
-            count = query.getSingleResult();
+            return query.getSingleResult();
         } catch (Exception e) {
             System.err.println("Error al contar doctores: " + e.getMessage());
             e.printStackTrace();
+            return 0;
         } finally {
             em.close();
         }
-        
-        return count;
     }
 }

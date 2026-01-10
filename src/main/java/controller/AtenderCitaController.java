@@ -5,7 +5,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.dao.CitaDAO;
+import model.dao.DAOFactory;
+import model.dao.ICitaDAO;
 import model.entity.Cita;
 
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.io.IOException;
 /**
  * AtenderCitaController - Según diagrama de robustez
  * Maneja el proceso de atender una cita médica
+ * ACTUALIZADO: Usa DAOFactory para obtener instancias de DAOs
  * 
  * FLUJO SEGÚN DIAGRAMA:
  * 1: atenderCita
@@ -26,12 +28,12 @@ import java.io.IOException;
 public class AtenderCitaController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     
-    private CitaDAO citaDAO;
+    private DAOFactory factory;
     
     @Override
     public void init() throws ServletException {
-        citaDAO = new CitaDAO();
-        System.out.println("✅ AtenderCitaController inicializado");
+        factory = DAOFactory.getFactory();
+        System.out.println("✅ AtenderCitaController inicializado con Factory");
     }
 
     @Override
@@ -54,7 +56,7 @@ public class AtenderCitaController extends HttpServlet {
             int idCita = Integer.parseInt(idCitaParam);
             
             // ===== 1. ATENDER CITA =====
-            Cita cita = citaDAO.obtenerPorId(idCita);
+            Cita cita = factory.getCitaDAO().getById(idCita);
             
             if (cita == null) {
                 enviarError(request, response, "Cita no encontrada");
@@ -93,8 +95,8 @@ public class AtenderCitaController extends HttpServlet {
                 );
                 cita.setEstadoCita("Completada");
                 
-                // Actualizar en BD usando ORM
-                citaDAO.actualizar(cita);
+                // Actualizar en BD usando Factory + GenericDAO
+                factory.getCitaDAO().update(cita);
                 
                 System.out.println("✅ Cita atendida exitosamente");
                 System.out.println("✅ Estado actualizado a: Completada");

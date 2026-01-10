@@ -1,15 +1,12 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
-<%@ page import="model.dao.EspecialidadDAO" %>
-<%@ page import="model.entity.Especialidad" %>
-<%@ page import="java.util.List" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 
-<%
-    // ===== CARGA DINÁMICA DESDE BD USANDO JPA =====
-    EspecialidadDAO dao = new EspecialidadDAO();
-    List<Especialidad> especialidades = dao.obtenerEspecialidades();
-    request.setAttribute("especialidades", especialidades);
-%>
+<%-- 
+  Especialidades JSP - Según diagrama de robustez
+  Paso 3: mostrar(especialidades)
+  Los datos vienen desde AgendarCitasController.agendarCita()
+  que ejecuta: obtener(): especialidades[] (paso 2)
+--%>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -35,9 +32,9 @@
         <nav>
             <ul>
                 <li><a href="<%= request.getContextPath() %>/inicio.html" class="font-bold">Inicio</a></li>
-                <li><a href="<%= request.getContextPath() %>/views/especialidades.jsp" class="font-bold">Especialidades</a></li>
+                <li><a href="<%= request.getContextPath() %>/AgendarCitasController" class="font-bold">Especialidades</a></li>
                 <li><a href="<%= request.getContextPath() %>/ConsultarCitasAgendadasController" class="font-bold">Mis Citas</a></li>
-                <li><a href="<%= request.getContextPath() %>/reseñas.jsp" class="font-bold">Reseñas</a></li>
+                <li><a href="<%= request.getContextPath() %>/inicio.html#reseñas" class="font-bold">Reseñas</a></li>
                 <li class="login mt-2 mb-2" id="authButton">
                     <a href="<%= request.getContextPath() %>/index.html" class="font-bold">Login</a>
                 </li>
@@ -89,7 +86,7 @@
                                 </c:forTokens>
                             </ul>
                             <div class="mt-4">
-                                <a href="${pageContext.request.contextPath}/views/agendamientos.jsp?especialidad=${especialidad.nombre}" 
+                                <a href="${pageContext.request.contextPath}/AgendarCitasController?accion=solicitarCita&especialidad=${especialidad.nombre}" 
                                    class="btn btn-primary">
                                     Agendar Cita
                                 </a>
@@ -125,9 +122,9 @@
                 <h3>Enlaces Rápidos</h3>
                 <ul class="footer-links">
                     <li><a href="<%= request.getContextPath() %>/inicio.html">Inicio</a></li>
-                    <li><a href="<%= request.getContextPath() %>/views/especialidades.jsp">Especialidades</a></li>
+                    <li><a href="<%= request.getContextPath() %>/AgendarCitasController">Especialidades</a></li>
                     <li><a href="<%= request.getContextPath() %>/ConsultarCitasAgendadasController">Mis Citas</a></li>
-                    <li><a href="<%= request.getContextPath() %>/reseñas.jsp">Reseñas</a></li>
+                    <li><a href="<%= request.getContextPath() %>/inicio.html#reseñas">Reseñas</a></li>
                 </ul>
             </div>
 

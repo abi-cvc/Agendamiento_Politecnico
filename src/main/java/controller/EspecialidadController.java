@@ -1,6 +1,7 @@
 package controller;
 
-import model.dao.EspecialidadDAO;
+import model.dao.DAOFactory;
+import model.dao.IEspecialidadDAO;
 import model.entity.Especialidad;
 
 import jakarta.servlet.ServletException;
@@ -10,14 +11,18 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Controller para manejar las peticiones relacionadas con Especialidades
+ * ACTUALIZADO: Usa DAOFactory para obtener instancias de DAOs
+ */
 @WebServlet("/especialidades")
 public class EspecialidadController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private EspecialidadDAO especialidadDAO;
+	private DAOFactory factory;
 	
 	@Override
 	public void init() throws ServletException {
-		especialidadDAO = new EspecialidadDAO();
+		factory = DAOFactory.getFactory();
 	}
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -61,9 +66,9 @@ public class EspecialidadController extends HttpServlet {
 	private void listarEspecialidades(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		List<Especialidad> especialidades = especialidadDAO.obtenerEspecialidades();
+		List<Especialidad> especialidades = factory.getEspecialidadDAO().getAll();
 		request.setAttribute("especialidades", especialidades);
-		request.getRequestDispatcher("especialidades.jsp").forward(request, response);
+		request.getRequestDispatcher("/views/especialidades.jsp").forward(request, response);
 	}
 	
 	/**
@@ -73,11 +78,11 @@ public class EspecialidadController extends HttpServlet {
 			throws ServletException, IOException {
 		
 		String nombre = request.getParameter("nombre");
-		Especialidad especialidad = especialidadDAO.obtenerPorNombre(nombre);
+		Especialidad especialidad = factory.getEspecialidadDAO().obtenerPorNombre(nombre);
 		
 		if (especialidad != null) {
 			request.setAttribute("especialidad", especialidad);
-			request.getRequestDispatcher("detalle-especialidad.jsp").forward(request, response);
+			request.getRequestDispatcher("/views/detalle-especialidad.jsp").forward(request, response);
 		} else {
 			response.sendRedirect("especialidades?accion=listar");
 		}
@@ -96,7 +101,7 @@ public class EspecialidadController extends HttpServlet {
 		String icono = request.getParameter("icono");
 		
 		Especialidad especialidad = new Especialidad(nombre, titulo, descripcion, servicios, icono);
-		especialidadDAO.guardar(especialidad);
+		factory.getEspecialidadDAO().create(especialidad);
 		
 		response.sendRedirect("especialidades?accion=listar");
 	}
@@ -109,7 +114,7 @@ public class EspecialidadController extends HttpServlet {
 			throws ServletException, IOException {
 		
 		// Verificar si ya existen especialidades
-		if (especialidadDAO.existenEspecialidades()) {
+		if (factory.getEspecialidadDAO().existenEspecialidades()) {
 			response.getWriter().println("Ya existen especialidades en la base de datos.");
 			return;
 		}
@@ -155,12 +160,12 @@ public class EspecialidadController extends HttpServlet {
 			"💉"
 		);
 		
-		// Guardar en la base de datos
-		especialidadDAO.guardar(nutricion);
-		especialidadDAO.guardar(odontologia);
-		especialidadDAO.guardar(psicologia);
-		especialidadDAO.guardar(medicinaGeneral);
-		especialidadDAO.guardar(enfermeria);
+		// Guardar en la base de datos usando Factory + GenericDAO
+		factory.getEspecialidadDAO().create(nutricion);
+		factory.getEspecialidadDAO().create(odontologia);
+		factory.getEspecialidadDAO().create(psicologia);
+		factory.getEspecialidadDAO().create(medicinaGeneral);
+		factory.getEspecialidadDAO().create(enfermeria);
 		
 		response.getWriter().println("Especialidades inicializadas correctamente.");
 		response.getWriter().println("<br><a href='especialidades?accion=listar'>Ver especialidades</a>");

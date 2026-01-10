@@ -9,26 +9,24 @@ import util.JPAUtil;
 import java.time.LocalDate;
 import java.util.List;
 
-public class CitaDAO {
+/**
+ * DAO para la entidad Cita
+ * Extiende JPAGenericDAO e implementa ICitaDAO según el patrón del diagrama de arquitectura
+ */
+public class CitaDAO extends JPAGenericDAO<Cita, Integer> implements ICitaDAO {
+	
+	public CitaDAO() {
+		super(Cita.class);
+	}
 	
 	/**
 	 * Guarda una nueva cita en la base de datos usando ORM
 	 * @param cita Objeto Cita a guardar
+	 * @deprecated Usar create(Cita) del GenericDAO
 	 */
+	@Deprecated
 	public void guardar(Cita cita) {
-        EntityManager em = JPAUtil.getEntityManager();
-        try {
-            em.getTransaction().begin();
-            em.persist(cita);  // ← ORM: JPA genera el INSERT automáticamente
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
-            throw e;
-        } finally {
-            em.close();
-        }
+		create(cita);
     }
 	
 	/**
@@ -36,7 +34,7 @@ public class CitaDAO {
 	 * @return Lista de citas con sus especialidades (ORM carga la relación)
 	 */
 	public List<Cita> obtenerTodas() {
-		EntityManager em = JPAUtil.getEntityManager();
+		EntityManager em = getEntityManager();
 		try {
 			TypedQuery<Cita> query = em.createQuery(
 				"SELECT c FROM Cita c ORDER BY c.fechaCita DESC, c.horaCita DESC", 
@@ -52,23 +50,33 @@ public class CitaDAO {
 	 * Obtiene una cita por su ID usando ORM
 	 * @param id ID de la cita
 	 * @return Cita encontrada o null
+	 * @deprecated Usar getById(Integer) del GenericDAO
 	 */
+	@Deprecated
 	public Cita obtenerPorId(int id) {
-		EntityManager em = JPAUtil.getEntityManager();
+		return getById(id);
+	}
+	
+	// ===== IMPLEMENTACIÓN DE ICitaDAO =====
+	
+	@Override
+	public List<Cita> obtenerPorFecha(LocalDate fecha) {
+		EntityManager em = getEntityManager();
 		try {
-			return em.find(Cita.class, id);  // ← ORM: find automático
+			TypedQuery<Cita> query = em.createQuery(
+				"SELECT c FROM Cita c WHERE c.fechaCita = :fecha ORDER BY c.horaCita", 
+				Cita.class
+			);
+			query.setParameter("fecha", fecha);
+			return query.getResultList();
 		} finally {
 			em.close();
 		}
 	}
 	
-	/**
-	 * Obtiene citas por especialidad usando la relación ORM
-	 * @param especialidad Objeto Especialidad
-	 * @return Lista de citas de esa especialidad
-	 */
+	@Override
 	public List<Cita> obtenerPorEspecialidad(Especialidad especialidad) {
-		EntityManager em = JPAUtil.getEntityManager();
+		EntityManager em = getEntityManager();
 		try {
 			TypedQuery<Cita> query = em.createQuery(
 				"SELECT c FROM Cita c WHERE c.especialidad = :especialidad ORDER BY c.fechaCita", 
@@ -81,23 +89,63 @@ public class CitaDAO {
 		}
 	}
 	
-	/**
-	 * Obtiene citas por fecha
-	 * @param fecha Fecha a buscar
-	 * @return Lista de citas de esa fecha
-	 */
-	public List<Cita> obtenerPorFecha(LocalDate fecha) {
-		EntityManager em = JPAUtil.getEntityManager();
+	@Override
+	public List<Cita> obtenerPorDoctor(int idDoctor) {
+		EntityManager em = getEntityManager();
 		try {
 			TypedQuery<Cita> query = em.createQuery(
-				"SELECT c FROM Cita c WHERE c.fechaCita = :fecha ORDER BY c.horaCita", 
+				"SELECT c FROM Cita c WHERE c.doctor.idDoctor = :idDoctor ORDER BY c.fechaCita DESC, c.horaCita DESC", 
 				Cita.class
 			);
-			query.setParameter("fecha", fecha);
+			query.setParameter("idDoctor", idDoctor);
 			return query.getResultList();
 		} finally {
 			em.close();
 		}
+	}
+	
+	@Override
+	public List<Cita> obtenerPorDoctorYMes(int idDoctor, java.time.YearMonth mes) {
+		EntityManager em = getEntityManager();
+		try {
+			LocalDate primerDia = mes.atDay(1);
+			LocalDate ultimoDia = mes.atEndOfMonth();
+			
+			TypedQuery<Cita> query = em.createQuery(
+				"SELECT c FROM Cita c WHERE c.doctor.idDoctor = :idDoctor AND c.fechaCita BETWEEN :inicio AND :fin ORDER BY c.fechaCita, c.horaCita", 
+				Cita.class
+			);
+			query.setParameter("idDoctor", idDoctor);
+			query.setParameter("inicio", primerDia);
+			query.setParameter("fin", ultimoDia);
+			return query.getResultList();
+		} finally {
+			em.close();
+		}
+	}
+	
+	// ===== MÉTODOS ESPECÍFICOS DEL NEGOCIO =====
+	
+	/**
+	 * Obtiene citas por especialidad usando la relación ORM
+	 * @param especialidad Objeto Especialidad
+	 * @return Lista de citas de esa especialidad
+	 * @deprecated Usar obtenerPorEspecialidad(Especialidad) de ICitaDAO
+	 */
+	@Deprecated
+	public List<Cita> obtenerPorEspecialidad_old(Especialidad especialidad) {
+		return obtenerPorEspecialidad(especialidad);
+	}
+	
+	/**
+	 * Obtiene citas por fecha
+	 * @param fecha Fecha a buscar
+	 * @return Lista de citas de esa fecha
+	 * @deprecated Usar obtenerPorFecha(LocalDate) de ICitaDAO
+	 */
+	@Deprecated
+	public List<Cita> obtenerPorFecha_old(LocalDate fecha) {
+		return obtenerPorFecha(fecha);
 	}
 	
 	/**
@@ -162,55 +210,12 @@ public class CitaDAO {
 	}
 	
 	/**
-	 * Obtiene citas por doctor y mes
-	 * 2: obtenerCitasAgendadasDoctorMes(idDoctor): citasMes[]
-	 * @param idDoctor ID del doctor
-	 * @param mesActual Mes a consultar (YearMonth)
-	 * @return Lista de citas del doctor en ese mes
-	 */
-	public List<Cita> obtenerPorDoctorYMes(int idDoctor, java.time.YearMonth mesActual) {
-		EntityManager em = JPAUtil.getEntityManager();
-		try {
-			LocalDate primerDia = mesActual.atDay(1);
-			LocalDate ultimoDia = mesActual.atEndOfMonth();
-			
-			System.out.println("🔍 [CitaDAO] obtenerPorDoctorYMes:");
-			System.out.println("   - idDoctor: " + idDoctor);
-			System.out.println("   - Mes: " + mesActual);
-			System.out.println("   - Rango: " + primerDia + " a " + ultimoDia);
-			
-			TypedQuery<Cita> query = em.createQuery(
-				"SELECT c FROM Cita c WHERE c.doctor.idDoctor = :idDoctor AND c.fechaCita BETWEEN :inicio AND :fin ORDER BY c.fechaCita, c.horaCita", 
-				Cita.class
-			);
-			query.setParameter("idDoctor", idDoctor);
-			query.setParameter("inicio", primerDia);
-			query.setParameter("fin", ultimoDia);
-			
-			List<Cita> resultado = query.getResultList();
-			System.out.println("   - Resultados: " + resultado.size() + " citas");
-			
-			if (!resultado.isEmpty()) {
-				System.out.println("   - Citas encontradas:");
-				for (int i = 0; i < Math.min(3, resultado.size()); i++) {
-					Cita c = resultado.get(i);
-					System.out.println("     * Cita #" + c.getIdCita() + ": " + c.getFechaCita() + " " + c.getHoraCita());
-				}
-			}
-			
-			return resultado;
-		} finally {
-			em.close();
-		}
-	}
-	
-	/**
 	 * Obtiene todas las citas de un mes específico
 	 * @param mesActual Mes a consultar (YearMonth)
 	 * @return Lista de citas del mes
 	 */
 	public List<Cita> obtenerPorMes(java.time.YearMonth mesActual) {
-		EntityManager em = JPAUtil.getEntityManager();
+		EntityManager em = getEntityManager();
 		try {
 			LocalDate primerDia = mesActual.atDay(1);
 			LocalDate ultimoDia = mesActual.atEndOfMonth();
@@ -230,43 +235,20 @@ public class CitaDAO {
 	/**
 	 * Actualiza una cita existente usando ORM
 	 * @param cita Cita a actualizar
+	 * @deprecated Usar update(Cita) del GenericDAO
 	 */
+	@Deprecated
 	public void actualizar(Cita cita) {
-		EntityManager em = JPAUtil.getEntityManager();
-		try {
-			em.getTransaction().begin();
-			em.merge(cita);  // ← ORM: JPA genera el UPDATE automáticamente
-			em.getTransaction().commit();
-		} catch (Exception e) {
-			if (em.getTransaction().isActive()) {
-				em.getTransaction().rollback();
-			}
-			throw e;
-		} finally {
-			em.close();
-		}
+		update(cita);
 	}
 	
 	/**
 	 * Elimina una cita por su ID
 	 * @param id ID de la cita a eliminar
+	 * @deprecated Usar delete(Integer) del GenericDAO
 	 */
+	@Deprecated
 	public void eliminar(int id) {
-		EntityManager em = JPAUtil.getEntityManager();
-		try {
-			em.getTransaction().begin();
-			Cita cita = em.find(Cita.class, id);
-			if (cita != null) {
-				em.remove(cita);  // ← ORM: JPA genera el DELETE automáticamente
-			}
-			em.getTransaction().commit();
-		} catch (Exception e) {
-			if (em.getTransaction().isActive()) {
-				em.getTransaction().rollback();
-			}
-			throw e;
-		} finally {
-			em.close();
-		}
+		delete(id);
 	}
 }
