@@ -38,6 +38,15 @@ public class EspecialidadController extends HttpServlet {
 			case "listar":
 				listarEspecialidades(request, response);
 				break;
+			case "listarAdmin":
+				listarEspecialidadesAdmin(request, response);
+				break;
+			case "nuevo":
+				mostrarFormularioNuevo(request, response);
+				break;
+			case "editar":
+				mostrarFormularioEditar(request, response);
+				break;
 			case "obtener":
 				obtenerEspecialidad(request, response);
 				break;
@@ -55,8 +64,27 @@ public class EspecialidadController extends HttpServlet {
 		
 		String accion = request.getParameter("accion");
 		
-		if ("guardar".equals(accion)) {
-			guardarEspecialidad(request, response);
+		if (accion == null) {
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Acción no especificada");
+			return;
+		}
+		
+		switch (accion) {
+			case "guardar":
+				guardarEspecialidad(request, response);
+				break;
+			case "crear":
+				crearEspecialidad(request, response);
+				break;
+			case "actualizar":
+				actualizarEspecialidad(request, response);
+				break;
+			case "eliminar":
+				eliminarEspecialidad(request, response);
+				break;
+			default:
+				response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Acción no válida");
+				break;
 		}
 	}
 	
@@ -170,4 +198,109 @@ public class EspecialidadController extends HttpServlet {
 		response.getWriter().println("Especialidades inicializadas correctamente.");
 		response.getWriter().println("<br><a href='especialidades?accion=listar'>Ver especialidades</a>");
 	}
+	
+	/**
+	 * Lista especialidades para el panel de administrador
+	 */
+	private void listarEspecialidadesAdmin(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		List<Especialidad> especialidades = factory.getEspecialidadDAO().getAll();
+		request.setAttribute("especialidades", especialidades);
+		request.getRequestDispatcher("/admin/gestionar-especialidades.jsp").forward(request, response);
+	}
+	
+	/**
+	 * Muestra el formulario para crear una nueva especialidad para el Admin
+	 */
+	private void mostrarFormularioNuevo(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		// No hay especialidad (modo creación)
+		request.setAttribute("especialidad", null);
+		request.setAttribute("accion", "crear");
+		request.getRequestDispatcher("/admin/form-especialidad.jsp").forward(request, response);
+	}
+	
+	/**
+	 * Muestra el formulario para editar una especialidad existente - Admin
+	 */
+	private void mostrarFormularioEditar(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		int id = Integer.parseInt(request. getParameter("id"));
+		Especialidad especialidad = factory.getEspecialidadDAO().getById(id);
+		
+		if (especialidad != null) {
+			request.setAttribute("especialidad", especialidad);
+			request.setAttribute("accion", "editar");
+			request.getRequestDispatcher("/admin/form-especialidad. jsp").forward(request, response);
+		} else {
+			response.sendRedirect(request.getContextPath() + "/especialidades?accion=listarAdmin");
+		}
+	}
+	
+	/**
+	 * Crea una nueva especialidad
+	 */
+	private void crearEspecialidad(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		String nombre = request.getParameter("nombre");
+		String titulo = request. getParameter("titulo");
+		String descripcion = request.getParameter("descripcion");
+		String servicios = request.getParameter("servicios");
+		String icono = request.getParameter("icono");
+		
+		Especialidad especialidad = new Especialidad(nombre, titulo, descripcion, servicios, icono);
+		factory.getEspecialidadDAO().create(especialidad);
+		
+		// Mensaje de éxito
+		request.getSession().setAttribute("mensaje", "Especialidad creada exitosamente");
+		response.sendRedirect(request.getContextPath() + "/especialidades?accion=listarAdmin");
+	}
+	
+	/**
+	 * Actualiza una especialidad existente
+	 */
+	private void actualizarEspecialidad(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		int id = Integer.parseInt(request. getParameter("id"));
+		Especialidad especialidad = factory.getEspecialidadDAO().getById(id);
+		
+		if (especialidad != null) {
+			especialidad.setNombre(request.getParameter("nombre"));
+			especialidad.setTitulo(request.getParameter("titulo"));
+			especialidad.setDescripcion(request.getParameter("descripcion"));
+			especialidad.setServicios(request.getParameter("servicios"));
+			especialidad.setIcono(request.getParameter("icono"));
+			
+			factory.getEspecialidadDAO().update(especialidad);
+			
+			// Mensaje de éxito
+			request.getSession().setAttribute("mensaje", "Especialidad actualizada exitosamente");
+		}
+		
+		response.sendRedirect(request.getContextPath() + "/especialidades?accion=listarAdmin");
+	}
+	
+	/**
+	 * Elimina una especialidad
+	 */
+	private void eliminarEspecialidad(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		int id = Integer.parseInt(request.getParameter("id"));
+		
+		try {
+			factory.getEspecialidadDAO().delete(id);
+			request.getSession().setAttribute("mensaje", "Especialidad eliminada exitosamente");
+		} catch (Exception e) {
+			request.getSession().setAttribute("error", "No se pudo eliminar la especialidad:  " + e.getMessage());
+		}
+		
+		response.sendRedirect(request.getContextPath() + "/especialidades?accion=listarAdmin");
+	}
+
 }
