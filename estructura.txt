@@ -94,21 +94,24 @@ C:.
 |   |       |   consultar-citas.jsp
 |   |       |   especialidades.html
 |   |       |   estructura.txt
-|   |       |   framework.css
 |   |       |   index.html
 |   |       |   index.jsp
 |   |       |   inicio.html
 |   |       |   login-success.jsp
 |   |       |   rese¤as.html
-|   |       |   styles.css
 |   |       |   test-login.jsp
 |   |       |   
+|   |       +---css
+|   |       |       framework.css
+|   |       |       styles.css
+|   |       |       
 |   |       +---images
 |   |       |       logo.svg
 |   |       |       logo_epn.png
 |   |       |       user.svg
 |   |       |       
 |   |       +---js
+|   |       |       admin-especialidades.js
 |   |       |       agendamientos-calendario.js
 |   |       |       agendamientos.js
 |   |       |       atender-cita-nuevo.js
@@ -126,13 +129,17 @@ C:.
 |   |       |       MANIFEST.MF
 |   |       |       
 |   |       \---views
-|   |               agendamientos.jsp
-|   |               calendario.jsp
-|   |               confirmacion.jsp
-|   |               especialidades.jsp
-|   |               lista-doctores.jsp
-|   |               rese¤as.jsp
-|   |               
+|   |           |   agendamientos.jsp
+|   |           |   calendario.jsp
+|   |           |   confirmacion.jsp
+|   |           |   especialidades.jsp
+|   |           |   lista-doctores.jsp
+|   |           |   rese¤as.jsp
+|   |           |   
+|   |           \---admin
+|   |                   form-especialidad.jsp
+|   |                   gestionarEspecialidades.jsp
+|   |                   
 |   \---test
 |       +---java
 |       \---resources
