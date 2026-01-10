@@ -4,18 +4,34 @@
   <artifactId>01_MiProyecto</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
+  
+  <!-- Configuración de encoding UTF-8 -->
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+</properties>
+
+
   <build>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.13.0</version>
         <configuration>
-          <release>21</release>
+          <release>17</release>
         </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
         <version>3.2.3</version>
+        <!-- Agregada configuración failOnMissingWebXml -->
+        <configuration>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+        </configuration>
+        
       </plugin>
     </plugins>
   </build>
@@ -63,6 +79,7 @@
 			<groupId>jakarta.persistence</groupId>
 			<artifactId>jakarta.persistence-api</artifactId>
 			<version>3.1.0</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- EclipseLink - Implementación de JPA -->

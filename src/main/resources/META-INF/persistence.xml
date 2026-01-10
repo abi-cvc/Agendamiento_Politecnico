@@ -39,7 +39,7 @@
             <property name="jakarta.persistence.jdbc.user" value="root"/>
             
             <!-- Contraseña de XAMPP MySQL (Default: vacía) -->
-            <property name="jakarta.persistence.jdbc.password" value="peysi123"/>
+            <property name="jakarta.persistence.jdbc.password" value="1234"/>
 
             <!-- ============================================ -->
             <!-- ESTRATEGIA DE ESQUEMA -->
