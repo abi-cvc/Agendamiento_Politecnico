@@ -143,6 +143,7 @@ public class EstudianteAdminController extends HttpServlet {
             String nombre = request.getParameter("nombre");
             String apellido = request.getParameter("apellido");
             String email = request.getParameter("email");
+            String password = request.getParameter("password");
             
             // Verificar que no exista un estudiante con ese idPaciente
             if (factory.getEstudianteDAO().existePorIdPaciente(idPaciente)) {
@@ -153,6 +154,10 @@ public class EstudianteAdminController extends HttpServlet {
             
             // Crear nuevo estudiante usando el constructor correcto
             Estudiante nuevoEstudiante = new Estudiante(idPaciente, nombre, apellido, email);
+            // Asignar contraseña si viene (obligatoria en UI)
+            if (password != null && !password.trim().isEmpty()) {
+                nuevoEstudiante.setPasswordEstudiante(password);
+            }
             
             // Guardar en la base de datos
             factory.getEstudianteDAO().create(nuevoEstudiante);
@@ -178,6 +183,7 @@ public class EstudianteAdminController extends HttpServlet {
             String nombre = request.getParameter("nombre");
             String apellido = request.getParameter("apellido");
             String email = request.getParameter("email");
+            String password = request.getParameter("password");
             
             // Buscar estudiante
             Estudiante estudiante = factory.getEstudianteDAO().getById(id);
@@ -187,6 +193,10 @@ public class EstudianteAdminController extends HttpServlet {
                 estudiante.setNombreEstudiante(nombre);
                 estudiante.setApellidoEstudiante(apellido);
                 estudiante.setCorreoEstudiante(email);
+                // Actualizar contraseña solo si se proporcionó
+                if (password != null && !password.trim().isEmpty()) {
+                    estudiante.setPasswordEstudiante(password);
+                }
                 
                 // Guardar cambios
                 factory.getEstudianteDAO().update(estudiante);

@@ -207,6 +207,10 @@
                 <label class="form-label">Email *</label>
                 <input type="email" name="email" class="form-input" required maxlength="100" placeholder="estudiante@epn.edu.ec">
             </div>
+            <div class="form-group">
+                <label class="form-label">Contraseña *</label>
+                <input type="password" name="password" class="form-input" required maxlength="255" placeholder="Contraseña para el estudiante">
+            </div>
             
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">💾 Guardar</button>
@@ -255,6 +259,10 @@
                 <input type="email" name="email" class="form-input" 
                        value="<%= estudianteEditar.getCorreoEstudiante() %>" 
                        required maxlength="100">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Contraseña (dejar vacío para mantener)</label>
+                <input type="password" name="password" class="form-input" maxlength="255">
             </div>
             
             <div class="form-actions">

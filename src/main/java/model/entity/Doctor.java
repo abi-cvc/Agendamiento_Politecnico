@@ -1,6 +1,17 @@
 package model.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Column;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -36,18 +47,15 @@ public class Doctor implements Serializable {
     @Column(name = "telefono", length = 15)
     private String telefono;
     
-    @Column(name = "foto", length = 255)
-    private String foto;
-    
-    @Column(name = "descripcion", columnDefinition = "TEXT")
-    private String descripcion;
+    @Column(name = "password_doctor", length = 255)
+    private String password;
     
     @Column(name = "activo")
     private boolean activo = true;
     
     // Relación ManyToOne con Especialidad
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_especialidad", nullable = false)
+    @JoinColumn(name = "id_especialidad", nullable = true)
     private Especialidad especialidad;
     
     // Relación OneToMany con Disponibilidad
@@ -119,20 +127,12 @@ public class Doctor implements Serializable {
         this.telefono = telefono;
     }
     
-    public String getFoto() {
-        return foto;
+    public String getPassword() {
+        return password;
     }
     
-    public void setFoto(String foto) {
-        this.foto = foto;
-    }
-    
-    public String getDescripcion() {
-        return descripcion;
-    }
-    
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setPassword(String password) {
+        this.password = password;
     }
     
     public boolean isActivo() {

@@ -87,7 +87,7 @@ public class DoctorAdminController extends HttpServlet {
             // Obtener todos los doctores (activos e inactivos para el admin)
             List<Doctor> doctores = factory.getDoctorDAO().getAll();
             
-            // Obtener especialidades para el select del formulario
+            // Obtener especialidades para el select del formulario (necesario para crear/editar)
             List<Especialidad> especialidades = factory.getEspecialidadDAO().getAll();
             
             request.setAttribute("doctores", doctores);
@@ -153,9 +153,8 @@ public class DoctorAdminController extends HttpServlet {
             String apellido = request.getParameter("apellido");
             String email = request.getParameter("email");
             String telefono = request.getParameter("telefono");
-            String foto = request.getParameter("foto");
-            String descripcion = request.getParameter("descripcion");
-            int idEspecialidad = Integer.parseInt(request.getParameter("idEspecialidad"));
+            String password = request.getParameter("password");
+            int idEspecialidad = -1; // opcional, ya no requerimos especialidad en lista; mantener si viene
             
             // Verificar que no exista un doctor con esa cédula
             if (factory.getDoctorDAO().obtenerPorCedula(cedula) != null) {
@@ -165,19 +164,20 @@ public class DoctorAdminController extends HttpServlet {
             }
             
             // Obtener especialidad
-            Especialidad especialidad = factory.getEspecialidadDAO().getById(idEspecialidad);
-            
-            if (especialidad == null) {
-                request.getSession().setAttribute("error", "Especialidad no encontrada");
-                response.sendRedirect(request.getContextPath() + "/DoctorAdminController?accion=listar");
-                return;
+            Especialidad especialidad = null;
+            try {
+                if (request.getParameter("idEspecialidad") != null && !request.getParameter("idEspecialidad").isEmpty()) {
+                    idEspecialidad = Integer.parseInt(request.getParameter("idEspecialidad"));
+                    especialidad = factory.getEspecialidadDAO().getById(idEspecialidad);
+                }
+            } catch (NumberFormatException ex) {
+                // ignorar, especialidad permanecerá null
             }
             
-            // Crear nuevo doctor
+            // Crear nuevo doctor (sin foto/descripcion)
             Doctor nuevoDoctor = new Doctor(cedula, nombre, apellido, email, especialidad);
             nuevoDoctor.setTelefono(telefono);
-            nuevoDoctor.setFoto(foto);
-            nuevoDoctor.setDescripcion(descripcion);
+            nuevoDoctor.setPassword(password);
             nuevoDoctor.setActivo(true);
             
             // Guardar en la base de datos
@@ -202,8 +202,7 @@ public class DoctorAdminController extends HttpServlet {
         try {
             int id = Integer.parseInt(request.getParameter("id"));
             String telefono = request.getParameter("telefono");
-            String foto = request.getParameter("foto");
-            String descripcion = request.getParameter("descripcion");
+            String password = request.getParameter("password");
             
             // Buscar doctor
             Doctor doctor = factory.getDoctorDAO().getById(id);
@@ -211,8 +210,9 @@ public class DoctorAdminController extends HttpServlet {
             if (doctor != null) {
                 // Actualizar solo los campos permitidos
                 doctor.setTelefono(telefono);
-                doctor.setFoto(foto);
-                doctor.setDescripcion(descripcion);
+                if (password != null && !password.trim().isEmpty()) {
+                    doctor.setPassword(password);
+                }
                 
                 // Guardar cambios
                 factory.getDoctorDAO().update(doctor);

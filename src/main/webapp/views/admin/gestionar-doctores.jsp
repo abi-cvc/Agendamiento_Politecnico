@@ -4,13 +4,9 @@
 <%@ page import="model.entity.Especialidad" %>
 <%
     List<Doctor> doctores = (List<Doctor>) request.getAttribute("doctores");
-    List<Especialidad> especialidades = (List<Especialidad>) request.getAttribute("especialidades");
     
     if (doctores == null) {
         doctores = new java.util.ArrayList<>();
-    }
-    if (especialidades == null) {
-        especialidades = new java.util.ArrayList<>();
     }
     
     // Determinar si mostrar el modal de creación
@@ -133,12 +129,11 @@
                 <table class="table-admin">
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Cédula</th>
-                            <th>Nombre</th>
-                            <th>Apellido</th>
+                            <th>Nombre Completo</th>
                             <th>Email</th>
                             <th>Teléfono</th>
-                            <th>Especialidad</th>
                             <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
@@ -146,25 +141,16 @@
                     <tbody>
                         <% for (Doctor doc : doctores) { %>
                             <tr>
+                                <td><%= doc.getIdDoctor() %></td>
                                 <td><%= doc.getCedula() %></td>
-                                <td><%= doc.getNombre() %></td>
-                                <td><%= doc.getApellido() %></td>
+                                <td><%= doc.getNombre() + " " + doc.getApellido() %></td>
                                 <td><%= doc.getEmail() != null ? doc.getEmail() : "-" %></td>
                                 <td><%= doc.getTelefono() != null ? doc.getTelefono() : "-" %></td>
                                 <td>
-                                    <% if (doc.getEspecialidad() != null) { %>
-                                        <span class="badge badge-primary">
-                                            <%= doc.getEspecialidad().getTitulo() %>
-                                        </span>
-                                    <% } else { %>
-                                        <span class="text-muted">-</span>
-                                    <% } %>
-                                </td>
-                                <td>
-                                    <span class="estado-badge <%= doc.isActivo() ? "estado-activo" : "estado-inactivo" %>">
-                                        <%= doc.isActivo() ? "✓ Activo" : "✗ Inactivo" %>
-                                    </span>
-                                </td>
+                                     <span class="estado-badge <%= doc.isActivo() ? "estado-activo" : "estado-inactivo" %>">
+                                         <%= doc.isActivo() ? "✓ Activo" : "✗ Inactivo" %>
+                                     </span>
+                                 </td>
                                 <td>
                                     <div class="btn-actions">
                                         <a href="${pageContext.request.contextPath}/DoctorAdminController?accion=listar&editar=<%= doc.getIdDoctor() %>" 
@@ -227,29 +213,24 @@
                 <input type="email" name="email" class="form-input" required maxlength="100">
             </div>
             
-            <div class="form-group">
-                <label class="form-label">Teléfono</label>
-                <input type="text" name="telefono" class="form-input" maxlength="15">
+            <div class="grid grid-2 gap-lg">
+                <div class="form-group">
+                    <label class="form-label">Contraseña *</label>
+                    <input type="password" name="password" class="form-input" required maxlength="255" placeholder="Contraseña para el doctor">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Teléfono</label>
+                    <input type="text" name="telefono" class="form-input" maxlength="15">
+                </div>
             </div>
             
             <div class="form-group">
-                <label class="form-label">Foto (URL)</label>
-                <input type="text" name="foto" class="form-input" maxlength="255" placeholder="https://ejemplo.com/foto.jpg">
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Descripción</label>
-                <textarea name="descripcion" class="form-textarea" rows="3"></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Especialidad *</label>
-                <select name="idEspecialidad" class="form-select" required>
-                    <option value="">Seleccionar Especialidad</option>
-                    <% for (Especialidad esp : especialidades) { %>
-                        <option value="<%= esp.getIdEspecialidad() %>">
-                            <%= esp.getTitulo() %>
-                        </option>
+                <label class="form-label">Especialidad (opcional)</label>
+                <select name="idEspecialidad" class="form-select">
+                    <option value="">-- Sin especialidad --</option>
+                    <% for (Especialidad esp : (List<Especialidad>) request.getAttribute("especialidades")) { %>
+                        <option value="<%= esp.getIdEspecialidad() %>"><%= esp.getTitulo() %></option>
                     <% } %>
                 </select>
             </div>
@@ -305,15 +286,8 @@
             </div>
             
             <div class="form-group">
-                <label class="form-label">Foto (URL)</label>
-                <input type="text" name="foto" class="form-input" 
-                       value="<%= doctorEditar.getFoto() != null ? doctorEditar.getFoto() : "" %>" 
-                       maxlength="255">
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Descripción</label>
-                <textarea name="descripcion" class="form-textarea" rows="3"><%= doctorEditar.getDescripcion() != null ? doctorEditar.getDescripcion() : "" %></textarea>
+                <label class="form-label">Contraseña (dejar vacío para mantener)</label>
+                <input type="password" name="password" class="form-input" maxlength="255">
             </div>
             
             <div class="form-actions">

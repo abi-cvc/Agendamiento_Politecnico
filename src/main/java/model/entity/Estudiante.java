@@ -31,6 +31,9 @@ public class Estudiante implements Serializable {
     @Column(name = "correo_estudiante", nullable = false, unique = true, length = 100)
     private String correoEstudiante;
     
+    @Column(name = "password_estudiante", length = 255)
+    private String passwordEstudiante;
+    
     @Column(name = "activo")
     private boolean activo = true;
     
@@ -156,6 +159,14 @@ public class Estudiante implements Serializable {
     
     public void setCorreoEstudiante(String correoEstudiante) {
         this.correoEstudiante = correoEstudiante;
+    }
+    
+    public String getPasswordEstudiante() {
+        return passwordEstudiante;
+    }
+    
+    public void setPasswordEstudiante(String passwordEstudiante) {
+        this.passwordEstudiante = passwordEstudiante;
     }
     
     public List<Cita> getCitas() {
