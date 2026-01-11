@@ -271,4 +271,72 @@ public class EvaluacionDAO extends JPAGenericDAO<Evaluacion, Integer> implements
             em.close();
         }
     }
+    
+    
+    /*===== PARA ESTUDIANTE ====*/
+    /**
+     * Obtiene todas las evaluaciones de una especialidad
+     */
+    @Override
+    public List<Evaluacion> getByEspecialidad(int idEspecialidad) {
+        EntityManager em = getEntityManager();
+        try {
+            TypedQuery<Evaluacion> query = em.createQuery(
+                "SELECT e FROM Evaluacion e WHERE e.doctor.especialidad.idEspecialidad = :idEspecialidad " +
+                "ORDER BY e.fechaEvaluacion DESC",
+                Evaluacion.class
+            );
+            query.setParameter("idEspecialidad", idEspecialidad);
+            return query.getResultList();
+        } catch (Exception e) {
+            System.err.println("Error al obtener evaluaciones por especialidad: " + e.getMessage());
+            e.printStackTrace();
+            return new ArrayList<>();
+        } finally {
+            em.close();
+        }
+    }
+    
+    /**
+     * Cuenta el total de evaluaciones en la base de datos
+     */
+    @Override
+    public long contarTodas() {
+        EntityManager em = getEntityManager();
+        try {
+            TypedQuery<Long> query = em.createQuery(
+                "SELECT COUNT(e) FROM Evaluacion e",
+                Long.class
+            );
+            return query.getSingleResult();
+        } catch (Exception e) {
+            System.err.println("Error al contar todas las evaluaciones: " + e.getMessage());
+            e.printStackTrace();
+            return 0L;
+        } finally {
+            em.close();
+        }
+    }
+    
+    /**
+     * Calcula el promedio general de todas las calificaciones
+     */
+    @Override
+    public double obtenerPromedioGeneral() {
+        EntityManager em = getEntityManager();
+        try {
+            TypedQuery<Double> query = em.createQuery(
+                "SELECT AVG(e.calificacion) FROM Evaluacion e",
+                Double.class
+            );
+            Double promedio = query.getSingleResult();
+            return promedio != null ? promedio : 0.0;
+        } catch (Exception e) {
+            System.err.println("Error al calcular promedio general: " + e.getMessage());
+            e.printStackTrace();
+            return 0.0;
+        } finally {
+            em.close();
+        }
+    }
 }

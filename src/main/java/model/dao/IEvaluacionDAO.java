@@ -88,4 +88,39 @@ public interface IEvaluacionDAO extends GenericDAO<Evaluacion, Integer> {
      * @return Lista de doctores ordenados por calificación
      */
     List<Map<String, Object>> obtenerDoctoresMejorCalificados(int limite);
+    
+// ===== MÉTODOS ADICIONALES PARA RESENAS CONTROLLER =====
+    
+    /**
+     * Obtiene todas las evaluaciones de una especialidad
+     * @param idEspecialidad ID de la especialidad
+     * @return Lista de evaluaciones de la especialidad
+     */
+    List<Evaluacion> getByEspecialidad(int idEspecialidad);
+    
+    /**
+     * Alias para obtenerPorDoctor (compatibilidad con controller)
+     */
+    default List<Evaluacion> getByDoctor(int idDoctor) {
+        return obtenerPorDoctor(idDoctor);
+    }
+    
+    /**
+     * Alias para obtenerPorEstudiante (compatibilidad con controller)
+     */
+    default List<Evaluacion> getByEstudiante(int idEstudiante) {
+        return obtenerPorEstudiante(idEstudiante);
+    }
+    
+    /**
+     * Cuenta el total de evaluaciones en la base de datos
+     * @return Número total de evaluaciones
+     */
+    long contarTodas();
+    
+    /**
+     * Calcula el promedio general de todas las calificaciones
+     * @return Promedio general (0.0 si no hay evaluaciones)
+     */
+    double obtenerPromedioGeneral();
 }

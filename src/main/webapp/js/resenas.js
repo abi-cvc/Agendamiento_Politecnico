@@ -1,58 +1,86 @@
-// ===== PROTEGER FORMULARIO Y CARGAR DATOS =====
+// ===== INICIALIZACIÓN =====
 document.addEventListener('DOMContentLoaded', function() {
-    const usuario = verificarSesion();
+    // Configurar sistema de calificación
+    configurarCalificacion();
     
-    // El formulario solo es visible para estudiantes
-    const formCard = document.querySelector('.resena-form-card');
-    if (!usuario) {
-        formCard.innerHTML = `
-            <div class="resena-form-header text-center">
-                <h2>🔒 Inicia Sesión</h2>
-                <p class="text-muted mb-4">Para dejar una reseña, necesitas iniciar sesión</p>
-                <a href="index.jsp" class="btn-primary" onclick="sessionStorage.setItem('paginaAnterior', 'reseñas.jsp')">Ir a Login</a>
-            </div>
-        `;
-    } else if (usuario.rol !== 'estudiante') {
-        formCard.innerHTML = `
-            <div class="resena-form-header text-center">
-                <h2>🔒 Solo Estudiantes</h2>
-                <p class="text-muted mb-4">Únicamente los estudiantes pueden dejar reseñas</p>
-            </div>
-        `;
-    } else {
-        // Configurar sistema de calificación
-        configurarCalificacion();
-        
-        // Manejar envío del formulario
-        document.getElementById('resenaForm').addEventListener('submit', agregarResena);
-    }
+    // Configurar filtrado en cascada Especialidad → Doctor
+    configurarFiltradoCascada();
     
-    // Cargar reseñas existentes (visible para todos)
-    cargarResenas();
+    // Validar formulario antes de enviar
+    configurarValidacionFormulario();
     
-    // Manejar filtro
-    document.getElementById('filtroEspecialidad').addEventListener('change', cargarResenas);
+    // Auto-ocultar mensajes de alerta
+    autoOcultarAlertas();
 });
 
-// ===== CONFIGURAR SISTEMA DE CALIFICACIÓN =====
+// ===== FILTRADO EN CASCADA: ESPECIALIDAD → DOCTOR =====
+function configurarFiltradoCascada() {
+    const especialidadSelect = document.getElementById('especialidadResena');
+    const doctorSelect = document.getElementById('idDoctor');
+    
+    if (!especialidadSelect || !doctorSelect) {
+        console.error('No se encontraron los selectores necesarios');
+        return;
+    }
+    
+    console.log('Filtrado en cascada configurado correctamente');
+    
+    especialidadSelect.addEventListener('change', function() {
+        const especialidadId = parseInt(this.value);
+        
+        console.log('Especialidad seleccionada:', especialidadId);
+        console.log('Doctores disponibles:', doctoresDisponibles);
+        
+        // Limpiar opciones del select de doctores
+        doctorSelect.innerHTML = '<option value="">Selecciona un doctor</option>';
+        
+        if (!especialidadId || isNaN(especialidadId)) {
+            doctorSelect.disabled = true;
+            console.log('No hay especialidad válida seleccionada');
+            return;
+        }
+        
+        // Filtrar doctores por especialidad seleccionada
+        const doctoresFiltrados = doctoresDisponibles.filter(
+            doc => doc.especialidadId === especialidadId
+        );
+        
+        console.log('Doctores filtrados:', doctoresFiltrados);
+        
+        if (doctoresFiltrados.length === 0) {
+            doctorSelect.innerHTML = '<option value="">No hay doctores disponibles en esta especialidad</option>';
+            doctorSelect.disabled = true;
+            return;
+        }
+        
+        // Agregar doctores filtrados al select
+        doctoresFiltrados.forEach(doctor => {
+            const option = document.createElement('option');
+            option.value = doctor.id;
+            option.textContent = `${doctor.especialidadIcono} Dr. ${doctor.nombre}`;
+            doctorSelect.appendChild(option);
+        });
+        
+        doctorSelect.disabled = false;
+        console.log('Select de doctores habilitado con', doctoresFiltrados.length, 'opciones');
+    });
+}
+
+// ===== SISTEMA DE CALIFICACIÓN CON ESTRELLAS =====
 function configurarCalificacion() {
     const stars = document.querySelectorAll('.star');
     const calificacionInput = document.getElementById('calificacion');
     
+    if (stars.length === 0 || !calificacionInput) return;
+    
     stars.forEach(star => {
+        // Click para seleccionar calificación
         star.addEventListener('click', function() {
             const value = this.getAttribute('data-value');
             calificacionInput.value = value;
             
             // Actualizar estrellas visuales
-            stars.forEach(s => {
-                const starValue = s.getAttribute('data-value');
-                if (starValue <= value) {
-                    s.classList.add('active');
-                } else {
-                    s.classList.remove('active');
-                }
-            });
+            actualizarEstrellas(stars, value);
         });
         
         // Hover effect
@@ -70,202 +98,102 @@ function configurarCalificacion() {
     });
     
     // Limpiar hover al salir del contenedor
-    document.getElementById('ratingInput').addEventListener('mouseleave', function() {
-        stars.forEach(s => s.classList.remove('hover'));
+    const ratingInput = document.getElementById('ratingInput');
+    if (ratingInput) {
+        ratingInput.addEventListener('mouseleave', function() {
+            stars.forEach(s => s.classList.remove('hover'));
+        });
+    }
+}
+
+function actualizarEstrellas(stars, value) {
+    stars.forEach(s => {
+        const starValue = s.getAttribute('data-value');
+        if (starValue <= value) {
+            s.classList.add('active');
+        } else {
+            s.classList.remove('active');
+        }
     });
 }
 
-// ===== AGREGAR RESEÑA =====
-function agregarResena(e) {
-    e.preventDefault();
+// ===== VALIDACIÓN DEL FORMULARIO =====
+function configurarValidacionFormulario() {
+    const form = document.getElementById('resenaForm');
+    if (!form) return;
     
-    const usuario = verificarSesion();
+    form.addEventListener('submit', function(e) {
+        const especialidad = document.getElementById('especialidadResena').value;
+        const doctor = document.getElementById('idDoctor').value;
+        const calificacion = document.getElementById('calificacion').value;
+        const comentario = document.getElementById('comentario').value;
+        
+        // Validar especialidad
+        if (!especialidad) {
+            e.preventDefault();
+            mostrarMensaje('Por favor selecciona una especialidad', 'error');
+            return false;
+        }
+        
+        // Validar doctor
+        if (!doctor) {
+            e.preventDefault();
+            mostrarMensaje('Por favor selecciona un doctor', 'error');
+            return false;
+        }
+        
+        // Validar calificación
+        if (!calificacion) {
+            e.preventDefault();
+            mostrarMensaje('Por favor selecciona una calificación', 'error');
+            return false;
+        }
+        
+        // Validar comentario
+        if (comentario.trim().length < 20) {
+            e.preventDefault();
+            mostrarMensaje('El comentario debe tener al menos 20 caracteres', 'error');
+            return false;
+        }
+        
+        if (comentario.trim().length > 500) {
+            e.preventDefault();
+            mostrarMensaje('El comentario no puede exceder 500 caracteres', 'error');
+            return false;
+        }
+        
+        // Todo válido, continuar con el submit
+        return true;
+    });
+}
+
+// ===== MOSTRAR MENSAJES =====
+function mostrarMensaje(mensaje, tipo) {
     const messageDiv = document.getElementById('resenaMessage');
+    if (!messageDiv) return;
     
-    const especialidad = document.getElementById('especialidadResena');
-    const calificacion = document.getElementById('calificacion').value;
-    const comentario = document.getElementById('comentario').value;
+    messageDiv.textContent = mensaje;
+    messageDiv.className = `form-message ${tipo} show`;
     
-    // Validar calificación
-    if (!calificacion) {
-        messageDiv.textContent = 'Por favor selecciona una calificación';
-        messageDiv.className = 'form-message error show';
-        setTimeout(() => messageDiv.className = 'form-message', 3000);
-        return;
-    }
-    
-    // Crear objeto de reseña
-    const nuevaResena = {
-        id: Date.now(),
-        usuarioId: usuario.id,
-        usuarioNombre: usuario.nombre,
-        especialidad: especialidad.options[especialidad.selectedIndex].text,
-        especialidadValue: especialidad.value,
-        calificacion: parseInt(calificacion),
-        comentario: comentario,
-        fecha: new Date().toISOString(),
-        likes: 0
-    };
-    
-    // Guardar en sessionStorage
-    let resenas = JSON.parse(sessionStorage.getItem('resenas')) || [];
-    resenas.push(nuevaResena);
-    sessionStorage.setItem('resenas', JSON.stringify(resenas));
-    
-    // Mostrar mensaje de éxito
-    messageDiv.textContent = '¡Reseña publicada exitosamente!';
-    messageDiv.className = 'form-message success show';
-    
-    // Limpiar formulario
-    document.getElementById('resenaForm').reset();
-    document.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
-    
-    // Recargar lista de reseñas
-    cargarResenas();
-    
-    // Ocultar mensaje después de 3 segundos
+    // Ocultar después de 5 segundos
     setTimeout(() => {
         messageDiv.className = 'form-message';
-    }, 3000);
+    }, 5000);
 }
 
-// ===== CARGAR RESEÑAS =====
-function cargarResenas() {
-    const listaResenas = document.getElementById('listaResenas');
-    const filtro = document.getElementById('filtroEspecialidad').value;
-    const resenas = JSON.parse(sessionStorage.getItem('resenas')) || [];
-    const usuario = verificarSesion();
-    
-    // Filtrar reseñas
-    let resenasFiltradas = resenas;
-    if (filtro !== 'todas') {
-        resenasFiltradas = resenas.filter(r => r.especialidadValue === filtro);
-    }
-    
-    if (resenasFiltradas.length === 0) {
-        listaResenas.innerHTML = `
-            <div class="no-resenas text-center">
-                <p class="text-muted">No hay reseñas disponibles para esta especialidad</p>
-                <p class="text-muted text-sm">¡Sé el primero en compartir tu experiencia!</p>
-            </div>
-        `;
-        return;
-    }
-    
-    // Ordenar por fecha (más recientes primero)
-    resenasFiltradas.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
-    
-    // Generar HTML
-    let html = '';
-    resenasFiltradas.forEach(resena => {
-        const fechaFormateada = formatearFechaResena(resena.fecha);
-        const estrellas = generarEstrellas(resena.calificacion);
-        
-        // Botones de admin (solo si es admin)
-        const botonesAdmin = (usuario && usuario.rol === 'admin') ? `
-            <button class="btn-editar" onclick="editarResena(${resena.id})" title="Editar reseña">
-                ✏️
-            </button>
-            <button class="btn-eliminar" onclick="eliminarResena(${resena.id})" title="Eliminar reseña">
-                🗑️
-            </button>
-        ` : '';
-        
-        html += `
-            <div class="resena-card card hover-lift" id="resena-${resena.id}">
-                <div class="resena-header flex-between">
-                    <div>
-                        <h3 class="resena-usuario">${resena.usuarioNombre}</h3>
-                        <span class="resena-especialidad">${resena.especialidad}</span>
-                    </div>
-                    <div class="resena-rating">
-                        ${estrellas}
-                    </div>
-                </div>
-                <div class="resena-body">
-                    <p class="resena-comentario text-justify" id="comentario-${resena.id}">${resena.comentario}</p>
-                </div>
-                <div class="resena-footer flex-between">
-                    <span class="resena-fecha text-muted text-sm">${fechaFormateada}</span>
-                    <div class="resena-actions">
-                        <button class="btn-like" onclick="darLike(${resena.id})">
-                            👍 <span id="likes-${resena.id}">${resena.likes}</span>
-                        </button>
-                        ${botonesAdmin}
-                    </div>
-                </div>
-            </div>
-        `;
+// ===== AUTO-OCULTAR ALERTAS =====
+function autoOcultarAlertas() {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+        setTimeout(() => {
+            alert.style.transition = 'opacity 0.3s';
+            alert.style.opacity = '0';
+            setTimeout(() => alert.remove(), 300);
+        }, 5000);
     });
-    
-    listaResenas.innerHTML = html;
 }
 
-// ===== DAR LIKE A RESEÑA =====
-function darLike(resenaId) {
-    let resenas = JSON.parse(sessionStorage.getItem('resenas')) || [];
-    const resena = resenas.find(r => r.id === resenaId);
-    
-    if (resena) {
-        resena.likes += 1;
-        sessionStorage.setItem('resenas', JSON.stringify(resenas));
-        
-        // Actualizar contador visual
-        const likesSpan = document.getElementById(`likes-${resenaId}`);
-        if (likesSpan) {
-            likesSpan.textContent = resena.likes;
-        }
-    }
-}
-
-// ===== ELIMINAR RESEÑA (SOLO ADMIN) =====
-function eliminarResena(resenaId) {
-    const usuario = verificarSesion();
-    if (!usuario || usuario.rol !== 'admin') {
-        alert('No tienes permisos para eliminar reseñas');
-        return;
-    }
-    
-    if (!confirm('¿Estás seguro de que deseas eliminar esta reseña?')) {
-        return;
-    }
-    
-    let resenas = JSON.parse(sessionStorage.getItem('resenas')) || [];
-    resenas = resenas.filter(r => r.id !== resenaId);
-    sessionStorage.setItem('resenas', JSON.stringify(resenas));
-    
-    // Recargar lista
-    cargarResenas();
-}
-
-// ===== EDITAR RESEÑA (SOLO ADMIN) =====
-function editarResena(resenaId) {
-    const usuario = verificarSesion();
-    if (!usuario || usuario.rol !== 'admin') {
-        alert('No tienes permisos para editar reseñas');
-        return;
-    }
-    
-    let resenas = JSON.parse(sessionStorage.getItem('resenas')) || [];
-    const resena = resenas.find(r => r.id === resenaId);
-    
-    if (!resena) return;
-    
-    const nuevoComentario = prompt('Editar comentario:', resena.comentario);
-    
-    if (nuevoComentario && nuevoComentario.trim() !== '') {
-        resena.comentario = nuevoComentario.trim();
-        sessionStorage.setItem('resenas', JSON.stringify(resenas));
-        
-        // Actualizar comentario visual
-        const comentarioElement = document.getElementById(`comentario-${resenaId}`);
-        if (comentarioElement) {
-            comentarioElement.textContent = resena.comentario;
-        }
-    }
-}
-
-// ===== UTILIDADES =====
+// ===== UTILIDADES PARA FORMATEO =====
 function generarEstrellas(calificacion) {
     let estrellas = '';
     for (let i = 1; i <= 5; i++) {
@@ -278,7 +206,17 @@ function generarEstrellas(calificacion) {
     return estrellas;
 }
 
-function formatearFechaResena(fechaStr) {
+function formatearFecha(fechaStr) {
+    const fecha = new Date(fechaStr);
+    const opciones = { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    };
+    return fecha.toLocaleDateString('es-EC', opciones);
+}
+
+function formatearFechaRelativa(fechaStr) {
     const fecha = new Date(fechaStr);
     const ahora = new Date();
     const diff = ahora - fecha;
@@ -307,6 +245,5 @@ function formatearFechaResena(fechaStr) {
     }
     
     // Formato completo
-    const opciones = { year: 'numeric', month: 'long', day: 'numeric' };
-    return fecha.toLocaleDateString('es-EC', opciones);
+    return formatearFecha(fechaStr);
 }

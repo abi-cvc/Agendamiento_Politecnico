@@ -26,8 +26,10 @@
                 <li class="flex"><a href="<%= request.getContextPath() %>/inicio.jsp" class="font-bold">Inicio</a></li>
                 <li class="flex"><a href="<%= request.getContextPath() %>/AgendarCitasController" class="font-bold">Especialidades</a></li>
                 <li class="flex"><a href="<%= request.getContextPath() %>/ConsultarCitasAgendadasController" class="font-bold">Mis Citas</a></li>
-                <li class="flex"><a href="reseñas.jsp" class="font-bold">Reseñas</a></li>
-                <li class="login mt-2 mb-2" id="authButton"><a href="index.jsp" class="font-bold">Cerrar Sesión</a></li>
+                <li class="flex"><a href="<%= request.getContextPath() %>/resenas" class="font-bold">Mis Reseñas</a></li>
+                <li class="login mt-2 mb-2" id="authButton">
+                    <a href="<%= request.getContextPath() %>/index.jsp" class="font-bold">Login</a>
+                </li>
             </ul>
         </nav>
     </header>
@@ -250,10 +252,10 @@
             <div class="footer-section">
                 <h3>Enlaces Rápidos</h3>
                 <ul class="footer-links">
-                    <li><a href="inicio.jsp">Inicio</a></li>
-                    <li><a href="AgendarCitasController">Especialidades</a></li>
-                    <li><a href="ConsultarCitasAgendadasController">Mis Citas</a></li>
-                    <li><a href="reseñas.jsp">Reseñas</a></li>
+                    <li><a href="<%= request.getContextPath() %>/inicio.jsp">Inicio</a></li>
+				    <li><a href="<%= request.getContextPath() %>/AgendarCitasController">Especialidades</a></li>
+				    <li><a href="<%= request.getContextPath() %>/ConsultarCitasAgendadasController">Mis Citas</a></li>
+				    <li><a href="<%= request.getContextPath() %>/resenas">Mis Reseñas</a></li>
                 </ul>
             </div>
 
@@ -296,7 +298,7 @@
     </footer>
     
 
-    <script src="<%= request.getContextPath() %>js/auth-temporal.js"></script>
+    <script src="<%= request.getContextPath() %>/js/auth-temporal.js"></script>
     
 </body>
 </html>

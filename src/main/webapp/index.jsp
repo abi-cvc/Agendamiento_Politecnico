@@ -27,7 +27,7 @@
             <li><a href="<%= request.getContextPath() %>/index.jsp" class="font-bold">Inicio</a></li>
             <li><a href="#" class="font-bold" style="opacity: 0.5; pointer-events: none;">Especialidades</a></li>
             <li><a href="#" class="font-bold" style="opacity: 0.5; pointer-events: none;">Mis Citas</a></li>
-            <li><a href="#" class="font-bold" style="opacity: 0.5; pointer-events: none;">Reseñas</a></li>
+            <li><a href="#" class="font-bold" style="opacity: 0.5; pointer-events: none;">Mis Reseñas</a></li>
         </ul>
     </nav>
 </header>

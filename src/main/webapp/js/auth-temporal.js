@@ -232,7 +232,7 @@ function actualizarNavegacionPorRol() {
             <li><a href="${contextPath}/inicio.jsp" class="font-bold">Inicio</a></li>
             <li><a href="${contextPath}/AgendarCitasController" class="font-bold">Especialidades</a></li>
             <li><a href="${contextPath}/ConsultarCitasAgendadasController" class="font-bold">Mis Citas</a></li>
-            <li><a href="${contextPath}/reseñas.jsp" class="font-bold">Reseñas</a></li>
+            <li><a href="${contextPath}/resenas" class="font-bold">Reseñas</a></li>
             <li class="user-logged">
                 <div class="user-menu">
                     <img src="${contextPath}/images/user.svg" alt="Usuario" class="user-avatar">
@@ -253,7 +253,7 @@ function actualizarNavegacionPorRol() {
         nav.innerHTML = `
             <li><a href="${contextPath}/inicio.jsp" class="font-bold">Inicio</a></li>
             <li><a href="${contextPath}/AgendarCitasController" class="font-bold">Especialidades</a></li>
-            <li><a href="${contextPath}/reseñas.jsp" class="font-bold">Reseñas</a></li>
+            <li><a href="${contextPath}/resenas" class="font-bold">Reseñas</a></li>
             <li class="login mt-2 mb-2"><a href="${contextPath}/index.jsp" class="font-bold">Login</a></li>
         `;
     }

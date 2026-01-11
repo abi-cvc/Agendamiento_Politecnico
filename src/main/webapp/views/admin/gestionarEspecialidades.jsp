@@ -25,20 +25,20 @@
                 <li><a href="<%= request.getContextPath() %>/especialidades?accion=listarAdmin" class="font-bold">Gestionar Especialidades</a></li>
                 <li><a href="<%= request.getContextPath() %>/evaluaciones?accion=listarAdmin">Gestionar Evaluaciones</a></li>
                 <li class="user-logged">
-                <div class="user-menu">
-                    <img src="<%= request.getContextPath() %>/images/user.svg" alt="Usuario" class="user-avatar">
-                    <span class="user-name">Admin</span>
-                    <div class="user-dropdown">
-                        <div class="dropdown-header">
-                            <strong>Admin Bienestar</strong>
-                            <small>admin@epn.edu.ec</small>
-                        </div>
-                        <a href="<%= request.getContextPath() %>/index.jsp" onclick="logout(); return false;">
-                            🚪 Cerrar Sesión
-                        </a>
-                    </div>
-                </div>
-            </li>
+	                <div class="user-menu">
+	                    <img src="<%= request.getContextPath() %>/images/user.svg" alt="Usuario" class="user-avatar">
+	                    <span class="user-name">Admin</span>
+	                    <div class="user-dropdown">
+	                        <div class="dropdown-header">
+	                            <strong>Admin Bienestar</strong>
+	                            <small>admin@epn.edu.ec</small>
+	                        </div>
+	                        <a href="<%= request.getContextPath() %>/index.jsp" onclick="logout(); return false;">
+	                            🚪 Cerrar Sesión
+	                        </a>
+	                    </div>
+	                </div>
+	            </li>
                 
             </ul>
         </nav>
