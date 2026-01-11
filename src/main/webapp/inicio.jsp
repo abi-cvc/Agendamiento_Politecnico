@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bienestar Politécnico</title>
     <link rel="icon" type="image/png" href="images/logo_epn.png">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/framework.css">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/css/framework.css">
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/css/styles.css">
     
     <!--Tipo de letra para bienvenida-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,9 +23,9 @@
         </div>
         <nav>
             <ul>
-                <li class="flex"><a href="inicio.jsp" class="font-bold">Inicio</a></li>
-                <li class="flex"><a href="AgendarCitasController" class="font-bold">Especialidades</a></li>
-                <li class="flex"><a href="ConsultarCitasAgendadasController" class="font-bold">Mis Citas</a></li>
+                <li class="flex"><a href="<%= request.getContextPath() %>/inicio.jsp" class="font-bold">Inicio</a></li>
+                <li class="flex"><a href="<%= request.getContextPath() %>/AgendarCitasController" class="font-bold">Especialidades</a></li>
+                <li class="flex"><a href="<%= request.getContextPath() %>/ConsultarCitasAgendadasController" class="font-bold">Mis Citas</a></li>
                 <li class="flex"><a href="reseñas.jsp" class="font-bold">Reseñas</a></li>
                 <li class="login mt-2 mb-2" id="authButton"><a href="index.jsp" class="font-bold">Cerrar Sesión</a></li>
             </ul>

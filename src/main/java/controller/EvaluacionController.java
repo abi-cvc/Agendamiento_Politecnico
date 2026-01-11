@@ -1,13 +1,11 @@
 package controller;
 
-import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.dao.DAOFactory;
-import model.dao.IEvaluacionDAO;
 import model.entity.Evaluacion;
 import model.entity.Doctor;
 
@@ -27,12 +25,10 @@ import java.util.Map;
 public class EvaluacionController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private DAOFactory factory;
-    private Gson gson;
     
     @Override
     public void init() throws ServletException {
         factory = DAOFactory.getFactory();
-        gson = new Gson();
     }
     
     @Override
@@ -55,17 +51,11 @@ public class EvaluacionController extends HttpServlet {
             case "porDoctor":
                 listarPorDoctor(request, response);
                 break;
-            case "estadisticas":
-                obtenerEstadisticas(request, response);
-                break;
             case "mejoresCalificados":
-                obtenerMejoresCalificados(request, response);
+                mostrarMejoresCalificados(request, response);
                 break;
             case "reporteDoctor":
                 generarReporteDoctor(request, response);
-                break;
-            case "recientes":
-                obtenerRecientes(request, response);
                 break;
             default:
                 listarEvaluaciones(request, response);
@@ -91,7 +81,11 @@ public class EvaluacionController extends HttpServlet {
             throws ServletException, IOException {
         
         List<Evaluacion> evaluaciones = factory.getEvaluacionDAO().getAll();
+        List<Doctor> doctores = factory.getDoctorDAO().getAll();
+        
+        request.setAttribute("doctores", doctores);
         request.setAttribute("evaluaciones", evaluaciones);
+        
         request.getRequestDispatcher("/views/admin/gestionarEvaluaciones.jsp").forward(request, response);
     }
     
@@ -132,38 +126,9 @@ public class EvaluacionController extends HttpServlet {
     }
     
     /**
-     * Obtiene estadísticas de un doctor en formato JSON
+     * Muestra página con los doctores mejor calificados
      */
-    private void obtenerEstadisticas(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-        String idDoctorStr = request.getParameter("idDoctor");
-        
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        
-        if (idDoctorStr != null && !idDoctorStr.isEmpty()) {
-            try {
-                int idDoctor = Integer.parseInt(idDoctorStr);
-                Map<String, Object> estadisticas = factory.getEvaluacionDAO().obtenerEstadisticasDoctor(idDoctor);
-                
-                String json = gson.toJson(estadisticas);
-                response.getWriter().write(json);
-                
-            } catch (NumberFormatException e) {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().write("{\"error\": \"ID de doctor inválido\"}");
-            }
-        } else {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("{\"error\": \"ID de doctor no proporcionado\"}");
-        }
-    }
-    
-    /**
-     * Obtiene los doctores mejor calificados
-     */
-    private void obtenerMejoresCalificados(HttpServletRequest request, HttpServletResponse response)
+    private void mostrarMejoresCalificados(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
         String limiteStr = request.getParameter("limite");
@@ -177,13 +142,11 @@ public class EvaluacionController extends HttpServlet {
             }
         }
         
-        List<Map<String, Object>> mejoresCalificados = factory.getEvaluacionDAO().obtenerDoctoresMejorCalificados(limite);
+        List<Map<String, Object>> mejoresCalificados = 
+            factory.getEvaluacionDAO().obtenerDoctoresMejorCalificados(limite);
         
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        
-        String json = gson.toJson(mejoresCalificados);
-        response.getWriter().write(json);
+        request.setAttribute("mejoresCalificados", mejoresCalificados);
+        request.getRequestDispatcher("/views/admin/mejores-calificados.jsp").forward(request, response);
     }
     
     /**
@@ -241,32 +204,6 @@ public class EvaluacionController extends HttpServlet {
         } else {
             response.sendRedirect("evaluaciones?accion=listarAdmin");
         }
-    }
-    
-    /**
-     * Obtiene las evaluaciones más recientes
-     */
-    private void obtenerRecientes(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-        String limiteStr = request.getParameter("limite");
-        int limite = 10;
-        
-        if (limiteStr != null && !limiteStr.isEmpty()) {
-            try {
-                limite = Integer.parseInt(limiteStr);
-            } catch (NumberFormatException e) {
-                limite = 10;
-            }
-        }
-        
-        List<Evaluacion> evaluaciones = factory.getEvaluacionDAO().obtenerRecientes(limite);
-        
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        
-        String json = gson.toJson(evaluaciones);
-        response.getWriter().write(json);
     }
     
     @Override

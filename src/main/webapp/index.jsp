@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,10 +24,10 @@
     </div>
     <nav>
         <ul>
-            <li><a href="<%= request.getContextPath() %>/inicio.jsp" class="font-bold">Inicio</a></li>
-            <li><a href="<%= request.getContextPath() %>/especialidades.jsp" class="font-bold">Especialidades</a></li>
-            <li><a href="<%= request.getContextPath() %>/ConsultarCitasAgendadasController" class="font-bold">Mis Citas</a></li>
-            <li><a href="<%= request.getContextPath() %>/reseñas.jsp" class="font-bold">Reseñas</a></li>
+            <li><a href="<%= request.getContextPath() %>/index.jsp" class="font-bold">Inicio</a></li>
+            <li><a href="#" class="font-bold" style="opacity: 0.5; pointer-events: none;">Especialidades</a></li>
+            <li><a href="#" class="font-bold" style="opacity: 0.5; pointer-events: none;">Mis Citas</a></li>
+            <li><a href="#" class="font-bold" style="opacity: 0.5; pointer-events: none;">Reseñas</a></li>
         </ul>
     </nav>
 </header>
@@ -40,13 +40,11 @@
         </div>
 
         <!-- FORMULARIO -->
-        <form id="loginForm" class="login-form"
-              action="<%= request.getContextPath() %>/login"
-              method="post">
+        <form id="loginForm" class="login-form">
 
             <div class="form-group">
                 <label for="rol">Selecciona tu rol</label>
-                <select id="rol" name="rol" required>
+                <select id="rol" name="rol" class="form-select" required>
                     <option value="">Selecciona una opción</option>
                     <option value="estudiante">Estudiante</option>
                     <option value="doctor">Doctor</option>
@@ -55,23 +53,40 @@
             </div>
 
             <div class="form-group">
-                <label for="identificacion">ID / Cédula</label>
-                <input type="text" id="identificacion" name="identificacion"
-                       placeholder="Ej: 1725896347" required>
+                <label for="email">Correo institucional</label>
+                <div class="input-wrapper">
+                    <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                    </svg>
+                    <input type="email" 
+                           id="email" 
+                           name="email"
+                           placeholder="admin@epn.edu.ec" 
+                           required>
+                </div>
             </div>
 
             <div class="form-group">
                 <label for="password">Contraseña</label>
-                <input type="password" id="password" name="password"
-                       placeholder="Ingresa tu contraseña" required>
+                <div class="input-wrapper">
+                    <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/>
+                    </svg>
+                    <input type="password" 
+                           id="password" 
+                           name="password"
+                           placeholder="••••••••" 
+                           required>
+                    <button type="button" class="toggle-password" onclick="togglePassword()">
+                        <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
+                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
 
             <!-- Mensaje de error -->
-            <% if (request.getAttribute("error") != null) { %>
-                <div class="error-message" style="background: #fee2e2; color: #dc2626; padding: 12px; border-radius: 8px; margin-bottom: 15px;">
-                    <%= request.getAttribute("error") %>
-                </div>
-            <% } %>
+            <div id="errorMessage" class="alert alert-error"></div>
 
             <button type="submit" class="btn-login">
                 Iniciar Sesión
@@ -81,11 +96,6 @@
         <div class="login-footer">
             <p>¿Problemas para acceder?</p>
             <a href="mailto:bienestar@epn.edu.ec">Contacta a Bienestar Politécnico</a>
-            <p style="margin-top: 15px; font-size: 0.85rem; color: #666;">
-                <strong>Credenciales de prueba:</strong><br>
-                Estudiante: 1725896347 / 123456<br>
-                Admin: admin001 / 123456
-            </p>
         </div>
     </div>
 </main>
@@ -96,45 +106,8 @@
     </div>
 </footer>
 
+<!-- ✅ CARGAR AUTH TEMPORAL -->
 <script src="<%= request.getContextPath() %>/js/auth-temporal.js"></script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const navLinks = document.querySelectorAll('nav ul li a');
-        navLinks.forEach(link => {
-            if (!link.href.includes('inicio.jsp') && !link.href.includes('index.jsp')) {
-                link.style.pointerEvents = 'none';
-                link.style.opacity = '0.5';
-            }
-        });
-        
-        // Debug del formulario de login
-        const loginForm = document.getElementById('loginForm');
-        console.log('Formulario de login encontrado:', loginForm);
-        console.log('Action del formulario:', loginForm.action);
-        
-        loginForm.addEventListener('submit', function(e) {
-            console.log('=== FORMULARIO ENVIÁNDOSE ===');
-            console.log('Rol:', document.getElementById('rol').value);
-            console.log('Identificación:', document.getElementById('identificacion').value);
-            console.log('Password:', document.getElementById('password').value ? '****' : 'vacío');
-            console.log('Action URL:', this.action);
-            
-            // Validar que todos los campos estén llenos
-            const rol = document.getElementById('rol').value;
-            const id = document.getElementById('identificacion').value;
-            const pass = document.getElementById('password').value;
-            
-            if (!rol || !id || !pass) {
-                e.preventDefault();
-                alert('Por favor completa todos los campos');
-                return false;
-            }
-            
-            console.log('Formulario válido, enviando...');
-        });
-    });
-</script>
 
 </body>
 </html>

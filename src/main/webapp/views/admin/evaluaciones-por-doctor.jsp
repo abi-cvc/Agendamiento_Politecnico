@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -57,7 +58,12 @@
                     <div class="stat-info">
                         <h3>Calificación Promedio</h3>
                         <p class="stat-number-large">
-                            <fmt:formatNumber value="${estadisticas.promedio}" maxFractionDigits="2" />
+                            <c:choose>
+                                <c:when test="${estadisticas.promedio != null}">
+                                    ${String.format("%.2f", estadisticas.promedio)}
+                                </c:when>
+                                <c:otherwise>0.00</c:otherwise>
+                            </c:choose>
                         </p>
                         <div class="estrellas-visual">
                             <c:set var="promedioRedondeado" value="${Math.round(estadisticas.promedio)}" />
@@ -80,20 +86,76 @@
             <!-- Distribución por Estrellas -->
             <div class="distribucion-estrellas">
                 <h3>Distribución de Calificaciones</h3>
-                <c:forEach var="i" begin="5" end="1" step="-1">
-                    <div class="estrella-bar">
-                        <span class="estrella-label">${i} ⭐</span>
-                        <div class="progress-bar">
-                            <div class="progress-fill" 
-                                 style="width: ${estadisticas['porcentaje_'.concat(i)]}%">
-                            </div>
+                
+                <!-- 5 estrellas -->
+                <div class="estrella-bar">
+                    <span class="estrella-label">5 ⭐</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" 
+                             style="width: ${estadisticas.porcentaje_5}%">
                         </div>
-                        <span class="estrella-count">
-                            ${estadisticas['estrellas_'.concat(i)]} 
-                            (<fmt:formatNumber value="${estadisticas['porcentaje_'.concat(i)]}" maxFractionDigits="1" />%)
-                        </span>
                     </div>
-                </c:forEach>
+                    <span class="estrella-count">
+                        ${estadisticas.estrellas_5} 
+                        (${String.format("%.1f", estadisticas.porcentaje_5)}%)
+                    </span>
+                </div>
+                
+                <!-- 4 estrellas -->
+                <div class="estrella-bar">
+                    <span class="estrella-label">4 ⭐</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" 
+                             style="width: ${estadisticas.porcentaje_4}%">
+                        </div>
+                    </div>
+                    <span class="estrella-count">
+                        ${estadisticas.estrellas_4} 
+                        (${String.format("%.1f", estadisticas.porcentaje_4)}%)
+                    </span>
+                </div>
+                
+                <!-- 3 estrellas -->
+                <div class="estrella-bar">
+                    <span class="estrella-label">3 ⭐</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" 
+                             style="width: ${estadisticas.porcentaje_3}%">
+                        </div>
+                    </div>
+                    <span class="estrella-count">
+                        ${estadisticas.estrellas_3} 
+                        (${String.format("%.1f", estadisticas.porcentaje_3)}%)
+                    </span>
+                </div>
+                
+                <!-- 2 estrellas -->
+                <div class="estrella-bar">
+                    <span class="estrella-label">2 ⭐</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" 
+                             style="width: ${estadisticas.porcentaje_2}%">
+                        </div>
+                    </div>
+                    <span class="estrella-count">
+                        ${estadisticas.estrellas_2} 
+                        (${String.format("%.1f", estadisticas.porcentaje_2)}%)
+                    </span>
+                </div>
+                
+                <!-- 1 estrella -->
+                <div class="estrella-bar">
+                    <span class="estrella-label">1 ⭐</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" 
+                             style="width: ${estadisticas.porcentaje_1}%">
+                        </div>
+                    </div>
+                    <span class="estrella-count">
+                        ${estadisticas.estrellas_1} 
+                        (${String.format("%.1f", estadisticas.porcentaje_1)}%)
+                    </span>
+                </div>
             </div>
         </div>
 
@@ -138,8 +200,7 @@
                                 
                                 <div class="evaluacion-footer">
                                     <small class="fecha">
-                                        📅 <fmt:formatDate value="${eval.fechaEvaluacion}" pattern="dd/MM/yyyy" /> 
-                                        a las <fmt:formatDate value="${eval.fechaEvaluacion}" pattern="HH:mm" />
+                                        📅 ${eval.fechaFormateada}
                                     </small>
                                 </div>
                             </div>
@@ -148,7 +209,7 @@
                 </c:when>
                 <c:otherwise>
                     <div class="empty-state">
-                        <p>📭 Este doctor aún no tiene evaluaciones.</p>
+                        <p>🔭 Este doctor aún no tiene evaluaciones.</p>
                     </div>
                 </c:otherwise>
             </c:choose>

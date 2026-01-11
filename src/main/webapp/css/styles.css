@@ -3154,6 +3154,476 @@ body.header-is-hidden .especialidades-menu {
     }
 }
 
+/* ===================================
+   MEJORES CALIFICADOS - RANKING
+   ===================================*/
+
+.ranking-lista {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.ranking-item {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    background: var(--color-7);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.ranking-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.ranking-item.top-1 {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    color: white;
+}
+
+.ranking-item.top-2 {
+    background: linear-gradient(135deg, #C0C0C0 0%, #A8A8A8 100%);
+    color: white;
+}
+
+.ranking-item.top-3 {
+    background: linear-gradient(135deg, #CD7F32 0%, #B87333 100%);
+    color: white;
+}
+
+.ranking-numero {
+    font-size: 2rem;
+    font-weight: bold;
+    min-width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.1);
+    border-radius: 50%;
+}
+
+.ranking-info {
+    flex: 1;
+}
+
+.ranking-info h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+}
+
+.ranking-stats {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.95rem;
+}
+
+.ranking-stats span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.promedio {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.ranking-accion .btn {
+    white-space: nowrap;
+}
+
+.admin-header {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.admin-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.admin-header p {
+    color: var(--color-8);
+    font-size: 1rem;
+    font-style: italic;
+}
+
+.acciones-footer {
+    text-align: center;
+    margin: 3rem 0;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    font-size: 1.25rem;
+    color: #666;
+}
+
+.empty-state p:last-child {
+    font-size: 1rem;
+    color: #999;
+    margin-top: 1rem;
+}
+
+
+/* ===================================
+   ESTILOS ADICIONALES PARA REPORTE DOCTOR
+   ===================================*/
+
+
+/* Contenedor principal del reporte */
+.reporte-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 3rem;
+    background: var(--color-7);
+    box-shadow: var(--shadow-xl);
+    border-radius: var(--radius-xl);
+}
+
+/* Header del reporte */
+.reporte-header {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 3px solid var(--color-2);
+}
+
+.logo-reporte {
+    width: 100px;
+    height: auto;
+}
+
+.reporte-title h1 {
+    color: var(--color-2);
+    margin: 0;
+    font-size: 2rem;
+    font-family: 'Inter', sans-serif;
+}
+
+.reporte-subtitle {
+    color: var(--color-8);
+    margin: 0.5rem 0;
+}
+
+.reporte-fecha {
+    color: var(--color-8);
+    font-size: 0.9rem;
+}
+
+/* Info del doctor en reporte */
+.reporte-doctor-info {
+    margin-bottom: 2rem;
+}
+
+.doctor-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: var(--color-6);
+    border-radius: var(--radius-lg);
+    margin-top: 1rem;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.info-label {
+    font-weight: 600;
+    color: var(--color-2);
+    font-size: 0.9rem;
+}
+
+.info-value {
+    font-size: 1.1rem;
+    color: var(--color-1);
+}
+
+/* Resumen ejecutivo */
+.reporte-resumen {
+    margin-bottom: 2rem;
+}
+
+.resumen-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+
+.resumen-card {
+    padding: 2rem;
+    border-radius: var(--radius-xl);
+    text-align: center;
+    box-shadow: var(--shadow-md);
+}
+
+.resumen-card.promedio {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.resumen-card.total {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+}
+
+.resumen-card.estado {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+}
+
+.resumen-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.resumen-numero {
+    font-size: 3rem;
+    font-weight: bold;
+    margin: 0.5rem 0;
+}
+
+.resumen-texto {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.estrellas-promedio {
+    font-size: 1.3rem;
+    margin-top: 0.5rem;
+    letter-spacing: 2px;
+}
+
+/* Distribución de calificaciones */
+.reporte-distribucion {
+    margin-bottom: 2rem;
+}
+
+.distribucion-tabla {
+    margin-top: 1.5rem;
+}
+
+.distribucion-fila {
+    display: grid;
+    grid-template-columns: 100px 1fr 150px;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0.8rem;
+    background: var(--color-6);
+    border-radius: var(--radius-md);
+}
+
+.distribucion-label {
+    font-size: 1.2rem;
+    text-align: right;
+}
+
+.distribucion-barra-container {
+    background: #e0e0e0;
+    border-radius: 10px;
+    height: 30px;
+    overflow: hidden;
+}
+
+.distribucion-barra {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    transition: width 0.3s ease;
+}
+
+.distribucion-stats {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-weight: 600;
+}
+
+.distribucion-count {
+    font-size: 1rem;
+    color: var(--color-2);
+}
+
+.distribucion-porcentaje {
+    font-size: 0.9rem;
+    color: var(--color-8);
+}
+
+/* Análisis y recomendaciones */
+.reporte-analisis {
+    margin-bottom: 2rem;
+}
+
+.analisis-card {
+    padding: 2rem;
+    border-radius: var(--radius-xl);
+    margin-top: 1.5rem;
+}
+
+.analisis-card.excelente {
+    background: #d4edda;
+    border-left: 5px solid #28a745;
+}
+
+.analisis-card.muy-bueno {
+    background: #d1ecf1;
+    border-left: 5px solid #17a2b8;
+}
+
+.analisis-card.regular {
+    background: #fff3cd;
+    border-left: 5px solid #ffc107;
+}
+
+.analisis-card.atencion {
+    background: #f8d7da;
+    border-left: 5px solid #dc3545;
+}
+
+.analisis-card h3 {
+    margin-top: 0;
+    color: var(--color-2);
+}
+
+.analisis-card ul {
+    line-height: 1.8;
+}
+
+/* Comentarios destacados */
+.reporte-comentarios {
+    margin-bottom: 2rem;
+}
+
+.comentarios-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.comentario-item {
+    padding: 1.5rem;
+    background: var(--color-6);
+    border-radius: var(--radius-md);
+    border-left: 4px solid #667eea;
+}
+
+.comentario-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.comentario-rating {
+    font-size: 1.2rem;
+}
+
+.comentario-fecha {
+    font-size: 0.85rem;
+    color: var(--color-8);
+}
+
+.comentario-texto {
+    font-style: italic;
+    color: var(--color-1);
+    line-height: 1.6;
+}
+
+/* Footer del reporte */
+.reporte-footer {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 2px solid var(--color-5);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.footer-info p {
+    margin-bottom: 0.5rem;
+    color: var(--color-8);
+}
+
+.footer-firma {
+    text-align: center;
+}
+
+.firma-linea {
+    width: 250px;
+    height: 1px;
+    background: var(--color-1);
+    margin: 3rem auto 0.5rem;
+}
+
+.firma-cargo {
+    font-size: 0.85rem;
+    color: var(--color-8);
+}
+
+/* Acciones del reporte */
+.reporte-acciones {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+/* Secciones generales del reporte */
+section {
+    margin-bottom: 2rem;
+}
+
+section h2 {
+    color: var(--color-2);
+    border-bottom: 2px solid var(--color-2);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+
+/* === ESTILOS PARA IMPRESIÓN === */
+@media print {
+    header, 
+    .btn, 
+    .reporte-acciones, 
+    footer { 
+        display: none !important; 
+    }
+    
+    .reporte-container { 
+        max-width: 100%; 
+        box-shadow: none;
+        padding: 1rem;
+    }
+    
+    body {
+        background: white;
+        padding-top: 0;
+    }
+    
+    .resumen-card,
+    .analisis-card,
+    .comentario-item {
+        break-inside: avoid;
+    }
+}
+
+
 
 /* ===================================
    RESPONSIVE DESIGN
@@ -3416,7 +3886,57 @@ body.header-is-hidden .especialidades-menu {
     .reporte-footer {
         grid-template-columns: 1fr;
     }
+    
+    /* === MEJORES CALIFICADOS - RANKING === */
+    .ranking-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .ranking-stats {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .ranking-accion {
+        width: 100%;
+    }
+    
+    .ranking-accion .btn {
+        width: 100%;
+    }
+    
+    .reporte-container {
+        padding: 1.5rem;
+    }
+    
+    .reporte-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .resumen-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .doctor-info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .distribucion-fila {
+        grid-template-columns: 80px 1fr 100px;
+    }
+    
+    .comentarios-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .reporte-footer {
+        grid-template-columns: 1fr;
+    }
 }
+
 
 /* ===== SMALL MOBILE (max-width: 480px) ===== */
 @media (max-width: 480px) {

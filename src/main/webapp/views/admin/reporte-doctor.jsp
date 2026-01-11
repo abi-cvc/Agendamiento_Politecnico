@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
-<%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
+<%@ page import="java.time.LocalDate, java.time.LocalDateTime, java.time.format.DateTimeFormatter" %>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -11,12 +11,6 @@
     <link rel="icon" type="image/png" href="<%= request.getContextPath() %>/images/logo_epn.png">
     <link rel="stylesheet" href="<%= request.getContextPath() %>/css/framework.css">
     <link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
-    <style>
-        @media print {
-            header, .btn-accion, .back-button { display: none; }
-            .reporte-container { max-width: 100%; box-shadow: none; }
-        }
-    </style>
 </head>
 
 <body>
@@ -45,13 +39,13 @@
                 <h1>📊 Reporte de Evaluaciones</h1>
                 <p class="reporte-subtitle">Bienestar Politécnico - Escuela Politécnica Nacional</p>
                 <p class="reporte-fecha">
-                    Fecha de generación: <strong><fmt:formatDate value="${java.time.LocalDate.now()}" pattern="dd/MM/yyyy" /></strong>
+                    Fecha de generación: <strong><%= LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) %></strong>
                 </p>
             </div>
         </div>
 
         <!-- Información del Doctor -->
-        <div class="reporte-doctor-info">
+        <section class="reporte-doctor-info">
             <h2>👨‍⚕️ Información del Doctor</h2>
             <div class="doctor-info-grid">
                 <div class="info-item">
@@ -71,19 +65,17 @@
                     <span class="info-value">${doctor.cedula}</span>
                 </div>
             </div>
-        </div>
+        </section>
 
         <!-- Resumen Ejecutivo -->
-        <div class="reporte-resumen">
+        <section class="reporte-resumen">
             <h2>📈 Resumen Ejecutivo</h2>
             <div class="resumen-cards">
                 <div class="resumen-card promedio">
                     <div class="resumen-icon">⭐</div>
                     <div class="resumen-content">
                         <h3>Calificación Promedio</h3>
-                        <p class="resumen-numero">
-                            <fmt:formatNumber value="${promedio}" maxFractionDigits="2" />
-                        </p>
+                        <p class="resumen-numero">${String.format("%.2f", promedio)}</p>
                         <div class="estrellas-promedio">
                             <c:set var="promedioRedondeado" value="${Math.round(promedio)}" />
                             <c:forEach begin="1" end="${promedioRedondeado}">⭐</c:forEach>
@@ -113,39 +105,80 @@
                     </div>
                     <div class="resumen-content">
                         <h3>Estado</h3>
-                        <p class="resumen-numero estado-${estado}">${estado}</p>
+                        <p class="resumen-numero">${estado}</p>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
         <!-- Distribución de Calificaciones -->
-        <div class="reporte-distribucion">
+        <section class="reporte-distribucion">
             <h2>📊 Distribución de Calificaciones</h2>
             <div class="distribucion-tabla">
-                <c:forEach var="i" begin="5" end="1" step="-1">
-                    <div class="distribucion-fila">
-                        <div class="distribucion-label">
-                            <c:forEach begin="1" end="${i}">⭐</c:forEach>
-                        </div>
-                        <div class="distribucion-barra-container">
-                            <div class="distribucion-barra" 
-                                 style="width: ${estadisticas['porcentaje_'.concat(i)]}%">
-                            </div>
-                        </div>
-                        <div class="distribucion-stats">
-                            <span class="distribucion-count">${estadisticas['estrellas_'.concat(i)]}</span>
-                            <span class="distribucion-porcentaje">
-                                (<fmt:formatNumber value="${estadisticas['porcentaje_'.concat(i)]}" maxFractionDigits="1" />%)
-                            </span>
-                        </div>
+                <!-- 5 estrellas -->
+                <div class="distribucion-fila">
+                    <div class="distribucion-label">⭐⭐⭐⭐⭐</div>
+                    <div class="distribucion-barra-container">
+                        <div class="distribucion-barra" style="width: ${estadisticas.porcentaje_5}%"></div>
                     </div>
-                </c:forEach>
+                    <div class="distribucion-stats">
+                        <span class="distribucion-count">${estadisticas.estrellas_5}</span>
+                        <span class="distribucion-porcentaje">(${String.format("%.1f", estadisticas.porcentaje_5)}%)</span>
+                    </div>
+                </div>
+                
+                <!-- 4 estrellas -->
+                <div class="distribucion-fila">
+                    <div class="distribucion-label">⭐⭐⭐⭐☆</div>
+                    <div class="distribucion-barra-container">
+                        <div class="distribucion-barra" style="width: ${estadisticas.porcentaje_4}%"></div>
+                    </div>
+                    <div class="distribucion-stats">
+                        <span class="distribucion-count">${estadisticas.estrellas_4}</span>
+                        <span class="distribucion-porcentaje">(${String.format("%.1f", estadisticas.porcentaje_4)}%)</span>
+                    </div>
+                </div>
+                
+                <!-- 3 estrellas -->
+                <div class="distribucion-fila">
+                    <div class="distribucion-label">⭐⭐⭐☆☆</div>
+                    <div class="distribucion-barra-container">
+                        <div class="distribucion-barra" style="width: ${estadisticas.porcentaje_3}%"></div>
+                    </div>
+                    <div class="distribucion-stats">
+                        <span class="distribucion-count">${estadisticas.estrellas_3}</span>
+                        <span class="distribucion-porcentaje">(${String.format("%.1f", estadisticas.porcentaje_3)}%)</span>
+                    </div>
+                </div>
+                
+                <!-- 2 estrellas -->
+                <div class="distribucion-fila">
+                    <div class="distribucion-label">⭐⭐☆☆☆</div>
+                    <div class="distribucion-barra-container">
+                        <div class="distribucion-barra" style="width: ${estadisticas.porcentaje_2}%"></div>
+                    </div>
+                    <div class="distribucion-stats">
+                        <span class="distribucion-count">${estadisticas.estrellas_2}</span>
+                        <span class="distribucion-porcentaje">(${String.format("%.1f", estadisticas.porcentaje_2)}%)</span>
+                    </div>
+                </div>
+                
+                <!-- 1 estrella -->
+                <div class="distribucion-fila">
+                    <div class="distribucion-label">⭐☆☆☆☆</div>
+                    <div class="distribucion-barra-container">
+                        <div class="distribucion-barra" style="width: ${estadisticas.porcentaje_1}%"></div>
+                    </div>
+                    <div class="distribucion-stats">
+                        <span class="distribucion-count">${estadisticas.estrellas_1}</span>
+                        <span class="distribucion-porcentaje">(${String.format("%.1f", estadisticas.porcentaje_1)}%)</span>
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
 
         <!-- Análisis y Recomendaciones -->
-        <div class="reporte-analisis">
+        <section class="reporte-analisis">
             <h2>💡 Análisis y Recomendaciones</h2>
             
             <c:choose>
@@ -197,10 +230,10 @@
                     </div>
                 </c:otherwise>
             </c:choose>
-        </div>
+        </section>
 
         <!-- Comentarios Destacados -->
-        <div class="reporte-comentarios">
+        <section class="reporte-comentarios">
             <h2>💬 Comentarios Destacados</h2>
             <c:choose>
                 <c:when test="${not empty evaluaciones}">
@@ -212,7 +245,7 @@
                                         <c:forEach begin="1" end="${eval.calificacion}">⭐</c:forEach>
                                     </div>
                                     <div class="comentario-fecha">
-                                        <fmt:formatDate value="${eval.fechaEvaluacion}" pattern="dd/MM/yyyy" />
+                                        ${eval.fechaFormateada}
                                     </div>
                                 </div>
                                 <p class="comentario-texto">
@@ -233,13 +266,13 @@
                     <p class="no-comentarios">No hay comentarios disponibles</p>
                 </c:otherwise>
             </c:choose>
-        </div>
+        </section>
 
         <!-- Footer del Reporte -->
         <div class="reporte-footer">
             <div class="footer-info">
                 <p><strong>Generado por:</strong> Sistema de Bienestar Politécnico</p>
-                <p><strong>Fecha:</strong> <fmt:formatDate value="${java.time.LocalDateTime.now()}" pattern="dd/MM/yyyy HH:mm" /></p>
+                <p><strong>Fecha:</strong> <%= LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) %></p>
                 <p><strong>Total de páginas:</strong> 1</p>
             </div>
             <div class="footer-firma">

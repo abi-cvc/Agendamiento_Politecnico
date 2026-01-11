@@ -70,67 +70,11 @@ function calcularEstadisticasGenerales() {
     }
 }
 
-// ===== MOSTRAR MEJORES CALIFICADOS =====
+// ===== MOSTRAR MEJORES CALIFICADOS - REDIRIGIR A JSP =====
 function mostrarMejoresCalificados() {
-    const url = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '') + 
-                '/evaluaciones?accion=mejoresCalificados&limite=10';
-    
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            mostrarModalMejoresCalificados(data);
-        })
-        .catch(error => {
-            console.error('Error al obtener mejores calificados:', error);
-            alert('Error al cargar los datos');
-        });
-}
-
-// ===== MODAL MEJORES CALIFICADOS =====
-function mostrarModalMejoresCalificados(doctores) {
-    // Crear modal
-    const modal = document.createElement('div');
-    modal.className = 'modal-overlay';
-    modal.innerHTML = `
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>🏆 Top 10 Doctores Mejor Calificados</h2>
-                <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">✖</button>
-            </div>
-            <div class="modal-body">
-                ${doctores.length === 0 ? '<p>No hay datos disponibles</p>' : ''}
-                <div class="ranking-lista">
-                    ${doctores.map((doctor, index) => `
-                        <div class="ranking-item ${index < 3 ? 'top-' + (index + 1) : ''}">
-                            <div class="ranking-numero">${index + 1}</div>
-                            <div class="ranking-info">
-                                <h4>Dr(a). ${doctor.nombre} ${doctor.apellido}</h4>
-                                <div class="ranking-stats">
-                                    <span class="promedio">⭐ ${parseFloat(doctor.promedio).toFixed(2)}</span>
-                                    <span class="total">📝 ${doctor.totalEvaluaciones} evaluaciones</span>
-                                </div>
-                            </div>
-                            <div class="ranking-accion">
-                                <a href="evaluaciones?accion=porDoctor&idDoctor=${doctor.idDoctor}" 
-                                   class="btn btn-sm btn-primary">
-                                    Ver Detalles
-                                </a>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        </div>
-    `;
-    
-    document.body.appendChild(modal);
-    
-    // Cerrar al hacer clic fuera
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            modal.remove();
-        }
-    });
+    // En lugar de usar JSON, redirigimos a la página JSP
+    const contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf('/', 1));
+    window.location.href = contextPath + '/evaluaciones?accion=mejoresCalificados&limite=10';
 }
 
 // ===== FILTRAR EVALUACIONES EN TIEMPO REAL (OPCIONAL) =====
