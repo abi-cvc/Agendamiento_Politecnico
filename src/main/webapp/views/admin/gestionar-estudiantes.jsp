@@ -132,6 +132,7 @@
                             <th>Nombre</th>
                             <th>Apellido</th>
                             <th>Email</th>
+                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -143,11 +144,26 @@
                                 <td><%= est.getApellidoEstudiante() %></td>
                                 <td><%= est.getCorreoEstudiante() != null ? est.getCorreoEstudiante() : "-" %></td>
                                 <td>
+                                    <span class="estado-badge <%= est.isActivo() ? "estado-activo" : "estado-inactivo" %>">
+                                        <%= est.isActivo() ? "✓ Activo" : "✗ Inactivo" %>
+                                    </span>
+                                </td>
+                                <td>
                                     <div class="btn-actions">
+                                        <!-- Edit link -->
                                         <a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=listar&editar=<%= est.getIdEstudiante() %>" 
                                            class="btn btn-sm btn-warning">
                                             ✏️ Editar
                                         </a>
+
+                                        <!-- Toggle state form -->
+                                        <form method="post" action="${pageContext.request.contextPath}/EstudianteAdminController" style="display:inline-block;">
+                                            <input type="hidden" name="accion" value="cambiarEstado">
+                                            <input type="hidden" name="id" value="<%= est.getIdEstudiante() %>">
+                                            <button type="submit" class="btn btn-sm <%= est.isActivo() ? "btn-danger" : "btn-primary" %>">
+                                                <%= est.isActivo() ? "⏸ Desactivar" : "▶ Activar" %>
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>

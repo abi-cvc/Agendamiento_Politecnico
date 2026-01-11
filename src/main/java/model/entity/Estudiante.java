@@ -31,6 +31,9 @@ public class Estudiante implements Serializable {
     @Column(name = "correo_estudiante", nullable = false, unique = true, length = 100)
     private String correoEstudiante;
     
+    @Column(name = "activo")
+    private boolean activo = true;
+    
     // Relación OneToMany con Cita
     @OneToMany(mappedBy = "estudiante", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Cita> citas;
@@ -163,6 +166,14 @@ public class Estudiante implements Serializable {
         this.citas = citas;
     }
     
+    public boolean isActivo() {
+        return activo;
+    }
+    
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
+    
     // Método auxiliar para obtener nombre completo
     public String getNombreCompleto() {
         return nombreEstudiante + " " + apellidoEstudiante;
@@ -176,6 +187,7 @@ public class Estudiante implements Serializable {
                 ", nombreEstudiante='" + nombreEstudiante + '\'' +
                 ", apellidoEstudiante='" + apellidoEstudiante + '\'' +
                 ", correoEstudiante='" + correoEstudiante + '\'' +
+                ", activo=" + activo +
                 '}';
     }
 }

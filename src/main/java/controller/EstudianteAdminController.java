@@ -13,9 +13,9 @@ import java.util.List;
 
 /**
  * Controller para gestionar estudiantes desde el panel de administrador
- * Maneja: listar, buscar, crear, actualizar
+ * Maneja: listar, buscar, crear, actualizar, cambiar estado
  */
-@WebServlet("/EstudianteAdminController")
+@WebServlet(urlPatterns = {"/admin/estudiantes", "/EstudianteAdminController"})
 public class EstudianteAdminController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     
@@ -66,6 +66,9 @@ public class EstudianteAdminController extends HttpServlet {
                 break;
             case "actualizar":
                 actualizarEstudiante(request, response);
+                break;
+            case "cambiarEstado":
+                cambiarEstado(request, response);
                 break;
             default:
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Acción no válida");
@@ -198,6 +201,40 @@ public class EstudianteAdminController extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             request.getSession().setAttribute("error", "Error al actualizar estudiante: " + e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/EstudianteAdminController?accion=listar");
+        }
+    }
+    
+    /**
+     * Cambia el estado de un estudiante (activo/inactivo)
+     */
+    private void cambiarEstado(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        try {
+            int id = Integer.parseInt(request.getParameter("id"));
+            
+            // Buscar estudiante
+            Estudiante estudiante = factory.getEstudianteDAO().getById(id);
+            
+            if (estudiante != null) {
+                // Cambiar estado (mirror DoctorAdminController)
+                estudiante.setActivo(!estudiante.isActivo());
+                
+                // Guardar cambios
+                factory.getEstudianteDAO().update(estudiante);
+                
+                String estadoNuevo = estudiante.isActivo() ? "activado" : "desactivado";
+                request.getSession().setAttribute("mensaje", "Estudiante " + estadoNuevo + " exitosamente");
+            } else {
+                request.getSession().setAttribute("error", "Estudiante no encontrado");
+            }
+            
+            response.sendRedirect(request.getContextPath() + "/EstudianteAdminController?accion=listar");
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.getSession().setAttribute("error", "Error al cambiar estado del estudiante: " + e.getMessage());
             response.sendRedirect(request.getContextPath() + "/EstudianteAdminController?accion=listar");
         }
     }

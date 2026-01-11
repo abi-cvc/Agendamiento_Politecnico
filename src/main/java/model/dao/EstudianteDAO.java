@@ -169,25 +169,43 @@ public class EstudianteDAO extends JPAGenericDAO<Estudiante, Integer> implements
     }
 
     /**
-     * Obtiene los estudiantes activos. Dado que la tabla `estudiante` no contiene
-     * columna `activo` en el script actual, devolvemos todos los estudiantes.
+     * Obtiene los estudiantes activos.
      */
     @Override
     public List<Estudiante> obtenerActivos() {
+        EntityManager em = JPAUtil.getEntityManager();
         try {
-            return getAll();
-        } catch (Exception e) {
-            return new ArrayList<>();
+            TypedQuery<Estudiante> query = em.createQuery(
+                "SELECT e FROM Estudiante e WHERE e.activo = true ORDER BY e.nombreEstudiante, e.apellidoEstudiante",
+                Estudiante.class
+            );
+            return query.getResultList();
+        } finally {
+            em.close();
         }
     }
 
     /**
-     * Cambia el estado activo de un estudiante - NO SOPORTADO
-     * La tabla `estudiante` del script actual no contiene columna `activo`.
-     * Por compatibilidad con la interfaz se implementa lanzando una excepción informativa.
+     * Cambia el estado activo de un estudiante
      */
     @Override
     public void cambiarEstado(int id, boolean activo) {
-        throw new UnsupportedOperationException("La entidad Estudiante no contiene el campo 'activo' en la base de datos.");
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            Estudiante estudiante = em.find(Estudiante.class, id);
+            if (estudiante != null) {
+                estudiante.setActivo(activo);
+                em.merge(estudiante);
+            }
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
     }
 }
