@@ -31,9 +31,6 @@ public class Estudiante implements Serializable {
     @Column(name = "correo_estudiante", nullable = false, unique = true, length = 100)
     private String correoEstudiante;
     
-    @Column(name = "password_estudiante", nullable = false, length = 255)
-    private String passwordEstudiante;
-    
     // Relación OneToMany con Cita
     @OneToMany(mappedBy = "estudiante", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Cita> citas;

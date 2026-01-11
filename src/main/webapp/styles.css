@@ -2337,50 +2337,32 @@ body.header-is-hidden .especialidades-menu {
     font-size: 1.3rem;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .lista-citas-consulta {
-        grid-template-columns: 1fr;
-    }
-    
-    .citas-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--spacing-md);
-    }
-    
-    .citas-header h2 {
-        font-size: 1.6rem;
-    }
-    
-    .info-row {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-xs);
-    }
-    
-    .cita-header {
-        flex-direction: column;
-        gap: var(--spacing-md);
-    }
-    
-    .cita-footer {
-        flex-direction: column;
-        gap: var(--spacing-sm);
-        align-items: flex-start;
-    }
-}
+/* ========== Admin pages shared styles (migrated from inline styles in gestionar-*.html) ========== */
+.admin-container { max-width: 1400px; margin: 0 auto; padding: var(--spacing-xl); }
+.admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-xl); padding-bottom: var(--spacing-lg); border-bottom: 3px solid var(--color-3); }
+.admin-header h1 { margin: 0; font-size: 2rem; color: var(--color-2); }
+.search-section { background: var(--color-7); padding: var(--spacing-xl); border-radius: var(--radius-xl); box-shadow: var(--shadow-md); margin-bottom: var(--spacing-xl); }
+.search-wrapper { display: flex; gap: var(--spacing-md); align-items: flex-end; }
+.search-wrapper .form-group { flex: 1; margin-bottom: 0; }
+.table-admin { width: 100%; background: var(--color-7); border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow-lg); }
+.table-admin thead { background: var(--gradient-accent); color: var(--color-7); }
+.table-admin th { padding: var(--spacing-lg); text-align: left; font-weight: 600; font-size: 0.95rem; }
+.table-admin td { padding: var(--spacing-md) var(--spacing-lg); border-bottom: 1px solid var(--color-6); }
+.table-admin tbody tr:hover { background: var(--color-6); }
+.estado-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: var(--radius-full); font-size: 0.85rem; font-weight: 600; }
+.estado-activo { background: #d1fae5; color: #065f46; }
+.estado-inactivo { background: #fee2e2; color: #dc2626; }
+.btn-actions { display: flex; gap: var(--spacing-sm); }
+.btn-sm { padding: 8px 16px; font-size: 0.85rem; }
+.btn-warning { background: #fbbf24; color: #78350f; border: 2px solid #f59e0b; }
+.btn-warning:hover { background: #f59e0b; color: var(--color-7); }
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+.modal-overlay.active { display: flex; }
+.modal-content { background: var(--color-7); border-radius: var(--radius-xl); padding: var(--spacing-xl); max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-lg); padding-bottom: var(--spacing-md); border-bottom: 2px solid var(--color-5); }
+.modal-header h2 { margin: 0; color: var(--color-2); }
+.btn-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--color-8); }
+.btn-close:hover { color: var(--color-2); }
+.form-actions { display: flex; gap: var(--spacing-md); justify-content: flex-end; margin-top: var(--spacing-lg); }
 
-@media (max-width: 480px) {
-    .fecha-principal {
-        font-size: 1.1rem;
-    }
-    
-    .hora-cita {
-        font-size: 0.9rem;
-    }
-    
-    .badge-estado {
-        font-size: 0.75rem;
-        padding: 6px 12px;
-    }
-}
+/* End admin styles */

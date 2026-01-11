@@ -365,6 +365,36 @@ public class AgendarCitasController extends HttpServlet {
 
 ---
 
+## Cambios aplicados (persistencia y vistas) - 2026-01-11
+
+Se aplicieron una serie de correcciones para asegurar que las vistas de administración (doctores/estudiantes) usen la persistencia real y que las rutas/estilos estén alineados con la implementación del proyecto.
+
+- Mapeos de servlets
+  - Para mantener compatibilidad con referencias antiguas y tu preferencia, los servlets de administración ahora están mapeados con ambos patrones:
+    - `@WebServlet(urlPatterns = {"/admin/doctores", "/DoctorAdminController"})` en `DoctorAdminController.java`
+    - `@WebServlet(urlPatterns = {"/admin/estudiantes", "/EstudianteAdminController"})` en `EstudianteAdminController.java`
+  - Esto hace que las rutas funcionen tanto usando `/admin/doctores` como `/DoctorAdminController` (y análogo para estudiantes).
+
+- Persistencia desde la UI
+  - Los archivos JavaScript de administración (`src/main/webapp/js/admin-doctores.js` y `src/main/webapp/js/admin-estudiantes.js`) ahora:
+    - Realizan `fetch` a los endpoints del servlet enviando `FormData` con `accion` (`crear`, `actualizar`, `cambiarEstado`) para delegar la persistencia al servidor (DAO + JPA).
+    - Tras cada operación recargan el listado desde el servidor (`?format=json`) para reflejar el estado real de la base de datos.
+    - Intentan primero las rutas bajo `/admin/*` y, en caso de fallo, prueban los mapeos por nombre de clase (`/DoctorAdminController`, `/EstudianteAdminController`) antes de usar datos locales de fallback. Esto evita inconsistencias entre UI y BD y soluciona duplicados en la tabla.
+
+- Estilos
+  - Se movieron los estilos inline presentes en `gestionar-doctores.html` y `gestionar-estudiantes.html` a `src/main/webapp/styles.css` bajo una sección "Admin pages shared styles".
+  - Con esto las vistas ya no contienen `<style>` internos y se usan exclusivamente `framework.css` y `styles.css` como pediste.
+
+- Notas de verificación
+  - Para comprobar el flujo completo (persistencia visible en BD):
+    1. Publicar/reiniciar Tomcat desde Eclipse para servir los archivos actualizados.
+    2. Abrir la URL `.../admin/doctores?accion=listar` (o `.../DoctorAdminController?accion=listar`) y verificar que la lista JSON coincide con la tabla en BD.
+    3. Crear un doctor desde la UI y validar en logs de Tomcat que se hizo POST con `accion=crear`, y que el registro aparece en la tabla y en la BD.
+
+Estos cambios respetan la arquitectura MVC y delegan al servidor la única fuente de verdad (BD via JPA). Si quieres que realice pruebas automáticas (build y comprobación de inserción real), puedo ejecutar un `mvn -DskipTests package` y/o iniciar Tomcat desde la terminal para hacer pruebas end-to-end.
+
+---
+
 ## 🎯 Ventajas de la Arquitectura Implementada
 
 ### 1. **Separación de Responsabilidades (MVC)**

@@ -151,30 +151,54 @@ function protegerPagina(rolesPermitidos = null) {
 function actualizarHeader() {
     const usuario = verificarSesion();
     const authButton = document.getElementById('authButton');
-    
     if (!authButton) return;
-    
+
     if (usuario) {
-        // Usuario logueado - mostrar imagen y nombre
-        const primerNombre = usuario.nombre.split(' ')[0];
-        // Obtener la ruta base del contexto
-        const contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf('/', 1));
         authButton.className = 'user-logged';
-        authButton.innerHTML = `
-            <div class="user-menu">
-                <img src="${contextPath}/images/user.svg" alt="Usuario" class="user-avatar">
-                <span class="user-name">${primerNombre}</span>
-                <div class="user-dropdown">
-                    <div class="dropdown-header">
-                        <strong>${usuario.nombre}</strong>
-                        <small>${usuario.email}</small>
-                    </div>
-                    <a href="index.html" onclick="logout(); return false;">🚪 Cerrar Sesión</a>
-                </div>
-            </div>
-        `;
+        // Construir el DOM en vez de innerHTML con template literals
+        const userMenu = document.createElement('div');
+        userMenu.className = 'user-menu';
+
+        const img = document.createElement('img');
+        // Intentar determinar context path razonable
+        const contextPath = window.location.pathname.indexOf('/', 1) > 0 ? window.location.pathname.substring(0, window.location.pathname.indexOf('/', 1)) : '';
+        img.src = (contextPath || '') + '/images/user.svg';
+        img.alt = 'Usuario';
+        img.className = 'user-avatar';
+
+        const primerNombre = (usuario.nombre || '').split(' ')[0] || '';
+        const spanName = document.createElement('span');
+        spanName.className = 'user-name';
+        spanName.textContent = primerNombre;
+
+        const dropdown = document.createElement('div');
+        dropdown.className = 'user-dropdown';
+
+        const header = document.createElement('div');
+        header.className = 'dropdown-header';
+        const strong = document.createElement('strong');
+        strong.textContent = usuario.nombre || '';
+        const small = document.createElement('small');
+        small.textContent = usuario.email || '';
+        header.appendChild(strong);
+        header.appendChild(small);
+
+        const logoutLink = document.createElement('a');
+        logoutLink.href = 'index.html';
+        logoutLink.onclick = function(e) { logout(); return false; };
+        logoutLink.textContent = '🚪 Cerrar Sesión';
+
+        dropdown.appendChild(header);
+        dropdown.appendChild(logoutLink);
+
+        userMenu.appendChild(img);
+        userMenu.appendChild(spanName);
+        userMenu.appendChild(dropdown);
+
+        // Reemplazar contenido actual
+        authButton.innerHTML = '';
+        authButton.appendChild(userMenu);
     } else {
-        // No logueado - mostrar botón de login
         authButton.className = 'login';
         authButton.innerHTML = '<a href="index.html" class="font-bold">Login</a>';
     }
@@ -274,107 +298,49 @@ function actualizarNavegacionPorRol() {
 
 // ===== EJECUTAR AL CARGAR CUALQUIER PÁGINA =====
 document.addEventListener('DOMContentLoaded', function() {
-    // Actualizar header en todas las páginas
-    actualizarHeader();
-    
-    // Actualizar navegación según rol
-    actualizarNavegacionPorRol();
-    
-    // Header auto-hide con detección de scroll y hover (optimizado)
-    const header = document.querySelector('header');
-    if (header) {
-        let lastScrollTop = 0;
-        let isScrolling = false;
-        let lastMouseY = -1;
-        const scrollThreshold = 150; // Píxeles antes de activar
-        const scrollDelta = 1000; // Diferencia mínima para detectar dirección
-        
-        // Función optimizada de scroll con requestAnimationFrame
-        function handleScroll() {
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            
-            // Evitar cálculos si el scroll no cambió significativamente
-            if (Math.abs(scrollTop - lastScrollTop) < scrollDelta && scrollTop > scrollThreshold) {
-                isScrolling = false;
-                return;
-            }
-            
-            if (scrollTop > scrollThreshold) {
-                header.classList.add('scrolled');
-                
-                if (scrollTop > lastScrollTop + scrollDelta) {
-                    // Scrolling down - ocultar header
+    try {
+        actualizarHeader();
+        actualizarNavegacionPorRol();
+
+        // Basic header hide/show behavior (kept simple)
+        const header = document.querySelector('header');
+        if (header) {
+            let lastScrollTop = 0;
+            window.addEventListener('scroll', function() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                if (scrollTop > 150 && scrollTop > lastScrollTop) {
                     header.classList.add('header-hidden');
-                    document.body.classList.add('header-is-hidden');
-                } else if (scrollTop < lastScrollTop - scrollDelta) {
-                    // Scrolling up - mostrar header
+                } else {
                     header.classList.remove('header-hidden');
-                    document.body.classList.remove('header-is-hidden');
                 }
-            } else {
-                header.classList.remove('scrolled', 'header-hidden');
-                document.body.classList.remove('header-is-hidden');
-            }
-            
-            lastScrollTop = scrollTop;
-            isScrolling = false;
-        }
-        
-        // Throttle del evento scroll usando requestAnimationFrame
-        window.addEventListener('scroll', function() {
-            if (!isScrolling) {
-                isScrolling = true;
-                requestAnimationFrame(handleScroll);
-            }
-        }, { passive: true });
-        
-        // Throttle del mousemove - solo verifica cada 100ms
-        let mouseThrottle;
-        document.addEventListener('mousemove', function(e) {
-            if (e.clientY < 80 && e.clientY !== lastMouseY) {
-                lastMouseY = e.clientY;
-                
-                if (!mouseThrottle) {
-                    header.classList.remove('header-hidden');
-                    document.body.classList.remove('header-is-hidden');
-                    mouseThrottle = setTimeout(() => {
-                        mouseThrottle = null;
-                    }, 100);
-                }
-            }
-        }, { passive: true });
-    }
-    
-    // Si estamos en la página de login
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-        // Si ya hay sesión, redirigir al inicio
-        if (verificarSesion()) {
-ia            window.location.href = 'inicio.html';
-            return;
+                lastScrollTop = scrollTop;
+            }, { passive: true });
         }
 
-        // Solo agregar listener si el formulario existe
+        // Login form handling
+        const loginForm = document.getElementById('loginForm');
         if (loginForm) {
+            if (verificarSesion()) {
+                window.location.href = 'inicio.html';
+                return;
+            }
+
             loginForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                
                 const rolElement = document.getElementById('rol');
                 const emailElement = document.getElementById('email');
                 const passwordElement = document.getElementById('password');
                 const errorDiv = document.getElementById('errorMessage');
-                
-                // Verificar que todos los elementos existan
+
                 if (!rolElement || !emailElement || !passwordElement) {
                     console.error('Elementos del formulario no encontrados');
                     return;
                 }
-                
+
                 const rol = rolElement.value;
                 const email = emailElement.value.trim();
                 const password = passwordElement.value;
-                
-                // Validar que se seleccionó un rol
+
                 if (!rol) {
                     if (errorDiv) {
                         errorDiv.textContent = 'Por favor selecciona tu rol';
@@ -382,28 +348,31 @@ ia            window.location.href = 'inicio.html';
                     }
                     return;
                 }
-                
-                // Validar dominio
+
                 if (!email.endsWith('@epn.edu.ec')) {
-                errorDiv.textContent = 'Debes usar tu correo institucional (@epn.edu.ec)';
-                errorDiv.classList.add('show');
-                return;
-            }
-            
-            // Intentar login
-            const resultado = login(email, password, rol);
-            
-            if (resultado.success) {
-                errorDiv.classList.remove('show');
-                // Redirigir a página anterior o inicio
-                const urlAnterior = sessionStorage.getItem('paginaAnterior');
-                window.location.href = urlAnterior || 'inicio.html';
-                sessionStorage.removeItem('paginaAnterior');
-            } else {
-                errorDiv.textContent = resultado.mensaje;
-                errorDiv.classList.add('show');
-            }
-        });
+                    if (errorDiv) {
+                        errorDiv.textContent = 'Debes usar tu correo institucional (@epn.edu.ec)';
+                        errorDiv.classList.add('show');
+                    }
+                    return;
+                }
+
+                const resultado = login(email, password, rol);
+                if (resultado.success) {
+                    if (errorDiv) errorDiv.classList.remove('show');
+                    const urlAnterior = sessionStorage.getItem('paginaAnterior');
+                    window.location.href = urlAnterior || 'inicio.html';
+                    sessionStorage.removeItem('paginaAnterior');
+                } else {
+                    if (errorDiv) {
+                        errorDiv.textContent = resultado.mensaje;
+                        errorDiv.classList.add('show');
+                    }
+                }
+            });
+        }
+    } catch (err) {
+        console.error('Error inicializando auth.js:', err);
     }
 });
 
