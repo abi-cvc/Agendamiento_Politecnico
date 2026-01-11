@@ -221,7 +221,7 @@ function actualizarNavegacionPorRol() {
         console.log('📋 Mostrando navegación de ADMIN');
         nav.innerHTML = `
             <li class="flex"><a href="inicio.html" class="font-bold">Inicio</a></li>
-            <li class="flex"><a href="especialidades? accion=listarAdmin" class="font-bold">Especialidades</a></li>
+            <li class="flex"><a href="especialidades?accion=listarAdmin" class="font-bold">Especialidades</a></li>
             <li class="flex"><a href="doctores?accion=listarAdmin" class="font-bold">Doctores</a></li>
             ${authButtonHTML}
         `;
@@ -230,8 +230,8 @@ function actualizarNavegacionPorRol() {
         console.log('👨‍⚕️ Mostrando navegación de DOCTOR');
         nav.innerHTML = `
             <li class="flex"><a href="inicio.html" class="font-bold">Inicio</a></li>
-            <li class="flex"><a href="ConsultarCitaAsignadaController? vista=calendario" class="font-bold">Citas Agendadas</a></li>
-            <li class="flex"><a href="atender-cita. jsp" class="font-bold">Atender Cita</a></li>
+            <li class="flex"><a href="ConsultarCitaAsignadaController?vista=calendario" class="font-bold">Citas Agendadas</a></li>
+            <li class="flex"><a href="atender-cita.jsp" class="font-bold">Atender Cita</a></li>
             ${authButtonHTML}
         `;
     } else if (usuario && usuario.rol === 'estudiante') {
