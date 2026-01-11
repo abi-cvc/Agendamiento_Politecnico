@@ -11,6 +11,14 @@ const usuariosDB = [
         rol: "estudiante",
         idPaciente: '1725896347'
     },
+	{
+	        id: 1,
+	        nombre: "Carol Velasquez",
+	        email: "carol.velasquez@epn.edu.ec",
+	        password: "123456",
+	        rol: "estudiante",
+	        idPaciente: '1725896347'
+	    },
     {
         id: 10,
         nombre: "Admin Bienestar",

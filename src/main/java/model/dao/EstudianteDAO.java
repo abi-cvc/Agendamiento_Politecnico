@@ -136,16 +136,35 @@ public class EstudianteDAO extends JPAGenericDAO<Estudiante, Integer> implements
     
     /**
      * Valida las credenciales de un estudiante para login
-     * Debido a que en el script de BD actual no existe columna de password para estudiantes,
-     * esta implementación valida simplemente la existencia del idPaciente en la base de datos.
-     * Si en el futuro se agrega password en la BD, este método debe actualizarse.
+     * Ahora comprueba password_estudiante y campo activo en la BD
      * @param idPaciente ID de paciente (cédula)
-     * @param password Contraseña del estudiante (no usada en la versión actual)
+     * @param password Contraseña del estudiante
      * @return Estudiante si las credenciales son válidas, null en caso contrario
      */
     @Override
     public Estudiante validarCredenciales(String idPaciente, String password) {
-        return buscarPorIdPaciente(idPaciente);
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            TypedQuery<Estudiante> query = em.createQuery(
+                "SELECT e FROM Estudiante e WHERE e.idPaciente = :idPaciente AND e.activo = true",
+                Estudiante.class
+            );
+            query.setParameter("idPaciente", idPaciente);
+            List<Estudiante> results = query.getResultList();
+            if (results.isEmpty()) {
+                return null;
+            }
+            Estudiante est = results.get(0);
+            // Comprobar contraseña (en texto plano, según esquema actual)
+            if (password != null && password.equals(est.getPasswordEstudiante())) {
+                return est;
+            }
+            return null;
+        } catch (NoResultException e) {
+            return null;
+        } finally {
+            em.close();
+        }
     }
     
     /**
