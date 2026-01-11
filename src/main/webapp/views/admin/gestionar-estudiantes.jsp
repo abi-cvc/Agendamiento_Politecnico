@@ -53,8 +53,8 @@
     <nav>
         <ul>
             <li><a href="${pageContext.request.contextPath}/inicio-admin.jsp">Inicio</a></li>
-            <li><a href="${pageContext.request.contextPath}/DoctorAdminController?accion=listar">Gestionar Doctores</a></li>
-            <li><a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=listar" class="font-bold">Gestionar Estudiantes</a></li>
+            <li><a href="${pageContext.request.contextPath}/DoctorAdminController?accion=gestionarDoctores">Gestionar Doctores</a></li>
+            <li><a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=gestionarEstudiantes" class="font-bold">Gestionar Estudiantes</a></li>
             <li><a href="${pageContext.request.contextPath}/especialidades?accion=listarAdmin">Gestionar Especialidades</a></li>
             <li><a href="${pageContext.request.contextPath}/EvaluacionController?accion=listar">Gestionar Evaluaciones</a></li>
             <li class="login mt-2 mb-2">
@@ -71,7 +71,7 @@
         <!-- ENCABEZADO -->
         <div class="admin-header">
             <h1>👥 Gestionar Estudiantes</h1>
-            <a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=listar&modal=nuevo" 
+            <a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=gestionarEstudiantes&modal=nuevo" 
                class="btn btn-primary">
                 ➕ Nuevo Estudiante
             </a>
@@ -151,7 +151,7 @@
                                 <td>
                                     <div class="btn-actions">
                                         <!-- Edit link -->
-                                        <a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=listar&editar=<%= est.getIdEstudiante() %>" 
+                                        <a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=gestionarEstudiantes&editar=<%= est.getIdEstudiante() %>" 
                                            class="btn btn-sm btn-warning">
                                             ✏️ Editar
                                         </a>
@@ -182,7 +182,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <h2>➕ Nuevo Estudiante</h2>
-            <a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=listar" 
+            <a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=gestionarEstudiantes" 
                class="btn-close">&times;</a>
         </div>
         <form method="post" action="${pageContext.request.contextPath}/EstudianteAdminController">
@@ -214,7 +214,7 @@
             
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">💾 Guardar</button>
-                <a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=listar" 
+                <a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=gestionarEstudiantes" 
                    class="btn btn-secondary">Cancelar</a>
             </div>
         </form>
@@ -228,7 +228,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <h2>✏️ Editar Estudiante</h2>
-            <a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=listar" 
+            <a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=gestionarEstudiantes" 
                class="btn-close">&times;</a>
         </div>
         <form method="post" action="${pageContext.request.contextPath}/EstudianteAdminController">
@@ -267,7 +267,7 @@
             
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">💾 Actualizar</button>
-                <a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=listar" 
+                <a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=gestionarEstudiantes" 
                    class="btn btn-secondary">Cancelar</a>
             </div>
         </form>
@@ -285,8 +285,8 @@
         <div class="footer-section">
             <h3>Panel Admin</h3>
             <ul class="footer-links">
-                <li><a href="${pageContext.request.contextPath}/DoctorAdminController?accion=listar">Gestionar Doctores</a></li>
-                <li><a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=listar">Gestionar Estudiantes</a></li>
+                <li><a href="${pageContext.request.contextPath}/DoctorAdminController?accion=gestionarDoctores">Gestionar Doctores</a></li>
+                <li><a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=gestionarEstudiantes">Gestionar Estudiantes</a></li>
             </ul>
         </div>
         <div class="footer-section">

@@ -15,6 +15,18 @@ import java.util.List;
 /**
  * Controller para gestionar doctores desde el panel de administrador
  * Maneja: listar, buscar, crear, actualizar, cambiar estado
+ *
+ * Mapado al diagrama de robustez (comentarios en código):
+ * 1: gestionarDoctores()
+ * 2: obtener(): doctores[]
+ * 3: mostrar(doctores)
+ * 4: solicitarNuevoDoctor(idDoctor)
+ * 5: obtenerNombreEspecialidades(): especialidades[]
+ * 6: mostrarFormulario(especialidades)
+ * 7: crearNuevoDoctor(datos)
+ * 8: CrearNuevoDoctor(datosDoctor)
+ * 9: obtenerDoctor(idDoctor)
+ * 10: MostrarConfirmacion
  */
 @WebServlet("/DoctorAdminController")
 public class DoctorAdminController extends HttpServlet {
@@ -34,18 +46,18 @@ public class DoctorAdminController extends HttpServlet {
         String accion = request.getParameter("accion");
         
         if (accion == null) {
-            accion = "listar";
+            accion = "gestionarDoctores"; // 1: gestionarDoctores() - Método inicial según diagrama
         }
         
         switch (accion) {
-            case "listar":
-                listarDoctores(request, response);
+            case "gestionarDoctores":
+                gestionarDoctores(request, response); // 1: Método principal del diagrama
                 break;
             case "buscar":
                 buscarDoctor(request, response);
                 break;
             default:
-                listarDoctores(request, response);
+                gestionarDoctores(request, response);
                 break;
         }
     }
@@ -62,8 +74,8 @@ public class DoctorAdminController extends HttpServlet {
         }
         
         switch (accion) {
-            case "crear":
-                crearDoctor(request, response);
+            case "solicitarNuevoDoctor":
+                solicitarNuevoDoctor(request, response); // 4: iniciar flujo de solicitud/creación
                 break;
             case "actualizar":
                 actualizarDoctor(request, response);
@@ -78,22 +90,24 @@ public class DoctorAdminController extends HttpServlet {
     }
     
     /**
-     * Lista todos los doctores
+     * 1: gestionarDoctores() - Método inicial según diagrama de robustez
+     * 2: obtener(): doctores[]
+     * 3: mostrar(doctores)
+     * 5: obtenerNombreEspecialidades(): especialidades[] (para el formulario)
      */
-    private void listarDoctores(HttpServletRequest request, HttpServletResponse response)
+    private void gestionarDoctores(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
         try {
-            // Obtener todos los doctores (activos e inactivos para el admin)
+            // 2: obtener(): doctores[] - Usando DAOFactory(activos e inactivos para el admin)
             List<Doctor> doctores = factory.getDoctorDAO().getAll();
             
-            // Obtener especialidades para el select del formulario (necesario para crear/editar)
+            // 5: obtenerNombreEspecialidades(): especialidades[] - Usando DAOFactory para el select del formulario (necesario para crear/editar)
             List<Especialidad> especialidades = factory.getEspecialidadDAO().getAll();
             
+            // 3: mostrar(doctores) - Enviar a la vista (la JSP mostrará la lista, y el formulario usará especialidades para el select)
             request.setAttribute("doctores", doctores);
             request.setAttribute("especialidades", especialidades);
-            
-            // Forward to JSP under views/admin
             request.getRequestDispatcher("/views/admin/gestionar-doctores.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
@@ -104,6 +118,7 @@ public class DoctorAdminController extends HttpServlet {
     
     /**
      * Busca un doctor por cédula
+     * (Este método realiza búsqueda puntual y también prepara especialidades para el formulario)
      */
     private void buscarDoctor(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -128,7 +143,7 @@ public class DoctorAdminController extends HttpServlet {
                 request.setAttribute("doctores", doctores);
             }
             
-            // Obtener especialidades para el select
+            // Obtener especialidades para el select (5)
             List<Especialidad> especialidades = factory.getEspecialidadDAO().getAll();
             request.setAttribute("especialidades", especialidades);
             
@@ -136,34 +151,38 @@ public class DoctorAdminController extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             request.getSession().setAttribute("error", "Error en la búsqueda: " + e.getMessage());
-            response.sendRedirect(request.getContextPath() + "/DoctorAdminController?accion=listar");
+            response.sendRedirect(request.getContextPath() + "/DoctorAdminController?accion=gestionarDoctores");
         }
     }
     
     /**
-     * Crea un nuevo doctor
+     * 4: solicitarNuevoDoctor(idDoctor) - recibir petición de nuevo doctor y procesar creación
+     * 5: obtenerNombreEspecialidad(): especialidades[] (si fue enviada la id)
+     * 6: mostrarFormulario(especialidades) - (la JSP usa el atributo 'especialidades' que se cargó en gestionarDoctores/buscar)
+     * 7: crearNuevoDoctor(datos) - recoger datos del formulario
+     * 8: CrearNuevoDoctor(datosDoctor) - crear entidad y persistir
      */
-    private void crearDoctor(HttpServletRequest request, HttpServletResponse response)
+    private void solicitarNuevoDoctor(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
         try {
-            // Obtener datos del formulario
+            // Obtener datos del formulario (7)
             String cedula = request.getParameter("cedula");
             String nombre = request.getParameter("nombre");
             String apellido = request.getParameter("apellido");
             String email = request.getParameter("email");
             String telefono = request.getParameter("telefono");
             String password = request.getParameter("password");
-            int idEspecialidad = -1; // opcional, ya no requerimos especialidad en lista; mantener si viene
+            int idEspecialidad = -1; // opcional, puede venir o no
             
             // Verificar que no exista un doctor con esa cédula
             if (factory.getDoctorDAO().obtenerPorCedula(cedula) != null) {
                 request.getSession().setAttribute("error", "Ya existe un doctor con esa cédula");
-                response.sendRedirect(request.getContextPath() + "/DoctorAdminController?accion=listar");
+                response.sendRedirect(request.getContextPath() + "/DoctorAdminController?accion=gestionarDoctores");
                 return;
             }
             
-            // Obtener especialidad
+            // 5: obtenerNombreEspecialidad() - si se envió idEspecialidad la buscamos
             Especialidad especialidad = null;
             try {
                 if (request.getParameter("idEspecialidad") != null && !request.getParameter("idEspecialidad").isEmpty()) {
@@ -174,27 +193,30 @@ public class DoctorAdminController extends HttpServlet {
                 // ignorar, especialidad permanecerá null
             }
             
-            // Crear nuevo doctor (sin foto/descripcion)
+            // 8: CrearNuevoDoctor(datosDoctor) - crear entidad Doctor y persistir
             Doctor nuevoDoctor = new Doctor(cedula, nombre, apellido, email, especialidad);
             nuevoDoctor.setTelefono(telefono);
             nuevoDoctor.setPassword(password);
             nuevoDoctor.setActivo(true);
             
-            // Guardar en la base de datos
+            // Guardar en la base de datos (7->8)
             factory.getDoctorDAO().create(nuevoDoctor);
             
+            // 10: MostrarConfirmacion - se usa mensaje en sesión y redirección
             request.getSession().setAttribute("mensaje", "Doctor creado exitosamente");
-            response.sendRedirect(request.getContextPath() + "/DoctorAdminController?accion=listar");
+            response.sendRedirect(request.getContextPath() + "/DoctorAdminController?accion=gestionarDoctores");
             
         } catch (Exception e) {
             e.printStackTrace();
             request.getSession().setAttribute("error", "Error al crear doctor: " + e.getMessage());
-            response.sendRedirect(request.getContextPath() + "/DoctorAdminController?accion=listar");
+            response.sendRedirect(request.getContextPath() + "/DoctorAdminController?accion=gestionarDoctores");
         }
     }
     
     /**
-     * Actualiza un doctor existente (solo telefono, foto, descripcion)
+     * Actualiza un doctor existente (solo telefono y password)
+     * 9: obtenerDoctor(idDoctor) - se realiza aquí con getById
+     * 10: MostrarConfirmacion - mensaje en sesión
      */
     private void actualizarDoctor(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -204,7 +226,7 @@ public class DoctorAdminController extends HttpServlet {
             String telefono = request.getParameter("telefono");
             String password = request.getParameter("password");
             
-            // Buscar doctor
+            // 9: obtenerDoctor(idDoctor)
             Doctor doctor = factory.getDoctorDAO().getById(id);
             
             if (doctor != null) {
@@ -217,17 +239,18 @@ public class DoctorAdminController extends HttpServlet {
                 // Guardar cambios
                 factory.getDoctorDAO().update(doctor);
                 
+                // 10: MostrarConfirmacion
                 request.getSession().setAttribute("mensaje", "Doctor actualizado exitosamente");
             } else {
                 request.getSession().setAttribute("error", "Doctor no encontrado");
             }
             
-            response.sendRedirect(request.getContextPath() + "/DoctorAdminController?accion=listar");
+            response.sendRedirect(request.getContextPath() + "/DoctorAdminController?accion=gestionarDoctores");
             
         } catch (Exception e) {
             e.printStackTrace();
             request.getSession().setAttribute("error", "Error al actualizar doctor: " + e.getMessage());
-            response.sendRedirect(request.getContextPath() + "/DoctorAdminController?accion=listar");
+            response.sendRedirect(request.getContextPath() + "/DoctorAdminController?accion=gestionarDoctores");
         }
     }
     
@@ -261,7 +284,7 @@ public class DoctorAdminController extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             request.getSession().setAttribute("error", "Error al cambiar estado: " + e.getMessage());
-            response.sendRedirect(request.getContextPath() + "/DoctorAdminController?accion=listar");
+            response.sendRedirect(request.getContextPath() + "/DoctorAdminController?accion=gestionarDoctores");
         }
     }
     

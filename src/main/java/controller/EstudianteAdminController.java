@@ -14,8 +14,19 @@ import java.util.List;
 /**
  * Controller para gestionar estudiantes desde el panel de administrador
  * Maneja: listar, buscar, crear, actualizar, cambiar estado
+ *
+ * Mapeo al diagrama de robustez (comentarios en código):
+ * 1: gestionarEstudiantes()
+ * 2: obtener(): estudiantes[]
+ * 3: mostrar(estudiantes)
+ * 4: solicitarNuevoEstudiante()
+ * 5: mostrarFormulario()
+ * 6: crearNuevoEstudiante(datos)
+ * 7: CrearNuevoEstudiante(datosEstudiante)
+ * 8: obtenerEstudiante(idEstudiante)
+ * 9: MostrarConfirmacion
  */
-@WebServlet(urlPatterns = {"/admin/estudiantes", "/EstudianteAdminController"})
+@WebServlet(urlPatterns = {"/EstudianteAdminController"})
 public class EstudianteAdminController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     
@@ -33,18 +44,18 @@ public class EstudianteAdminController extends HttpServlet {
         String accion = request.getParameter("accion");
         
         if (accion == null) {
-            accion = "listar";
+        	accion = "gestionarEstudiantes()"; // 1: gestionarEstudiantes() - Método inicial según diagrama (nota: el switch usa 'gestionarEstudiantes')
         }
         
         switch (accion) {
-            case "listar":
-                listarEstudiantes(request, response);
+            case "gestionarEstudiantes":
+            	gestionarEstudiantes(request, response); // 1: gestionarEstudiantes() - inicia flujo
                 break;
             case "buscar":
                 buscarEstudiante(request, response);
                 break;
             default:
-                listarEstudiantes(request, response);
+                gestionarEstudiantes(request, response);
                 break;
         }
     }
@@ -61,8 +72,8 @@ public class EstudianteAdminController extends HttpServlet {
         }
         
         switch (accion) {
-            case "crear":
-                crearEstudiante(request, response);
+            case "solicilitarNuevoEstudiante":
+            	solicilitarNuevoEstudiante(request, response); // 4: iniciar flujo de solicitud/creación de nuevo estudiante
                 break;
             case "actualizar":
                 actualizarEstudiante(request, response);
@@ -77,18 +88,19 @@ public class EstudianteAdminController extends HttpServlet {
     }
     
     /**
-     * Lista todos los estudiantes
+     * 1: gestionarEstudiantes() - Método inicial según diagrama de robustez
+     * 2: obtener(): estudiantes[]
+     * 3: mostrar(estudiantes)
      */
-    private void listarEstudiantes(HttpServletRequest request, HttpServletResponse response)
+    private void gestionarEstudiantes(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
         try {
-            // Obtener todos los estudiantes
+        	// 2: obtener(): estudiantes[] - obtenemos todos los estudiantes (activos e inactivos para el admin)
             List<Estudiante> estudiantes = factory.getEstudianteDAO().getAll();
             
+            // 3: mostrar(estudiantes) - enviar la lista a la vista
             request.setAttribute("estudiantes", estudiantes);
-            
-            // Forward to JSP under views/admin
             request.getRequestDispatcher("/views/admin/gestionar-estudiantes.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
@@ -99,6 +111,7 @@ public class EstudianteAdminController extends HttpServlet {
     
     /**
      * Busca un estudiante por ID de paciente (cédula)
+     * (método de filtro/búsqueda, no forma parte del flujo de creación principal, por eso no se modifica)
      */
     private void buscarEstudiante(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -110,7 +123,7 @@ public class EstudianteAdminController extends HttpServlet {
                 Estudiante estudiante = factory.getEstudianteDAO().buscarPorIdPaciente(idPaciente);
                 
                 if (estudiante != null) {
-                    // Crear lista con un solo estudiante
+                    // Crear lista con un solo estudiante (3: mostrar(estudiantes) con un único elemento)
                     List<Estudiante> estudiantes = java.util.Collections.singletonList(estudiante);
                     request.setAttribute("estudiantes", estudiantes);
                 } else {
@@ -118,62 +131,66 @@ public class EstudianteAdminController extends HttpServlet {
                     request.getSession().setAttribute("error", "No se encontró ningún estudiante con ese ID de paciente");
                 }
             } else {
-                // Si no hay idPaciente, listar todos
+                // Si no hay idPaciente, listar todos (2: obtener())
                 List<Estudiante> estudiantes = factory.getEstudianteDAO().getAll();
                 request.setAttribute("estudiantes", estudiantes);
             }
             
+            // Forward a la vista (3: mostrar)
             request.getRequestDispatcher("/views/admin/gestionar-estudiantes.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
             request.getSession().setAttribute("error", "Error en la búsqueda: " + e.getMessage());
-            response.sendRedirect(request.getContextPath() + "/EstudianteAdminController?accion=listar");
+            response.sendRedirect(request.getContextPath() + "/EstudianteAdminController?accion=gestionarEstudiantes");
         }
     }
     
     /**
-     * Crea un nuevo estudiante
+     * 4: solicitarNuevoEstudiante() - recibe la petición de crear un estudiante desde el formulario
+     * 5: mostrarFormulario() - el JSP corresponde a la vista que muestra el formulario (se renderiza en gestionarEstudiantes cuando se pasa modal=nuevo)
+     * 6: crearNuevoEstudiante(datos) - recoger datos del formulario
+     * 7: CrearNuevoEstudiante(datosEstudiante) - crear entidad y persistir en BD
      */
-    private void crearEstudiante(HttpServletRequest request, HttpServletResponse response)
+    private void solicilitarNuevoEstudiante(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
         try {
-            // Obtener datos del formulario - usar nombres de campos de la BD real
+            // 6: crearNuevoEstudiante(datos) - Obtener datos del formulario
             String idPaciente = request.getParameter("cedula"); // El form usa "cedula" pero es idPaciente
             String nombre = request.getParameter("nombre");
             String apellido = request.getParameter("apellido");
             String email = request.getParameter("email");
             String password = request.getParameter("password");
             
-            // Verificar que no exista un estudiante con ese idPaciente
+            // Validación: evitar duplicados
             if (factory.getEstudianteDAO().existePorIdPaciente(idPaciente)) {
                 request.getSession().setAttribute("error", "Ya existe un estudiante con ese ID de paciente");
-                response.sendRedirect(request.getContextPath() + "/EstudianteAdminController?accion=listar");
+                response.sendRedirect(request.getContextPath() + "/EstudianteAdminController?accion=gestionarEstudiantes");
                 return;
             }
             
-            // Crear nuevo estudiante usando el constructor correcto
+            // 7: CrearNuevoEstudiante(datosEstudiante) - crear entidad Estudiante y persistir (7->8)
             Estudiante nuevoEstudiante = new Estudiante(idPaciente, nombre, apellido, email);
-            // Asignar contraseña si viene (obligatoria en UI)
             if (password != null && !password.trim().isEmpty()) {
                 nuevoEstudiante.setPasswordEstudiante(password);
             }
-            
-            // Guardar en la base de datos
             factory.getEstudianteDAO().create(nuevoEstudiante);
             
+            // 9: MostrarConfirmacion - usar mensaje en sesión y redirección
             request.getSession().setAttribute("mensaje", "Estudiante creado exitosamente");
-            response.sendRedirect(request.getContextPath() + "/EstudianteAdminController?accion=listar");
+            response.sendRedirect(request.getContextPath() + "/EstudianteAdminController?accion=gestionarEstudiantes");
             
         } catch (Exception e) {
             e.printStackTrace();
             request.getSession().setAttribute("error", "Error al crear estudiante: " + e.getMessage());
-            response.sendRedirect(request.getContextPath() + "/EstudianteAdminController?accion=listar");
+            response.sendRedirect(request.getContextPath() + "/EstudianteAdminController?accion=gestionarEstudiantes");
         }
     }
     
     /**
      * Actualiza un estudiante existente
+     * 8: obtenerEstudiante(idEstudiante) - se realiza aquí con getById
+     * 9: MostrarConfirmacion - mensaje en sesión
      */
     private void actualizarEstudiante(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -185,7 +202,7 @@ public class EstudianteAdminController extends HttpServlet {
             String email = request.getParameter("email");
             String password = request.getParameter("password");
             
-            // Buscar estudiante
+            // 8: obtenerEstudiante(idEstudiante)
             Estudiante estudiante = factory.getEstudianteDAO().getById(id);
             
             if (estudiante != null) {
@@ -201,17 +218,18 @@ public class EstudianteAdminController extends HttpServlet {
                 // Guardar cambios
                 factory.getEstudianteDAO().update(estudiante);
                 
+                // 9: MostrarConfirmacion
                 request.getSession().setAttribute("mensaje", "Estudiante actualizado exitosamente");
             } else {
                 request.getSession().setAttribute("error", "Estudiante no encontrado");
             }
             
-            response.sendRedirect(request.getContextPath() + "/EstudianteAdminController?accion=listar");
+            response.sendRedirect(request.getContextPath() + "/EstudianteAdminController?accion=gestionarEstudiantes");
             
         } catch (Exception e) {
             e.printStackTrace();
             request.getSession().setAttribute("error", "Error al actualizar estudiante: " + e.getMessage());
-            response.sendRedirect(request.getContextPath() + "/EstudianteAdminController?accion=listar");
+            response.sendRedirect(request.getContextPath() + "/EstudianteAdminController?accion=gestionarEstudiantes");
         }
     }
     
@@ -240,12 +258,12 @@ public class EstudianteAdminController extends HttpServlet {
                 request.getSession().setAttribute("error", "Estudiante no encontrado");
             }
             
-            response.sendRedirect(request.getContextPath() + "/EstudianteAdminController?accion=listar");
+            response.sendRedirect(request.getContextPath() + "/EstudianteAdminController?accion=gestionarEstudiantes");
             
         } catch (Exception e) {
             e.printStackTrace();
             request.getSession().setAttribute("error", "Error al cambiar estado del estudiante: " + e.getMessage());
-            response.sendRedirect(request.getContextPath() + "/EstudianteAdminController?accion=listar");
+            response.sendRedirect(request.getContextPath() + "/EstudianteAdminController?accion=gestionarEstudiantes");
         }
     }
     
