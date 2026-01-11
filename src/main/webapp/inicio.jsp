@@ -296,7 +296,7 @@
     </footer>
     
 
-    <script src="js/auth-temporal.js"></script>
+    <script src="<%= request.getContextPath() %>js/auth-temporal.js"></script>
     
 </body>
 </html>

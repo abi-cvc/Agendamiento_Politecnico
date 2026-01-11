@@ -173,8 +173,8 @@
         </div>
     </footer>
 
-    <script src="js/auth-temproal.js"></script>
-    <script src="js/resenas.js"></script>
+    <script src="<%= request.getContextPath() %>/js/auth-temporal.js"></script>
+    <script src="<%= request.getContextPath() %>/js/resenas.js"></script>
     
 </body>
 </html>
