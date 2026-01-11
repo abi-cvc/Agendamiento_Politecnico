@@ -52,7 +52,7 @@ public class DatabaseConnection {
      * 
      * TODO: Cambiar por tu contraseña de MySQL
      */
-    private static final String DB_PASSWORD = "peysi123";
+    private static final String DB_PASSWORD = "";
     
     /**
      * Driver JDBC de MySQL
