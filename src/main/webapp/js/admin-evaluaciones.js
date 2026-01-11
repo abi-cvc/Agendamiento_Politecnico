@@ -72,8 +72,10 @@ function calcularEstadisticasGenerales() {
 
 // ===== MOSTRAR MEJORES CALIFICADOS - REDIRIGIR A JSP =====
 function mostrarMejoresCalificados() {
-    // En lugar de usar JSON, redirigimos a la página JSP
+    // Obtener el contextPath dinámicamente
     const contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf('/', 1));
+    
+    // Redirigir a la página JSP de mejores calificados
     window.location.href = contextPath + '/evaluaciones?accion=mejoresCalificados&limite=10';
 }
 

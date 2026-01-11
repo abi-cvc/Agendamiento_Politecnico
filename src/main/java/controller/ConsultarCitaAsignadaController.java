@@ -120,20 +120,7 @@ public class ConsultarCitaAsignadaController extends HttpServlet {
                 request.setAttribute("citasMes", citasDoctor);
                 request.setAttribute("nombreDoctor", "Dr. Enf. Sofía Morales (ID: 9)");
                 request.setAttribute("mesActual", mesActual);
-                
-                // Intentar convertir citas a JSON (opcional)
-                String citasMesJson = "[]";
-                try {
-                    com.google.gson.Gson gson = new com.google.gson.GsonBuilder()
-                        .setDateFormat("yyyy-MM-dd")
-                        .excludeFieldsWithoutExposeAnnotation() // Evitar relaciones circulares
-                        .create();
-                    citasMesJson = gson.toJson(citasDoctor);
-                } catch (Exception jsonEx) {
-                    System.err.println("⚠️ WARNING: Error al convertir citas a JSON: " + jsonEx.getMessage());
-                    // Continuar sin JSON
-                }
-                request.setAttribute("citasMesJson", citasMesJson);
+               
                 
                 System.out.println("✅ Datos agregados al request para doctor ID 9");
                 System.out.println("   - citasMes size: " + citasDoctor.size());

@@ -21,10 +21,26 @@
         <nav>
             <ul>
                 <li><a href="<%= request.getContextPath() %>/inicio.jsp">Inicio</a></li>
-                <li><a href="<%= request.getContextPath() %>/evaluaciones?accion=listarAdmin">Volver a Evaluaciones</a></li>
-                <li class="login mt-2 mb-2">
-                    <a href="<%= request.getContextPath() %>/LogoutServlet" class="font-bold">Cerrar Sesión</a>
-                </li>
+                <li><a href="<%= request.getContextPath() %>/doctores?accion=listarAdmin">Gestionar Doctores</a></li>
+                <li><a href="<%= request.getContextPath() %>/estudiantes?accion=listarAdmin">Gestionar Estudiantes</a></li>
+                <li><a href="<%= request.getContextPath() %>/especialidades?accion=listarAdmin" class="font-bold">Gestionar Especialidades</a></li>
+                <li><a href="<%= request.getContextPath() %>/evaluaciones?accion=listarAdmin">Gestionar Evaluaciones</a></li>
+                <li class="user-logged">
+                <div class="user-menu">
+                    <img src="<%= request.getContextPath() %>/images/user.svg" alt="Usuario" class="user-avatar">
+                    <span class="user-name">Admin</span>
+                    <div class="user-dropdown">
+                        <div class="dropdown-header">
+                            <strong>Admin Bienestar</strong>
+                            <small>admin@epn.edu.ec</small>
+                        </div>
+                        <a href="<%= request.getContextPath() %>/index.jsp" onclick="logout(); return false;">
+                            🚪 Cerrar Sesión
+                        </a>
+                    </div>
+                </div>
+            </li>
+                
             </ul>
         </nav>
     </header>
