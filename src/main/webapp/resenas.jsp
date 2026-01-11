@@ -144,7 +144,7 @@
         <!-- Lista de Reseñas -->
         <div class="resenas-display">
             <div class="resenas-header flex-between mb-4">
-                <h2>💬 Experiencias de Nuestros Estudiantes</h2>
+                <h2>💬 Tus Experiencias</h2>
                 <span class="badge">
                     <c:choose>
                         <c:when test="${not empty totalEvaluaciones}">
@@ -193,7 +193,7 @@
                                 <div class="resena-header flex-between">
                                     <div>
                                         <h3 class="resena-usuario">
-                                            ${evaluacion.estudiante.nombre}
+                                            ${evaluacion.estudiante.nombreEstudiante}
                                         </h3>
                                         <span class="resena-especialidad">
                                             ${evaluacion.doctor.especialidad.icono} 
