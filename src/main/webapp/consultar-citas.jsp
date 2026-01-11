@@ -47,12 +47,12 @@
 
     <nav>
         <ul>
-            <li><a href="${pageContext.request.contextPath}/inicio.html" class="font-bold">Inicio</a></li>
+            <li><a href="${pageContext.request.contextPath}/inicio.jsp" class="font-bold">Inicio</a></li>
             <li><a href="${pageContext.request.contextPath}/AgendarCitasController" class="font-bold">Especialidades</a></li>
             <li><a href="${pageContext.request.contextPath}/ConsultarCitasAgendadasController" class="font-bold">Mis Citas</a></li>
-            <li><a href="${pageContext.request.contextPath}/inicio.html#reseñas" class="font-bold">Reseñas</a></li>
+            <li><a href="${pageContext.request.contextPath}/reseñas.jsp" class="font-bold">Reseñas</a></li>
             <li class="login mt-2 mb-2" id="authButton">
-                <a href="${pageContext.request.contextPath}/index.html" class="font-bold">Login</a>
+                <a href="${pageContext.request.contextPath}/index.jsp" class="font-bold">Login</a>
             </li>
         </ul>
     </nav>
@@ -231,10 +231,10 @@
         <div class="footer-section">
             <h3>Enlaces Rápidos</h3>
             <ul class="footer-links">
-                <li><a href="${pageContext.request.contextPath}/inicio.html">Inicio</a></li>
+                <li><a href="${pageContext.request.contextPath}/inicio.jsp">Inicio</a></li>
                 <li><a href="${pageContext.request.contextPath}/AgendarCitasController">Especialidades</a></li>
                 <li><a href="${pageContext.request.contextPath}/ConsultarCitasAgendadasController">Mis Citas</a></li>
-                <li><a href="${pageContext.request.contextPath}/inicio.html#reseñas">Reseñas</a></li>
+                <li><a href="${pageContext.request.contextPath}/reseñas.jsp">Reseñas</a></li>
             </ul>
         </div>
 

@@ -42,7 +42,7 @@
     <nav>
         <ul>
             <li class="flex">
-                <a href="${pageContext.request.contextPath}/inicio.html" class="font-bold">Inicio</a>
+                <a href="${pageContext.request.contextPath}/inicio.jsp" class="font-bold">Inicio</a>
             </li>
             <li class="flex">
                 <a href="${pageContext.request.contextPath}/ConsultarCitaAsignadaController?vista=calendario" class="font-bold">Citas Agendadas</a>
@@ -51,7 +51,7 @@
                 <a href="${pageContext.request.contextPath}/ConsultarCitaAsignadaController" class="font-bold">Atender Cita</a>
             </li>
             <li class="login mt-2 mb-2" id="authButton">
-                <a href="${pageContext.request.contextPath}/index.html" class="font-bold">Login</a>
+                <a href="${pageContext.request.contextPath}/index.jsp" class="font-bold">Login</a>
             </li>
         </ul>
     </nav>

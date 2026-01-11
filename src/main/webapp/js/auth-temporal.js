@@ -124,7 +124,7 @@ function logout() {
     console.log('🔓 Cerrando sesión');
     sessionStorage.removeItem('usuarioActual');
     sessionStorage.removeItem('paginaAnterior');
-    window.location.href = 'index.html';
+    window.location.href = 'index.jsp';
 }
 
 // Verificar si hay sesión activa
@@ -138,7 +138,7 @@ function protegerPagina(rolesPermitidos = null) {
     const usuario = verificarSesion();
     if (!usuario) {
         console.log('⚠️ No hay sesión, redirigiendo a login');
-        window.location.href = 'index.html';
+        window.location.href = 'index.jsp';
         return null;
     }
     
@@ -147,43 +147,12 @@ function protegerPagina(rolesPermitidos = null) {
         if (!rolesPermitidos.includes(usuario.rol)) {
             console.log('⚠️ Rol no autorizado:', usuario.rol);
             alert('Acceso no autorizado para tu rol de usuario');
-            window.location.href = 'inicio.html';
+            window.location.href = 'inicio.jsp';
             return null;
         }
     }
     
     return usuario;
-}
-
-// ===== ACTUALIZAR HEADER CON ESTADO DE SESIÓN =====
-function actualizarHeader() {
-    const usuario = verificarSesion();
-    const authButton = document.getElementById('authButton');
-    
-    if (!authButton) return;
-    
-    if (usuario) {
-        const primerNombre = usuario.nombre.split(' ')[0];
-        // Obtener la ruta base del contexto
-        const contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf('/', 1));
-        authButton.className = 'user-logged';
-        authButton.innerHTML = `
-            <div class="user-menu">
-                <img src="${contextPath}/images/user.svg" alt="Usuario" class="user-avatar">
-                <span class="user-name">${primerNombre}</span>
-                <div class="user-dropdown">
-                    <div class="dropdown-header">
-                        <strong>${usuario.nombre}</strong>
-                        <small>${usuario.email}</small>
-                    </div>
-                    <a href="index.html" onclick="logout(); return false;">🚪 Cerrar Sesión</a>
-                </div>
-            </div>
-        `;
-    } else {
-        authButton.className = 'login';
-        authButton.innerHTML = '<a href="index.html" class="font-bold">Login</a>';
-    }
 }
 
 // ===== MOSTRAR/OCULTAR CONTRASEÑA =====
@@ -209,67 +178,95 @@ function actualizarNavegacionPorRol() {
     
     if (!nav) return;
     
-    // Guardar el authButton antes de modificar
-    const authButton = document.getElementById('authButton');
-    const authButtonHTML = authButton ?   authButton.outerHTML : '';
-    
-    // Limpiar la navegación
-    nav.innerHTML = '';
+    // Obtener el contexto de la aplicación
+    const contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf('/', 1)) || '';
     
     if (usuario && usuario.rol === 'admin') {
         // ===== NAVEGACIÓN DE ADMINISTRADOR =====
         console.log('📋 Mostrando navegación de ADMIN');
         nav.innerHTML = `
-            <li class="flex"><a href="inicio.html" class="font-bold">Inicio</a></li>
-            <li class="flex"><a href="especialidades?accion=listarAdmin" class="font-bold">Especialidades</a></li>
-            <li class="flex"><a href="doctores?accion=listarAdmin" class="font-bold">Doctores</a></li>
-            ${authButtonHTML}
+            <li><a href="${contextPath}/inicio.jsp">Inicio</a></li>
+            <li><a href="${contextPath}/doctores?accion=listarAdmin">Gestionar Doctores</a></li>
+            <li><a href="${contextPath}/estudiantes?accion=listarAdmin">Gestionar Estudiantes</a></li>
+            <li><a href="${contextPath}/especialidades?accion=listarAdmin">Gestionar Especialidades</a></li>
+            <li><a href="${contextPath}/evaluaciones?accion=listarAdmin">Gestionar Evaluaciones</a></li>
+            <li class="user-logged">
+                <div class="user-menu">
+                    <img src="${contextPath}/images/user.svg" alt="Usuario" class="user-avatar">
+                    <span class="user-name">Admin</span>
+                    <div class="user-dropdown">
+                        <div class="dropdown-header">
+                            <strong>${usuario.nombre}</strong>
+                            <small>${usuario.email}</small>
+                        </div>
+                        <a href="${contextPath}/index.jsp" onclick="logout(); return false;">🚪 Cerrar Sesión</a>
+                    </div>
+                </div>
+            </li>
         `;
     } else if (usuario && usuario.rol === 'doctor') {
         // ===== NAVEGACIÓN DE DOCTOR =====
         console.log('👨‍⚕️ Mostrando navegación de DOCTOR');
         nav.innerHTML = `
-            <li class="flex"><a href="inicio.html" class="font-bold">Inicio</a></li>
-            <li class="flex"><a href="ConsultarCitaAsignadaController?vista=calendario" class="font-bold">Citas Agendadas</a></li>
-            <li class="flex"><a href="atender-cita.jsp" class="font-bold">Atender Cita</a></li>
-            ${authButtonHTML}
+            <li><a href="${contextPath}/inicio.jsp" class="font-bold">Inicio</a></li>
+            <li><a href="${contextPath}/ConsultarCitaAsignadaController?vista=calendario" class="font-bold">Citas Agendadas</a></li>
+            <li><a href="${contextPath}/atender-cita.jsp" class="font-bold">Atender Cita</a></li>
+            <li class="user-logged">
+                <div class="user-menu">
+                    <img src="${contextPath}/images/user.svg" alt="Usuario" class="user-avatar">
+                    <span class="user-name">${usuario.nombre.split(' ')[0]}</span>
+                    <div class="user-dropdown">
+                        <div class="dropdown-header">
+                            <strong>${usuario.nombre}</strong>
+                            <small>${usuario.email}</small>
+                        </div>
+                        <a href="${contextPath}/index.jsp" onclick="logout(); return false;">🚪 Cerrar Sesión</a>
+                    </div>
+                </div>
+            </li>
         `;
     } else if (usuario && usuario.rol === 'estudiante') {
         // ===== NAVEGACIÓN DE ESTUDIANTE =====
         console.log('🎓 Mostrando navegación de ESTUDIANTE');
         nav.innerHTML = `
-            <li class="flex"><a href="inicio.html" class="font-bold">Inicio</a></li>
-            <li class="flex"><a href="AgendarCitasController" class="font-bold">Especialidades</a></li>
-            <li class="flex"><a href="ConsultarCitasAgendadasController" class="font-bold">Mis Citas</a></li>
-            <li class="flex"><a href="#reseñas" class="font-bold">Reseñas</a></li>
-            ${authButtonHTML}
+            <li><a href="${contextPath}/inicio.jsp" class="font-bold">Inicio</a></li>
+            <li><a href="${contextPath}/AgendarCitasController" class="font-bold">Especialidades</a></li>
+            <li><a href="${contextPath}/ConsultarCitasAgendadasController" class="font-bold">Mis Citas</a></li>
+            <li><a href="${contextPath}/reseñas.jsp" class="font-bold">Reseñas</a></li>
+            <li class="user-logged">
+                <div class="user-menu">
+                    <img src="${contextPath}/images/user.svg" alt="Usuario" class="user-avatar">
+                    <span class="user-name">${usuario.nombre.split(' ')[0]}</span>
+                    <div class="user-dropdown">
+                        <div class="dropdown-header">
+                            <strong>${usuario.nombre}</strong>
+                            <small>${usuario.email}</small>
+                        </div>
+                        <a href="${contextPath}/index.jsp" onclick="logout(); return false;">🚪 Cerrar Sesión</a>
+                    </div>
+                </div>
+            </li>
         `;
     } else {
         // ===== NAVEGACIÓN PÚBLICA (sin sesión) =====
-        console.log('🌍 Mostrando navegación PÚBLICA');
+        console.log('🌐 Mostrando navegación PÚBLICA');
         nav.innerHTML = `
-            <li class="flex"><a href="inicio.html" class="font-bold">Inicio</a></li>
-            <li class="flex"><a href="AgendarCitasController" class="font-bold">Especialidades</a></li>
-            <li class="flex"><a href="#reseñas" class="font-bold">Reseñas</a></li>
-            <li class="login mt-2 mb-2"><a href="index.html" class="font-bold">Login</a></li>
+            <li><a href="${contextPath}/inicio.jsp" class="font-bold">Inicio</a></li>
+            <li><a href="${contextPath}/AgendarCitasController" class="font-bold">Especialidades</a></li>
+            <li><a href="${contextPath}/reseñas.jsp" class="font-bold">Reseñas</a></li>
+            <li class="login mt-2 mb-2"><a href="${contextPath}/index.jsp" class="font-bold">Login</a></li>
         `;
     }
-    
-    // Volver a actualizar el authButton
-    actualizarHeader();
 }
 
 // ===== EJECUTAR AL CARGAR CUALQUIER PÁGINA =====
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 Auth temporal cargado');
     
-    // Actualizar header en todas las páginas
-    actualizarHeader();
-    
     // Actualizar navegación según rol
     actualizarNavegacionPorRol();
     
-    // Si estamos en la página de login (index.html)
+    // Si estamos en la página de login (index.jsp)
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
         console.log('📝 Formulario de login encontrado');
@@ -277,7 +274,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Si ya hay sesión, redirigir al inicio
         if (verificarSesion()) {
             console.log('✅ Ya hay sesión activa, redirigiendo');
-            window.location.href = 'inicio.html';
+            window.location.href = 'inicio.jsp';
             return;
         }
 
@@ -291,7 +288,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const passwordElement = document.getElementById('password');
             const errorDiv = document.getElementById('errorMessage');
             
-            if (! rolElement || !emailElement || ! passwordElement) {
+            if (!rolElement || !emailElement || !passwordElement) {
                 console.error('❌ Elementos del formulario no encontrados');
                 return;
             }
@@ -300,10 +297,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const email = emailElement.value.trim();
             const password = passwordElement.value;
             
-            console.log('Datos recibidos:', { rol, email, password:  '****' });
+            console.log('Datos recibidos:', { rol, email, password: '****' });
             
             // Validar que se seleccionó un rol
-            if (! rol) {
+            if (!rol) {
                 if (errorDiv) {
                     errorDiv.textContent = 'Por favor selecciona tu rol';
                     errorDiv.classList.add('show');
@@ -312,7 +309,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Validar dominio
-            if (!email. endsWith('@epn.edu.ec')) {
+            if (!email.endsWith('@epn.edu.ec')) {
                 if (errorDiv) {
                     errorDiv.textContent = 'Debes usar tu correo institucional (@epn.edu.ec)';
                     errorDiv.classList.add('show');
@@ -327,18 +324,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (errorDiv) {
                     errorDiv.classList.remove('show');
                 }
-                // Redirigir a página anterior o inicio. html
+                // Redirigir a página anterior o inicio.jsp
                 const urlAnterior = sessionStorage.getItem('paginaAnterior');
-                window.location.href = urlAnterior || 'inicio.html';
+                window.location.href = urlAnterior || 'inicio.jsp';
                 sessionStorage.removeItem('paginaAnterior');
             } else {
                 if (errorDiv) {
-                    errorDiv.textContent = resultado. mensaje;
+                    errorDiv.textContent = resultado.mensaje;
                     errorDiv.classList.add('show');
                 }
             }
         });
     }
-});	
+});
 
 console.log('✅ Auth temporal disponible - Usuarios hardcodeados listos');

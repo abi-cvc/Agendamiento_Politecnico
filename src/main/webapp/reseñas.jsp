@@ -1,9 +1,10 @@
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bienestar Politécnico - Mis Citas</title>
+    <title>Bienestar Politécnico</title>
     <link rel="icon" type="image/png" href="images/logo_epn.png">
     <link rel="stylesheet" href="css/framework.css">
     <link rel="stylesheet" href="css/styles.css">
@@ -21,36 +22,85 @@
         </div>
         <nav>
             <ul>
-                <li><a href="inicio.html" class="font-bold">Inicio</a></li>
+                <li><a href="inicio.jsp" class="font-bold">Inicio</a></li>
                 <li><a href="especialidades?accion=listar" class="font-bold">Especialidades</a></li>
                 <li><a href="ConsultarCitasAgendadasController" class="font-bold">Mis Citas</a></li>
-                <li><a href="reseñas.html" class="font-bold">Reseñas</a></li>
-                <li class="login mt-2 mb-2" id="authButton"><a href="index.html" class="font-bold">Login</a></li>
+                <li><a href="reseñas.jsp" class="font-bold">Reseñas</a></li>
+                <li class="login mt-2 mb-2" id="authButton"><a href="index.jsp" class="font-bold">Login</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
-        <h1>Mis Citas Médicas</h1>
-        <p>Bienvenido/a, <span id="userName">Usuario</span></p>
+        <h1>Reseñas de Nuestros Servicios</h1>
+        <p>Comparte tu experiencia y ayuda a otros estudiantes a conocer nuestros servicios</p>
     </main>
 
-    <section class="consultar-citas-page">
-        <div class="consultar-container">
-            <div class="citas-header">
-                <h2>Historial de Citas</h2>
-                <div class="filtros">
-                    <select id="filtroEstado" class="filtro-select">
-                        <option value="todas">Todas las citas</option>
-                        <option value="Pendiente">Pendientes</option>
-                        <option value="Completada">Completadas</option>
-                        <option value="Cancelada">Canceladas</option>
-                    </select>
-                </div>
+    <section class="resenas-page page-section">
+        <div class="resenas-container">
+            <!-- Formulario para agregar reseña -->
+            <div class="resena-form-card card">
+                <h3>Deja tu Reseña</h3>
+                <div id="resenaMessage" class="form-message"></div>
+
+                <form id="resenaForm" class="resena-form">
+                    <div class="form-group">
+                        <label for="especialidadResena">Especialidad/Servicio</label>
+                        <select id="especialidadResena" name="especialidad" required>
+                            <option value="">Selecciona una opción</option>
+                            <option value="nutricion">ð¥ Nutrición</option>
+                            <option value="odontologia">ð¦· Odontología</option>
+                            <option value="psicologia">ð§  Psicología</option>
+                            <option value="medicina-general">ð Medicina General</option>
+                            <option value="enfermeria">ð Enfermería</option>
+                            <option value="servicio-general">â­ Servicio General</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="calificacion">Calificación</label>
+                        <div class="rating-input" id="ratingInput">
+                            <span class="star" data-value="1">â</span>
+                            <span class="star" data-value="2">â</span>
+                            <span class="star" data-value="3">â</span>
+                            <span class="star" data-value="4">â</span>
+                            <span class="star" data-value="5">â</span>
+                        </div>
+                        <input type="hidden" id="calificacion" name="calificacion" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="comentario">Tu Experiencia</label>
+                        <textarea id="comentario" name="comentario" rows="5" 
+                            placeholder="Cuéntanos sobre tu experiencia, el trato recibido, los resultados..." 
+                            required minlength="20"></textarea>
+                        <small class="text-muted">Mínimo 20 caracteres</small>
+                    </div>
+
+                    <button type="submit" class="btn-agendar">Publicar Reseña</button>
+                </form>
             </div>
 
-            <div id="listaCitas" class="lista-citas-consulta">
-                <p class="no-citas">No tienes citas agendadas</p>
+            <!-- Filtros y lista de reseñas -->
+            <div class="resenas-display">
+                <div class="resenas-header flex-between mb-4">
+                    <h2>ð¬ Experiencias Compartidas</h2>
+                    <div class="form-group mb-0">
+                        <select id="filtroEspecialidad" class="filtro-select">
+                            <option value="todas">Todas las especialidades</option>
+                            <option value="nutricion">ð¥ Nutrición</option>
+                            <option value="odontologia">ð¦· Odontología</option>
+                            <option value="psicologia">ð§  Psicología</option>
+                            <option value="medicina-general">ð Medicina General</option>
+                            <option value="enfermeria">ð Enfermería</option>
+                            <option value="servicio-general">â­ Servicio General</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="listaResenas" class="resenas-list">
+                    <!-- Las reseñas se cargarán aquí dinámicamente -->
+                </div>
             </div>
         </div>
     </section>
@@ -78,10 +128,10 @@
             <div class="footer-section">
                 <h3>Enlaces Rápidos</h3>
                 <ul class="footer-links">
-                    <li><a href="inicio.html">Inicio</a></li>
+                    <li><a href="inicio.jsp">Inicio</a></li>
                     <li><a href="especialidades?accion=listar">Especialidades</a></li>
                     <li><a href="ConsultarCitasAgendadasController">Mis Citas</a></li>
-                    <li><a href="reseñas.html">Reseñas</a></li>
+                    <li><a href="reseñas.jsp">Reseñas</a></li>
                 </ul>
             </div>
 
@@ -123,7 +173,8 @@
         </div>
     </footer>
 
-    <script src="js/auth.js"></script>
-    <script src="js/consultar-citas.js"></script>
+    <script src="js/auth-temproal.js"></script>
+    <script src="js/resenas.js"></script>
+    
 </body>
 </html>

@@ -96,13 +96,13 @@
     </div>
 </footer>
 
-<script src="<%= request.getContextPath() %>/js/auth.js"></script>
+<script src="<%= request.getContextPath() %>/js/auth-temporal.js"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const navLinks = document.querySelectorAll('nav ul li a');
         navLinks.forEach(link => {
-            if (!link.href.includes('inicio.html') && !link.href.includes('index.jsp')) {
+            if (!link.href.includes('inicio.jsp') && !link.href.includes('index.jsp')) {
                 link.style.pointerEvents = 'none';
                 link.style.opacity = '0.5';
             }

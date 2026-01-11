@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="resena-form-header text-center">
                 <h2>🔒 Inicia Sesión</h2>
                 <p class="text-muted mb-4">Para dejar una reseña, necesitas iniciar sesión</p>
-                <a href="index.html" class="btn-primary" onclick="sessionStorage.setItem('paginaAnterior', 'reseñas.html')">Ir a Login</a>
+                <a href="index.jsp" class="btn-primary" onclick="sessionStorage.setItem('paginaAnterior', 'reseñas.jsp')">Ir a Login</a>
             </div>
         `;
     } else if (usuario.rol !== 'estudiante') {

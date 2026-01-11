@@ -3,7 +3,7 @@
 -- Descripción: Crear tabla de evaluaciones
 -- =====================================================
 
-USE sistema_citas_medicas;
+USE agendamiento_politecnico;
 
 -- Crear tabla evaluacion
 CREATE TABLE IF NOT EXISTS evaluacion (

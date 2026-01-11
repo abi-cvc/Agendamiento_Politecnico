@@ -19,7 +19,7 @@
         </div>
         <nav>
             <ul>
-                <li><a href="<%= request.getContextPath() %>/inicio.html">Inicio</a></li>
+                <li><a href="<%= request.getContextPath() %>/inicio.jsp">Inicio</a></li>
                 <li><a href="<%= request.getContextPath() %>/doctores?accion=listarAdmin">Gestionar Doctores</a></li>
                 <li><a href="<%= request.getContextPath() %>/estudiantes?accion=listarAdmin">Gestionar Estudiantes</a></li>
                 <li><a href="<%= request.getContextPath() %>/especialidades?accion=listarAdmin" class="font-bold">Gestionar Especialidades</a></li>

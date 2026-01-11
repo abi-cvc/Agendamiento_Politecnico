@@ -20,7 +20,7 @@
         </div>
         <nav>
             <ul>
-                <li><a href="<%= request.getContextPath() %>/inicio.html">Inicio</a></li>
+                <li><a href="<%= request.getContextPath() %>/inicio.jsp">Inicio</a></li>
                 <li><a href="<%= request.getContextPath() %>/doctores?accion=listarAdmin">Gestionar Doctores</a></li>
                 <li><a href="<%= request.getContextPath() %>/estudiantes?accion=listarAdmin">Gestionar Estudiantes</a></li>
                 <li><a href="<%= request.getContextPath() %>/especialidades?accion=listarAdmin">Gestionar Especialidades</a></li>
@@ -178,7 +178,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <fmt:formatDate value="${eval.fechaEvaluacion}" pattern="dd/MM/yyyy HH:mm" />
+                                        ${eval.fechaFormateada}
                                     </td>
                                     <td>
                                         <a href="<%= request.getContextPath() %>/evaluaciones?accion=porDoctor&idDoctor=${eval.doctor.idDoctor}" 

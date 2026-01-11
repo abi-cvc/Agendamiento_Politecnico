@@ -145,4 +145,17 @@ public class Evaluacion implements Serializable {
                 ", fechaEvaluacion=" + fechaEvaluacion +
                 '}';
     }
+    
+    /**
+     * Obtiene la fecha formateada para JSP
+     * @return Fecha en formato dd/MM/yyyy HH:mm
+     */
+    public String getFechaFormateada() {
+        if (fechaEvaluacion == null) return "";
+        
+        java.time.format.DateTimeFormatter formatter = 
+            java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        
+        return fechaEvaluacion.format(formatter);
+    }
 }

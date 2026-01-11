@@ -20,6 +20,8 @@
         <class>model.entity.Cita</class>
         <class>model.entity.Estudiante</class>
         <class>model.entity.Administrador</class>
+        <class>model.entity.Evaluacion</class>
+        
 
         <properties>
             <!-- ============================================ -->

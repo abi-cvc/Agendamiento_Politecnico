@@ -203,6 +203,6 @@
         </div>
     </footer>
 
-    <script src="../js/auth.js"></script>
+    <script src="../js/auth-temporal.js"></script>
 </body>
 </html>

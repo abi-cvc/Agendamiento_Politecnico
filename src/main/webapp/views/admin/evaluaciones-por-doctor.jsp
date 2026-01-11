@@ -1,6 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
-<%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -20,7 +19,7 @@
         </div>
         <nav>
             <ul>
-                <li><a href="<%= request.getContextPath() %>/inicio.html">Inicio</a></li>
+                <li><a href="<%= request.getContextPath() %>/inicio.jsp">Inicio</a></li>
                 <li><a href="<%= request.getContextPath() %>/evaluaciones?accion=listarAdmin" class="font-bold">Volver a Evaluaciones</a></li>
                 <li class="login mt-2 mb-2">
                     <a href="<%= request.getContextPath() %>/LogoutServlet" class="font-bold">Cerrar Sesión</a>

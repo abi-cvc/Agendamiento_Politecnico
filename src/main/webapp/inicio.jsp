@@ -1,3 +1,4 @@
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bienestar Politécnico</title>
     <link rel="icon" type="image/png" href="images/logo_epn.png">
-    <link rel="stylesheet" href="css/framework.css">
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/framework.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
     
     <!--Tipo de letra para bienvenida-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,11 +23,11 @@
         </div>
         <nav>
             <ul>
-                <li class="flex"><a href="inicio.html" class="font-bold">Inicio</a></li>
+                <li class="flex"><a href="inicio.jsp" class="font-bold">Inicio</a></li>
                 <li class="flex"><a href="AgendarCitasController" class="font-bold">Especialidades</a></li>
                 <li class="flex"><a href="ConsultarCitasAgendadasController" class="font-bold">Mis Citas</a></li>
-                <li class="flex"><a href="#reseñas" class="font-bold">Reseñas</a></li>
-                <li class="login mt-2 mb-2" id="authButton"><a href="index.html" class="font-bold">Cerrar Sesión</a></li>
+                <li class="flex"><a href="reseñas.jsp" class="font-bold">Reseñas</a></li>
+                <li class="login mt-2 mb-2" id="authButton"><a href="index.jsp" class="font-bold">Cerrar Sesión</a></li>
             </ul>
         </nav>
     </header>
@@ -249,10 +250,10 @@
             <div class="footer-section">
                 <h3>Enlaces Rápidos</h3>
                 <ul class="footer-links">
-                    <li><a href="inicio.html">Inicio</a></li>
+                    <li><a href="inicio.jsp">Inicio</a></li>
                     <li><a href="AgendarCitasController">Especialidades</a></li>
                     <li><a href="ConsultarCitasAgendadasController">Mis Citas</a></li>
-                    <li><a href="#reseñas">Reseñas</a></li>
+                    <li><a href="reseñas.jsp">Reseñas</a></li>
                 </ul>
             </div>
 

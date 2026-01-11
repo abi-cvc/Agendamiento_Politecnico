@@ -262,7 +262,7 @@ function seleccionarHorario(horaInicio, horaFin, idDisponibilidad) {
     document.querySelector('.btn-agendar').disabled = false;
 }
     document.querySelector('.btn-agendar').disabled = false;
-}
+
 
 // ===== AGENDAR CITA =====
 function agendarCita(e) {

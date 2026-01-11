@@ -31,12 +31,12 @@
         </div>
         <nav>
             <ul>
-                <li><a href="<%= request.getContextPath() %>/inicio.html" class="font-bold">Inicio</a></li>
+                <li><a href="<%= request.getContextPath() %>/inicio.jsp" class="font-bold">Inicio</a></li>
                 <li><a href="<%= request.getContextPath() %>/AgendarCitasController" class="font-bold">Especialidades</a></li>
                 <li><a href="<%= request.getContextPath() %>/ConsultarCitasAgendadasController" class="font-bold">Mis Citas</a></li>
-                <li><a href="<%= request.getContextPath() %>/inicio.html#reseñas" class="font-bold">Reseñas</a></li>
+                <li><a href="<%= request.getContextPath() %>/reseñas.jsp" class="font-bold">Reseñas</a></li>
                 <li class="login mt-2 mb-2" id="authButton">
-                    <a href="<%= request.getContextPath() %>/index.html" class="font-bold">Login</a>
+                    <a href="<%= request.getContextPath() %>/index.jsp" class="font-bold">Login</a>
                 </li>
             </ul>
         </nav>
@@ -121,10 +121,10 @@
             <div class="footer-section">
                 <h3>Enlaces Rápidos</h3>
                 <ul class="footer-links">
-                    <li><a href="<%= request.getContextPath() %>/inicio.html">Inicio</a></li>
+                    <li><a href="<%= request.getContextPath() %>/inicio.jsp">Inicio</a></li>
                     <li><a href="<%= request.getContextPath() %>/AgendarCitasController">Especialidades</a></li>
                     <li><a href="<%= request.getContextPath() %>/ConsultarCitasAgendadasController">Mis Citas</a></li>
-                    <li><a href="<%= request.getContextPath() %>/inicio.html#reseñas">Reseñas</a></li>
+                    <li><a href="<%= request.getContextPath() %>/reseñas.jsp">Reseñas</a></li>
                 </ul>
             </div>
 

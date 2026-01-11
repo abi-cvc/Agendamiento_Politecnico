@@ -26,7 +26,7 @@
         </div>
         <nav>
             <ul>
-                <li><a href="<%= request.getContextPath() %>/inicio.html">Inicio</a></li>
+                <li><a href="<%= request.getContextPath() %>/inicio.jsp">Inicio</a></li>
                 <li><a href="<%= request.getContextPath() %>/evaluaciones?accion=listarAdmin">Volver a Evaluaciones</a></li>
                 <li class="login mt-2 mb-2">
                     <a href="<%= request.getContextPath() %>/LogoutServlet" class="font-bold">Cerrar Sesión</a>
