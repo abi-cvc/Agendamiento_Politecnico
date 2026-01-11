@@ -202,12 +202,72 @@ function togglePassword() {
     }
 }
 
+// ===== ACTUALIZAR NAVEGACIÓN SEGÚN ROL =====
+function actualizarNavegacionPorRol() {
+    const usuario = verificarSesion();
+    const nav = document.querySelector('nav ul');
+    
+    if (!nav) return;
+    
+    // Guardar el authButton antes de modificar
+    const authButton = document.getElementById('authButton');
+    const authButtonHTML = authButton ?   authButton.outerHTML : '';
+    
+    // Limpiar la navegación
+    nav.innerHTML = '';
+    
+    if (usuario && usuario.rol === 'admin') {
+        // ===== NAVEGACIÓN DE ADMINISTRADOR =====
+        console.log('📋 Mostrando navegación de ADMIN');
+        nav.innerHTML = `
+            <li class="flex"><a href="inicio.html" class="font-bold">Inicio</a></li>
+            <li class="flex"><a href="especialidades? accion=listarAdmin" class="font-bold">Especialidades</a></li>
+            <li class="flex"><a href="doctores?accion=listarAdmin" class="font-bold">Doctores</a></li>
+            ${authButtonHTML}
+        `;
+    } else if (usuario && usuario.rol === 'doctor') {
+        // ===== NAVEGACIÓN DE DOCTOR =====
+        console.log('👨‍⚕️ Mostrando navegación de DOCTOR');
+        nav.innerHTML = `
+            <li class="flex"><a href="inicio.html" class="font-bold">Inicio</a></li>
+            <li class="flex"><a href="ConsultarCitaAsignadaController? vista=calendario" class="font-bold">Citas Agendadas</a></li>
+            <li class="flex"><a href="atender-cita. jsp" class="font-bold">Atender Cita</a></li>
+            ${authButtonHTML}
+        `;
+    } else if (usuario && usuario.rol === 'estudiante') {
+        // ===== NAVEGACIÓN DE ESTUDIANTE =====
+        console.log('🎓 Mostrando navegación de ESTUDIANTE');
+        nav.innerHTML = `
+            <li class="flex"><a href="inicio.html" class="font-bold">Inicio</a></li>
+            <li class="flex"><a href="AgendarCitasController" class="font-bold">Especialidades</a></li>
+            <li class="flex"><a href="ConsultarCitasAgendadasController" class="font-bold">Mis Citas</a></li>
+            <li class="flex"><a href="#reseñas" class="font-bold">Reseñas</a></li>
+            ${authButtonHTML}
+        `;
+    } else {
+        // ===== NAVEGACIÓN PÚBLICA (sin sesión) =====
+        console.log('🌍 Mostrando navegación PÚBLICA');
+        nav.innerHTML = `
+            <li class="flex"><a href="inicio.html" class="font-bold">Inicio</a></li>
+            <li class="flex"><a href="AgendarCitasController" class="font-bold">Especialidades</a></li>
+            <li class="flex"><a href="#reseñas" class="font-bold">Reseñas</a></li>
+            <li class="login mt-2 mb-2"><a href="index.html" class="font-bold">Login</a></li>
+        `;
+    }
+    
+    // Volver a actualizar el authButton
+    actualizarHeader();
+}
+
 // ===== EJECUTAR AL CARGAR CUALQUIER PÁGINA =====
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 Auth temporal cargado');
     
     // Actualizar header en todas las páginas
     actualizarHeader();
+    
+    // Actualizar navegación según rol
+    actualizarNavegacionPorRol();
     
     // Si estamos en la página de login (index.html)
     const loginForm = document.getElementById('loginForm');
@@ -231,7 +291,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const passwordElement = document.getElementById('password');
             const errorDiv = document.getElementById('errorMessage');
             
-            if (!rolElement || !emailElement || !passwordElement) {
+            if (! rolElement || !emailElement || ! passwordElement) {
                 console.error('❌ Elementos del formulario no encontrados');
                 return;
             }
@@ -240,10 +300,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const email = emailElement.value.trim();
             const password = passwordElement.value;
             
-            console.log('Datos recibidos:', { rol, email, password: '****' });
+            console.log('Datos recibidos:', { rol, email, password:  '****' });
             
             // Validar que se seleccionó un rol
-            if (!rol) {
+            if (! rol) {
                 if (errorDiv) {
                     errorDiv.textContent = 'Por favor selecciona tu rol';
                     errorDiv.classList.add('show');
@@ -252,7 +312,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Validar dominio
-            if (!email.endsWith('@epn.edu.ec')) {
+            if (!email. endsWith('@epn.edu.ec')) {
                 if (errorDiv) {
                     errorDiv.textContent = 'Debes usar tu correo institucional (@epn.edu.ec)';
                     errorDiv.classList.add('show');
@@ -267,18 +327,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (errorDiv) {
                     errorDiv.classList.remove('show');
                 }
-                // Redirigir a página anterior o inicio.html
+                // Redirigir a página anterior o inicio. html
                 const urlAnterior = sessionStorage.getItem('paginaAnterior');
                 window.location.href = urlAnterior || 'inicio.html';
                 sessionStorage.removeItem('paginaAnterior');
             } else {
                 if (errorDiv) {
-                    errorDiv.textContent = resultado.mensaje;
+                    errorDiv.textContent = resultado. mensaje;
                     errorDiv.classList.add('show');
                 }
             }
         });
     }
-});
+});	
 
 console.log('✅ Auth temporal disponible - Usuarios hardcodeados listos');

@@ -29,8 +29,8 @@
 
     <!-- CSS -->
     <link rel="icon" type="image/png" href="images/logo_epn.png">
-    <link rel="stylesheet" href="framework.css">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/css/framework.css">
+    <link rel="stylesheet" href="/css/styles.css">
 
     <!-- Google Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

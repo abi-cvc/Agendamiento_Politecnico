@@ -13,9 +13,9 @@
 
     <!-- CSS -->
     <link rel="stylesheet" 
-          href="${pageContext.request.contextPath}/framework.css">
+          href="${pageContext.request.contextPath}/css/framework.css">
     <link rel="stylesheet" 
-          href="${pageContext.request.contextPath}/styles.css">
+          href="${pageContext.request.contextPath}/css/styles.css">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

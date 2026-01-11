@@ -8,8 +8,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Gestionar Especialidades</title>
     <link rel="icon" type="image/png" href="<%= request.getContextPath() %>/images/logo_epn.png">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/framework.css">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/styles.css">   
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/framework.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">   
 </head>
 
 <body>
@@ -49,7 +49,7 @@
             <div class="mensaje error">
                 ✗ ${sessionScope.error}
             </div>
-            <c: remove var="error" scope="session" />
+            <c:remove var="error" scope="session" />
         </c:if>
 
         <!-- Tabla de especialidades -->
@@ -67,7 +67,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <c: forEach var="esp" items="${especialidades}">
+                        <c:forEach var="esp" items="${especialidades}">
                             <tr>
                                 <td>${esp.idEspecialidad}</td>
                                 <td style="font-size: 1.5rem;">${esp.icono}</td>

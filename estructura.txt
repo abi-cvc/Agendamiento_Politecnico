@@ -156,21 +156,24 @@ C:.
     |   |   consultar-citas.jsp
     |   |   especialidades.html
     |   |   estructura.txt
-    |   |   framework.css
     |   |   index.html
     |   |   index.jsp
     |   |   inicio.html
     |   |   login-success.jsp
     |   |   rese¤as.html
-    |   |   styles.css
     |   |   test-login.jsp
     |   |   
+    |   +---css
+    |   |       framework.css
+    |   |       styles.css
+    |   |       
     |   +---images
     |   |       logo.svg
     |   |       logo_epn.png
     |   |       user.svg
     |   |       
     |   +---js
+    |   |       admin-especialidades.js
     |   |       agendamientos-calendario.js
     |   |       agendamientos.js
     |   |       atender-cita-nuevo.js
@@ -188,13 +191,17 @@ C:.
     |   |       MANIFEST.MF
     |   |       
     |   +---views
-    |   |       agendamientos.jsp
-    |   |       calendario.jsp
-    |   |       confirmacion.jsp
-    |   |       especialidades.jsp
-    |   |       lista-doctores.jsp
-    |   |       rese¤as.jsp
-    |   |       
+    |   |   |   agendamientos.jsp
+    |   |   |   calendario.jsp
+    |   |   |   confirmacion.jsp
+    |   |   |   especialidades.jsp
+    |   |   |   lista-doctores.jsp
+    |   |   |   rese¤as.jsp
+    |   |   |   
+    |   |   \---admin
+    |   |           form-especialidad.jsp
+    |   |           gestionarEspecialidades.jsp
+    |   |           
     |   \---WEB-INF
     |       +---classes
     |       |   |   add_passwords.sql
@@ -257,6 +264,7 @@ C:.
     |               gson-2.10.1.jar
     |               jakarta.activation-api-2.1.2.jar
     |               jakarta.el-api-6.0.0.jar
+    |               jakarta.persistence-api-3.1.0.jar
     |               jakarta.servlet.jsp.jstl-3.0.1.jar
     |               jakarta.servlet.jsp.jstl-api-3.0.0.jar
     |               jakarta.xml.bind-api-4.0.0.jar
@@ -322,24 +330,20 @@ C:.
     |           
     +---generated-sources
     |   \---annotations
-    +---m2e-wtp
-    |   \---web-resources
-    |       \---META-INF
-    |           |   MANIFEST.MF
-    |           |   
-    |           \---maven
-    |               \---01_MiProyecto
-    |                   \---01_MiProyecto
-    |                           pom.properties
-    |                           pom.xml
-    |                           
+    +---generated-test-sources
+    |   \---test-annotations
     +---maven-archiver
     |       pom.properties
     |       
     +---maven-status
     |   \---maven-compiler-plugin
-    |       \---compile
-    |           \---default-compile
+    |       +---compile
+    |       |   \---default-compile
+    |       |           createdFiles.lst
+    |       |           inputFiles.lst
+    |       |           
+    |       \---testCompile
+    |           \---default-testCompile
     |                   createdFiles.lst
     |                   inputFiles.lst
     |                   

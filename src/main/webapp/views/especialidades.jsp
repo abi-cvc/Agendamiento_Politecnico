@@ -15,8 +15,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bienestar Politécnico - Especialidades</title>
     <link rel="icon" type="image/png" href="<%= request.getContextPath() %>/images/logo_epn.png">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/framework.css">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/styles.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/framework.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

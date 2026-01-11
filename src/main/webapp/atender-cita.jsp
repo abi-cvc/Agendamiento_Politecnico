@@ -24,8 +24,8 @@
     <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/logo_epn.png">
 
     <!-- CSS (NO se modifica, solo rutas correctas) -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/framework.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/framework.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

@@ -7,8 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bienestar Politécnico - Doctores de ${especialidad.titulo}</title>
     <link rel="icon" type="image/png" href="../images/logo_epn.png">
-    <link rel="stylesheet" href="../framework.css">
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="./css/framework.css">
+    <link rel="stylesheet" href="./css/styles.css">
     
     <style>
         .doctores-section {
