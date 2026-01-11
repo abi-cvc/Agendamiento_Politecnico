@@ -1,4 +1,4 @@
-o// ===== FILTRADO DE CITAS EN TIEMPO REAL =====
+// ===== FILTRADO DE CITAS EN TIEMPO REAL =====
 document.addEventListener('DOMContentLoaded', function() {
     const filtroEstado = document.getElementById('filtroEstado');
     

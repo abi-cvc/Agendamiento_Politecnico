@@ -40,4 +40,5 @@ public abstract class DAOFactory {
     public abstract IDoctorDAO getDoctorDAO();
     public abstract IEspecialidadDAO getEspecialidadDAO();
     public abstract IDisponibilidadDAO getDisponibilidadDAO();
+    public abstract IEvaluacionDAO getEvaluacionDAO();
 }

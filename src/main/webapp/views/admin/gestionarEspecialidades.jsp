@@ -20,8 +20,10 @@
         <nav>
             <ul>
                 <li><a href="<%= request.getContextPath() %>/inicio.html">Inicio</a></li>
-                <li><a href="<%= request.getContextPath() %>/especialidades?accion=listarAdmin" class="font-bold">Especialidades</a></li>
-                <li><a href="<%= request.getContextPath() %>/doctores?accion=listarAdmin">Doctores</a></li>
+                <li><a href="<%= request.getContextPath() %>/doctores?accion=listarAdmin">Gestionar Doctores</a></li>
+                <li><a href="<%= request.getContextPath() %>/estudiantes?accion=listarAdmin">Gestionar Estudiantes</a></li>
+                <li><a href="<%= request.getContextPath() %>/especialidades?accion=listarAdmin" class="font-bold">Gestionar Especialidades</a></li>
+                <li><a href="<%= request.getContextPath() %>/evaluaciones?accion=listarAdmin">Gestionar Evaluaciones</a></li>
                 <li class="login mt-2 mb-2" id="authButton">
                     <a href="<%= request.getContextPath() %>/LogoutServlet" class="font-bold">Cerrar Sesión</a>
                 </li>

@@ -2373,6 +2373,787 @@ body.header-is-hidden .especialidades-menu {
     text-decoration: underline;
 }
 
+/* ===================================
+   ESTILOS PARA EVALUACIONES
+   ===================================*/
+
+/* === FILTROS EVALUACIONES === */
+.filtros-evaluaciones {
+    background: var(--color-7);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    margin-bottom: var(--spacing-xl);
+}
+
+.filtros-evaluaciones h3 {
+    margin-bottom: var(--spacing-lg);
+    color: var(--color-2);
+}
+
+.form-filtro {
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: flex-end;
+}
+
+.form-filtro .form-group {
+    flex: 1;
+}
+
+.form-filtro select {
+    width: 100%;
+}
+
+/* === ESTADÃSTICAS GENERALES === */
+.estadisticas-generales {
+    background: var(--color-7);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    margin-bottom: var(--spacing-xl);
+}
+
+.estadisticas-generales h3 {
+    margin-bottom: var(--spacing-lg);
+    color: var(--color-2);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.stat-card {
+    background: linear-gradient(135deg, var(--color-6) 0%, var(--color-5) 100%);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    transition: transform var(--transition-normal);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-card.destacado {
+    background: linear-gradient(135deg, var(--color-3) 0%, var(--color-4) 100%);
+    color: var(--color-7);
+}
+
+.stat-icon {
+    font-size: 3rem;
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-7);
+    border-radius: var(--radius-lg);
+    flex-shrink: 0;
+}
+
+.stat-card.destacado .stat-icon {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.stat-info h3,
+.stat-info h4 {
+    font-size: 0.9rem;
+    margin-bottom: var(--spacing-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-3);
+    line-height: 1;
+}
+
+.stat-number-large {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--color-7);
+    line-height: 1;
+}
+
+.stat-card.destacado .stat-number {
+    color: var(--color-7);
+}
+
+/* === LISTA DE EVALUACIONES === */
+.evaluaciones-lista {
+    background: var(--color-7);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+}
+
+.evaluaciones-lista h3 {
+    margin-bottom: var(--spacing-lg);
+    color: var(--color-2);
+}
+
+.calificacion-estrellas {
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+}
+
+.calificacion-numero {
+    font-size: 0.9rem;
+    color: var(--color-8);
+    font-weight: 600;
+    margin-left: var(--spacing-sm);
+}
+
+.comentario-preview {
+    max-width: 300px;
+    color: var(--color-8);
+    line-height: 1.5;
+}
+
+/* === ESTADÃSTICAS DEL DOCTOR === */
+.doctor-header {
+    background: linear-gradient(135deg, var(--color-2) 0%, #2c6d8a 100%);
+    padding: var(--spacing-2xl) var(--spacing-xl);
+    border-radius: var(--radius-xl);
+    margin-bottom: var(--spacing-xl);
+    color: var(--color-7);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-lg);
+}
+
+.doctor-info h1 {
+    color: var(--color-7);
+    margin-bottom: var(--spacing-sm);
+}
+
+.doctor-info .especialidad {
+    font-size: 1.2rem;
+    color: var(--color-4);
+    margin-bottom: var(--spacing-sm);
+}
+
+.doctor-info .contacto {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.estadisticas-doctor {
+    background: var(--color-7);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    margin-bottom: var(--spacing-xl);
+}
+
+.estadisticas-doctor h2 {
+    margin-bottom: var(--spacing-xl);
+}
+
+.estrellas-visual {
+    font-size: 1.8rem;
+    margin-top: var(--spacing-sm);
+    letter-spacing: 4px;
+}
+
+/* === DISTRIBUCIÃN DE ESTRELLAS === */
+.distribucion-estrellas {
+    margin-top: var(--spacing-2xl);
+}
+
+.distribucion-estrellas h3 {
+    margin-bottom: var(--spacing-lg);
+    color: var(--color-2);
+}
+
+.estrella-bar {
+    display: grid;
+    grid-template-columns: 100px 1fr 120px;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.estrella-label {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-2);
+}
+
+.progress-bar {
+    height: 28px;
+    background: var(--color-6);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(135deg, var(--color-3) 0%, var(--color-4) 100%);
+    border-radius: var(--radius-full);
+    transition: width 0.6s ease;
+}
+
+.estrella-count {
+    font-weight: 600;
+    color: var(--color-2);
+}
+
+/* === EVALUACIONES DETALLE === */
+.evaluaciones-detalle {
+    background: var(--color-7);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    margin-bottom: var(--spacing-xl);
+}
+
+.evaluaciones-detalle h2 {
+    margin-bottom: var(--spacing-xl);
+}
+
+.evaluaciones-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.evaluacion-card {
+    background: var(--color-6);
+    border: 2px solid var(--color-5);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    transition: all var(--transition-normal);
+}
+
+.evaluacion-card:hover {
+    border-color: var(--color-3);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.evaluacion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--color-5);
+}
+
+.evaluacion-estudiante {
+    font-weight: 600;
+    color: var(--color-2);
+}
+
+.evaluacion-calificacion {
+    font-size: 1.3rem;
+}
+
+.evaluacion-body {
+    margin-bottom: var(--spacing-md);
+}
+
+.comentario {
+    color: var(--color-8);
+    line-height: 1.7;
+    font-style: italic;
+}
+
+.comentario.sin-comentario {
+    color: var(--color-8);
+    opacity: 0.6;
+}
+
+.evaluacion-footer {
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--color-5);
+}
+
+.evaluacion-footer .fecha {
+    font-size: 0.85rem;
+    color: var(--color-8);
+}
+
+/* === ACCIONES FOOTER === */
+.acciones-footer {
+    text-align: center;
+    margin-top: var(--spacing-2xl);
+}
+
+/* === MODAL === */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background: var(--color-7);
+    border-radius: var(--radius-xl);
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-xl);
+    border-bottom: 2px solid var(--color-5);
+}
+
+.modal-header h2 {
+    margin: 0;
+    color: var(--color-2);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--color-8);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all var(--transition-fast);
+}
+
+.modal-close:hover {
+    background: var(--color-5);
+    color: var(--color-2);
+}
+
+.modal-body {
+    padding: var(--spacing-xl);
+}
+
+/* === RANKING === */
+.ranking-lista {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.ranking-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background: var(--color-6);
+    border: 2px solid var(--color-5);
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-normal);
+}
+
+.ranking-item:hover {
+    border-color: var(--color-3);
+    transform: translateX(5px);
+}
+
+.ranking-item.top-1 {
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+    border-color: #ffd700;
+}
+
+.ranking-item.top-2 {
+    background: linear-gradient(135deg, #c0c0c0 0%, #e8e8e8 100%);
+    border-color: #c0c0c0;
+}
+
+.ranking-item.top-3 {
+    background: linear-gradient(135deg, #cd7f32 0%, #e39f5f 100%);
+    border-color: #cd7f32;
+}
+
+.ranking-numero {
+    width: 50px;
+    height: 50px;
+    background: var(--gradient-accent);
+    color: var(--color-7);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.ranking-info {
+    flex: 1;
+}
+
+.ranking-info h4 {
+    margin-bottom: var(--spacing-xs);
+    color: var(--color-2);
+}
+
+.ranking-stats {
+    display: flex;
+    gap: var(--spacing-lg);
+    font-size: 0.9rem;
+}
+
+.ranking-stats .promedio {
+    color: #ff9800;
+    font-weight: 600;
+}
+
+.ranking-stats .total {
+    color: var(--color-8);
+}
+
+/* === REPORTE === */
+.reporte-container {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: var(--spacing-2xl);
+    background: var(--color-7);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+}
+
+.reporte-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xl);
+    padding-bottom: var(--spacing-xl);
+    border-bottom: 3px solid var(--color-3);
+    margin-bottom: var(--spacing-2xl);
+}
+
+.logo-reporte {
+    width: 100px;
+    height: auto;
+}
+
+.reporte-title h1 {
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-2);
+}
+
+.reporte-subtitle {
+    color: var(--color-3);
+    font-size: 1.1rem;
+    margin-bottom: var(--spacing-xs);
+}
+
+.reporte-fecha {
+    color: var(--color-8);
+    font-size: 0.9rem;
+}
+
+/* Secciones del reporte */
+.reporte-doctor-info,
+.reporte-resumen,
+.reporte-distribucion,
+.reporte-analisis,
+.reporte-comentarios {
+    margin-bottom: var(--spacing-2xl);
+    padding: var(--spacing-xl);
+    background: var(--color-6);
+    border-radius: var(--radius-lg);
+}
+
+.reporte-doctor-info h2,
+.reporte-resumen h2,
+.reporte-distribucion h2,
+.reporte-analisis h2,
+.reporte-comentarios h2 {
+    margin-bottom: var(--spacing-lg);
+    color: var(--color-2);
+}
+
+.doctor-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-lg);
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.info-label {
+    font-size: 0.85rem;
+    color: var(--color-8);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    font-size: 1.1rem;
+    color: var(--color-2);
+    font-weight: 600;
+}
+
+/* Resumen Cards */
+.resumen-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-lg);
+}
+
+.resumen-card {
+    background: var(--color-7);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+}
+
+.resumen-card.promedio {
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+}
+
+.resumen-card.total {
+    background: linear-gradient(135deg, var(--color-3) 0%, var(--color-4) 100%);
+    color: var(--color-7);
+}
+
+.resumen-card.estado {
+    background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+    color: var(--color-7);
+}
+
+.resumen-icon {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.resumen-numero {
+    font-size: 3rem;
+    font-weight: 800;
+    margin: var(--spacing-md) 0;
+}
+
+.resumen-texto {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.estrellas-promedio {
+    font-size: 1.5rem;
+    margin-top: var(--spacing-sm);
+}
+
+.estado-EXCELENTE { color: #10b981; }
+.estado-MUY.BUENO { color: #34d399; }
+.estado-BUENO { color: #60a5fa; }
+.estado-REGULAR { color: #fbbf24; }
+.estado-REQUIERE.ATENCIÃN { color: #ef4444; }
+
+/* Distribución */
+.distribucion-tabla {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.distribucion-fila {
+    display: grid;
+    grid-template-columns: 120px 1fr 150px;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.distribucion-label {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.distribucion-barra-container {
+    height: 32px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+
+.distribucion-barra {
+    height: 100%;
+    background: linear-gradient(135deg, var(--color-3) 0%, var(--color-4) 100%);
+    transition: width 0.6s ease;
+}
+
+.distribucion-stats {
+    display: flex;
+    gap: var(--spacing-sm);
+    font-weight: 600;
+}
+
+.distribucion-count {
+    color: var(--color-2);
+    font-size: 1.1rem;
+}
+
+.distribucion-porcentaje {
+    color: var(--color-8);
+    font-size: 0.9rem;
+}
+
+/* Análisis */
+.analisis-card {
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    border-left: 5px solid;
+}
+
+.analisis-card.excelente {
+    background: #d1fae5;
+    border-color: #10b981;
+}
+
+.analisis-card.muy-bueno {
+    background: #dbeafe;
+    border-color: #3b82f6;
+}
+
+.analisis-card.regular {
+    background: #fef3c7;
+    border-color: #f59e0b;
+}
+
+.analisis-card.atencion {
+    background: #fee2e2;
+    border-color: #ef4444;
+}
+
+.analisis-card h3 {
+    margin-bottom: var(--spacing-lg);
+}
+
+.analisis-card ul {
+    list-style-position: inside;
+    line-height: 2;
+}
+
+/* Comentarios */
+.comentarios-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+}
+
+.comentario-item {
+    background: var(--color-7);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    border-left: 3px solid var(--color-3);
+}
+
+.comentario-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-sm);
+}
+
+.comentario-rating {
+    font-size: 1rem;
+}
+
+.comentario-fecha {
+    font-size: 0.8rem;
+    color: var(--color-8);
+}
+
+.comentario-texto {
+    color: var(--color-8);
+    line-height: 1.6;
+    font-size: 0.9rem;
+}
+
+/* Footer Reporte */
+.reporte-footer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-xl);
+    padding: var(--spacing-xl);
+    background: var(--color-6);
+    border-radius: var(--radius-lg);
+    margin-top: var(--spacing-2xl);
+}
+
+.footer-info p {
+    margin-bottom: var(--spacing-xs);
+    font-size: 0.9rem;
+    color: var(--color-8);
+}
+
+.footer-firma {
+    text-align: center;
+}
+
+.firma-linea {
+    width: 250px;
+    height: 2px;
+    background: var(--color-8);
+    margin: 0 auto var(--spacing-md);
+}
+
+.firma-cargo {
+    font-size: 0.85rem;
+    color: var(--color-8);
+    font-style: italic;
+}
+
+/* Acciones Reporte */
+.reporte-acciones {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-xl);
+}
+
+/* === ANIMACIONES === */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
 
 /* ===================================
    RESPONSIVE DESIGN
@@ -2599,6 +3380,41 @@ body.header-is-hidden .especialidades-menu {
     .form-actions a {
         width: 100%;
         text-align: center;
+    }
+    
+    /* === GESTION DE EVALUACIONES: ADMINISTRADOR === */
+     .stats-grid,
+    .resumen-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .doctor-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .evaluaciones-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .estrella-bar {
+        grid-template-columns: 80px 1fr 100px;
+    }
+
+    .form-filtro {
+        flex-direction: column;
+    }
+
+    .doctor-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .comentarios-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .reporte-footer {
+        grid-template-columns: 1fr;
     }
 }
 

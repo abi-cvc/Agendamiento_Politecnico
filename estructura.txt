@@ -38,6 +38,7 @@ C:.
 |   |   |   |       DisponibilidadServlet.java
 |   |   |   |       DoctorController.java
 |   |   |   |       EspecialidadController.java
+|   |   |   |       EvaluacionController.java
 |   |   |   |       LoginServlet.java
 |   |   |   |       LogoutServlet.java
 |   |   |   |       
@@ -50,11 +51,13 @@ C:.
 |   |   |   |   |       DoctorDAO.java
 |   |   |   |   |       EspecialidadDAO.java
 |   |   |   |   |       EstudianteDAO.java
+|   |   |   |   |       EvaluacionDAO.java
 |   |   |   |   |       GenericDAO.java
 |   |   |   |   |       ICitaDAO.java
 |   |   |   |   |       IDisponibilidadDAO.java
 |   |   |   |   |       IDoctorDAO.java
 |   |   |   |   |       IEspecialidadDAO.java
+|   |   |   |   |       IEvaluacionDAO.java
 |   |   |   |   |       JPADAOFactory.java
 |   |   |   |   |       JPAGenericDAO.java
 |   |   |   |   |       
@@ -65,6 +68,8 @@ C:.
 |   |   |   |           Doctor.java
 |   |   |   |           Especialidad.java
 |   |   |   |           Estudiante.java
+|   |   |   |           Evaluacio.java
+|   |   |   |           Evaluacion
 |   |   |   |           
 |   |   |   \---util
 |   |   |           DatabaseConnection.java
@@ -76,6 +81,7 @@ C:.
 |   |   |   |   crear_usuario_prueba.sql
 |   |   |   |   doctores_disponibilidad.sql
 |   |   |   |   especialidades.sql
+|   |   |   |   evaluaciones.sql
 |   |   |   |   init_database.sql
 |   |   |   |   insert_citas_prueba.sql
 |   |   |   |   insert_disponibilidades.sql
@@ -112,6 +118,7 @@ C:.
 |   |       |       
 |   |       +---js
 |   |       |       admin-especialidades.js
+|   |       |       admin-evaluaciones.js
 |   |       |       agendamientos-calendario.js
 |   |       |       agendamientos.js
 |   |       |       atender-cita-nuevo.js
@@ -137,8 +144,10 @@ C:.
 |   |           |   rese¤as.jsp
 |   |           |   
 |   |           \---admin
+|   |                   evaluaciones-por-doctor.jsp
 |   |                   form-especialidad.jsp
 |   |                   gestionarEspecialidades.jsp
+|   |                   gestionarEvaluaciones.jsp
 |   |                   
 |   \---test
 |       +---java
@@ -278,6 +287,7 @@ C:.
     |   |   crear_usuario_prueba.sql
     |   |   doctores_disponibilidad.sql
     |   |   especialidades.sql
+    |   |   evaluaciones.sql
     |   |   init_database.sql
     |   |   insert_citas_prueba.sql
     |   |   insert_disponibilidades.sql
@@ -322,6 +332,7 @@ C:.
     |   |           Doctor.class
     |   |           Especialidad.class
     |   |           Estudiante.class
+    |   |           Evaluacion
     |   |           
     |   \---util
     |           DatabaseConnection.class
@@ -332,6 +343,17 @@ C:.
     |   \---annotations
     +---generated-test-sources
     |   \---test-annotations
+    +---m2e-wtp
+    |   \---web-resources
+    |       \---META-INF
+    |           |   MANIFEST.MF
+    |           |   
+    |           \---maven
+    |               \---01_MiProyecto
+    |                   \---01_MiProyecto
+    |                           pom.properties
+    |                           pom.xml
+    |                           
     +---maven-archiver
     |       pom.properties
     |       

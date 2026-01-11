@@ -25,4 +25,9 @@ public class JPADAOFactory extends DAOFactory {
     public IDisponibilidadDAO getDisponibilidadDAO() {
         return new DisponibilidadDAO();
     }
+
+	@Override
+	public IEvaluacionDAO getEvaluacionDAO() {
+		return new EvaluacionDAO();
+	}
 }
