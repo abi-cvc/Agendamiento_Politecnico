@@ -80,6 +80,14 @@ public class Administrador implements Serializable {
     public boolean gestionarEspecialidades() {
         return this.activo && ("ADMIN".equals(this.rol) || "SUPER_ADMIN".equals(this.rol));
     }
+
+    /**
+     * Método gestionarEstudiantes() - Indica si el administrador puede gestionar estudiantes
+     * @return true si tiene permisos para gestionar estudiantes
+     */
+    public boolean gestionarEstudiantes() {
+        return this.activo && ("ADMIN".equals(this.rol) || "SUPER_ADMIN".equals(this.rol));
+    }
     
     /**
      * Método cerrarSesion() - Cierra la sesión del administrador

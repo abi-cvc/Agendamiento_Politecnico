@@ -9,7 +9,6 @@ import model.dao.DAOFactory;
 import model.entity.Estudiante;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 
 /**
@@ -84,68 +83,48 @@ public class EstudianteAdminController extends HttpServlet {
             // Obtener todos los estudiantes
             List<Estudiante> estudiantes = factory.getEstudianteDAO().getAll();
             
-            // Si piden JSON devolver JSON
-            String format = request.getParameter("format");
-            if ("json".equalsIgnoreCase(format) || "XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
-                response.setContentType("application/json;charset=UTF-8");
-                try (PrintWriter out = response.getWriter()) {
-                    out.print(estudiantesToJson(estudiantes));
-                    out.flush();
-                    return;
-                }
-            }
-            
             request.setAttribute("estudiantes", estudiantes);
             
-            request.getRequestDispatcher("/gestionar-estudiantes.html").forward(request, response);
+            // Forward to JSP under views/admin
+            request.getRequestDispatcher("/views/admin/gestionar-estudiantes.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
             request.getSession().setAttribute("error", "Error al cargar estudiantes: " + e.getMessage());
-            response.sendRedirect(request.getContextPath() + "/inicio-admin.html");
+            response.sendRedirect(request.getContextPath() + "/inicio-admin.jsp");
         }
     }
     
     /**
-     * Busca un estudiante por cédula
+     * Busca un estudiante por ID de paciente (cédula)
      */
     private void buscarEstudiante(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        String cedula = request.getParameter("cedula");
+        String idPaciente = request.getParameter("cedula"); // El parámetro se llama "cedula" pero es el idPaciente
         
         try {
-            if (cedula != null && !cedula.trim().isEmpty()) {
-                Estudiante estudiante = factory.getEstudianteDAO().buscarPorIdPaciente(cedula);
+            if (idPaciente != null && !idPaciente.trim().isEmpty()) {
+                Estudiante estudiante = factory.getEstudianteDAO().buscarPorIdPaciente(idPaciente);
                 
                 if (estudiante != null) {
                     // Crear lista con un solo estudiante
                     List<Estudiante> estudiantes = java.util.Collections.singletonList(estudiante);
-                    // Responder JSON si se pidió
-                    String format = request.getParameter("format");
-                    if ("json".equalsIgnoreCase(format) || "XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
-                        response.setContentType("application/json;charset=UTF-8");
-                        try (PrintWriter out = response.getWriter()) {
-                            out.print(estudiantesToJson(estudiantes));
-                            out.flush();
-                            return;
-                        }
-                    }
                     request.setAttribute("estudiantes", estudiantes);
                 } else {
                     request.setAttribute("estudiantes", java.util.Collections.emptyList());
-                    request.getSession().setAttribute("error", "No se encontró ningún estudiante con esa cédula");
+                    request.getSession().setAttribute("error", "No se encontró ningún estudiante con ese ID de paciente");
                 }
             } else {
-                // Si no hay cédula, listar todos
+                // Si no hay idPaciente, listar todos
                 List<Estudiante> estudiantes = factory.getEstudianteDAO().getAll();
                 request.setAttribute("estudiantes", estudiantes);
             }
             
-            request.getRequestDispatcher("/gestionar-estudiantes.html").forward(request, response);
+            request.getRequestDispatcher("/views/admin/gestionar-estudiantes.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
             request.getSession().setAttribute("error", "Error en la búsqueda: " + e.getMessage());
-            response.sendRedirect(request.getContextPath() + "/admin/estudiantes?accion=listar");
+            response.sendRedirect(request.getContextPath() + "/EstudianteAdminController?accion=listar");
         }
     }
     
@@ -156,37 +135,37 @@ public class EstudianteAdminController extends HttpServlet {
             throws ServletException, IOException {
         
         try {
-            // Obtener datos del formulario
-            String cedula = request.getParameter("cedula");
+            // Obtener datos del formulario - usar nombres de campos de la BD real
+            String idPaciente = request.getParameter("cedula"); // El form usa "cedula" pero es idPaciente
             String nombre = request.getParameter("nombre");
             String apellido = request.getParameter("apellido");
             String email = request.getParameter("email");
             
-            // Verificar que no exista un estudiante con esa cédula
-            if (factory.getEstudianteDAO().existePorIdPaciente(cedula)) {
-                request.getSession().setAttribute("error", "Ya existe un estudiante con esa cédula");
-                response.sendRedirect(request.getContextPath() + "/admin/estudiantes?accion=listar");
+            // Verificar que no exista un estudiante con ese idPaciente
+            if (factory.getEstudianteDAO().existePorIdPaciente(idPaciente)) {
+                request.getSession().setAttribute("error", "Ya existe un estudiante con ese ID de paciente");
+                response.sendRedirect(request.getContextPath() + "/EstudianteAdminController?accion=listar");
                 return;
             }
             
-            // Crear nuevo estudiante usando solo campos presentes en la BD
-            Estudiante nuevoEstudiante = new Estudiante(cedula, nombre, apellido, email);
+            // Crear nuevo estudiante usando el constructor correcto
+            Estudiante nuevoEstudiante = new Estudiante(idPaciente, nombre, apellido, email);
             
             // Guardar en la base de datos
             factory.getEstudianteDAO().create(nuevoEstudiante);
             
             request.getSession().setAttribute("mensaje", "Estudiante creado exitosamente");
-            response.sendRedirect(request.getContextPath() + "/admin/estudiantes?accion=listar");
+            response.sendRedirect(request.getContextPath() + "/EstudianteAdminController?accion=listar");
             
         } catch (Exception e) {
             e.printStackTrace();
             request.getSession().setAttribute("error", "Error al crear estudiante: " + e.getMessage());
-            response.sendRedirect(request.getContextPath() + "/admin/estudiantes?accion=listar");
+            response.sendRedirect(request.getContextPath() + "/EstudianteAdminController?accion=listar");
         }
     }
     
     /**
-     * Actualiza un estudiante existente (solo los campos existentes en BD)
+     * Actualiza un estudiante existente
      */
     private void actualizarEstudiante(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -201,7 +180,7 @@ public class EstudianteAdminController extends HttpServlet {
             Estudiante estudiante = factory.getEstudianteDAO().getById(id);
             
             if (estudiante != null) {
-                // Actualizar solo los campos permitidos (según BD)
+                // Actualizar campos usando los métodos correctos según la entidad
                 estudiante.setNombreEstudiante(nombre);
                 estudiante.setApellidoEstudiante(apellido);
                 estudiante.setCorreoEstudiante(email);
@@ -214,37 +193,13 @@ public class EstudianteAdminController extends HttpServlet {
                 request.getSession().setAttribute("error", "Estudiante no encontrado");
             }
             
-            response.sendRedirect(request.getContextPath() + "/admin/estudiantes?accion=listar");
+            response.sendRedirect(request.getContextPath() + "/EstudianteAdminController?accion=listar");
             
         } catch (Exception e) {
             e.printStackTrace();
             request.getSession().setAttribute("error", "Error al actualizar estudiante: " + e.getMessage());
-            response.sendRedirect(request.getContextPath() + "/admin/estudiantes?accion=listar");
+            response.sendRedirect(request.getContextPath() + "/EstudianteAdminController?accion=listar");
         }
     }
     
-    // ====== JSON helpers ======
-    private String escapeJson(String s) {
-        if (s == null) return "";
-        return s.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r");
-    }
-    
-    private String estudiantesToJson(List<Estudiante> estudiantes) {
-        StringBuilder sb = new StringBuilder();
-        sb.append('[');
-        boolean first = true;
-        for (Estudiante e : estudiantes) {
-            if (!first) sb.append(',');
-            first = false;
-            sb.append('{');
-            sb.append("\"idEstudiante\":").append(e.getIdEstudiante()).append(',');
-            sb.append("\"idPaciente\":\"").append(escapeJson(e.getIdPaciente())).append("\"").append(',');
-            sb.append("\"nombreEstudiante\":\"").append(escapeJson(e.getNombreEstudiante())).append("\"").append(',');
-            sb.append("\"apellidoEstudiante\":\"").append(escapeJson(e.getApellidoEstudiante())).append("\"").append(',');
-            sb.append("\"correoEstudiante\":\"").append(escapeJson(e.getCorreoEstudiante())).append("\"");
-            sb.append('}');
-        }
-        sb.append(']');
-        return sb.toString();
-    }
 }

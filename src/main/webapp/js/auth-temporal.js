@@ -259,8 +259,8 @@ document.addEventListener('DOMContentLoaded', function() {
 function redirigirSegunRol(rol) {
     switch(rol) {
         case 'admin':
-            console.log('👤 Admin detectado, redirigiendo a inicio-admin.html');
-            window.location.href = 'inicio-admin.html';
+            console.log('👤 Admin detectado, redirigiendo a inicio-admin.jsp');
+            window.location.href = 'inicio-admin.jsp';
             break;
         case 'doctor':
             console.log('👨‍⚕️ Doctor detectado, redirigiendo a inicio-doctor.html');

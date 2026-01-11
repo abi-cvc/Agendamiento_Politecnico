@@ -10,7 +10,6 @@ import model.entity.Doctor;
 import model.entity.Especialidad;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 
 /**
@@ -91,25 +90,15 @@ public class DoctorAdminController extends HttpServlet {
             // Obtener especialidades para el select del formulario
             List<Especialidad> especialidades = factory.getEspecialidadDAO().getAll();
             
-            // Si solicitan JSON, devolver JSON
-            String format = request.getParameter("format");
-            if ("json".equalsIgnoreCase(format) || "XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
-                response.setContentType("application/json;charset=UTF-8");
-                try (PrintWriter out = response.getWriter()) {
-                    out.print(doctoresToJson(doctores));
-                    out.flush();
-                    return;
-                }
-            }
-            
             request.setAttribute("doctores", doctores);
             request.setAttribute("especialidades", especialidades);
             
-            request.getRequestDispatcher("/gestionar-doctores.html").forward(request, response);
+            // Forward to JSP under views/admin
+            request.getRequestDispatcher("/views/admin/gestionar-doctores.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
             request.getSession().setAttribute("error", "Error al cargar doctores: " + e.getMessage());
-            response.sendRedirect(request.getContextPath() + "/inicio-admin.html");
+            response.sendRedirect(request.getContextPath() + "/inicio-admin.jsp");
         }
     }
     
@@ -128,16 +117,6 @@ public class DoctorAdminController extends HttpServlet {
                 if (doctor != null) {
                     // Crear lista con un solo doctor
                     List<Doctor> doctores = java.util.Collections.singletonList(doctor);
-                    // Responder JSON si se pidió
-                    String format = request.getParameter("format");
-                    if ("json".equalsIgnoreCase(format) || "XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
-                        response.setContentType("application/json;charset=UTF-8");
-                        try (PrintWriter out = response.getWriter()) {
-                            out.print(doctoresToJson(doctores));
-                            out.flush();
-                            return;
-                        }
-                    }
                     request.setAttribute("doctores", doctores);
                 } else {
                     request.setAttribute("doctores", java.util.Collections.emptyList());
@@ -153,11 +132,11 @@ public class DoctorAdminController extends HttpServlet {
             List<Especialidad> especialidades = factory.getEspecialidadDAO().getAll();
             request.setAttribute("especialidades", especialidades);
             
-            request.getRequestDispatcher("/gestionar-doctores.html").forward(request, response);
+            request.getRequestDispatcher("/views/admin/gestionar-doctores.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
             request.getSession().setAttribute("error", "Error en la búsqueda: " + e.getMessage());
-            response.sendRedirect(request.getContextPath() + "/admin/doctores?accion=listar");
+            response.sendRedirect(request.getContextPath() + "/DoctorAdminController?accion=listar");
         }
     }
     
@@ -181,7 +160,7 @@ public class DoctorAdminController extends HttpServlet {
             // Verificar que no exista un doctor con esa cédula
             if (factory.getDoctorDAO().obtenerPorCedula(cedula) != null) {
                 request.getSession().setAttribute("error", "Ya existe un doctor con esa cédula");
-                response.sendRedirect(request.getContextPath() + "/admin/doctores?accion=listar");
+                response.sendRedirect(request.getContextPath() + "/DoctorAdminController?accion=listar");
                 return;
             }
             
@@ -190,7 +169,7 @@ public class DoctorAdminController extends HttpServlet {
             
             if (especialidad == null) {
                 request.getSession().setAttribute("error", "Especialidad no encontrada");
-                response.sendRedirect(request.getContextPath() + "/admin/doctores?accion=listar");
+                response.sendRedirect(request.getContextPath() + "/DoctorAdminController?accion=listar");
                 return;
             }
             
@@ -205,12 +184,12 @@ public class DoctorAdminController extends HttpServlet {
             factory.getDoctorDAO().create(nuevoDoctor);
             
             request.getSession().setAttribute("mensaje", "Doctor creado exitosamente");
-            response.sendRedirect(request.getContextPath() + "/admin/doctores?accion=listar");
+            response.sendRedirect(request.getContextPath() + "/DoctorAdminController?accion=listar");
             
         } catch (Exception e) {
             e.printStackTrace();
             request.getSession().setAttribute("error", "Error al crear doctor: " + e.getMessage());
-            response.sendRedirect(request.getContextPath() + "/admin/doctores?accion=listar");
+            response.sendRedirect(request.getContextPath() + "/DoctorAdminController?accion=listar");
         }
     }
     
@@ -243,12 +222,12 @@ public class DoctorAdminController extends HttpServlet {
                 request.getSession().setAttribute("error", "Doctor no encontrado");
             }
             
-            response.sendRedirect(request.getContextPath() + "/admin/doctores?accion=listar");
+            response.sendRedirect(request.getContextPath() + "/DoctorAdminController?accion=listar");
             
         } catch (Exception e) {
             e.printStackTrace();
             request.getSession().setAttribute("error", "Error al actualizar doctor: " + e.getMessage());
-            response.sendRedirect(request.getContextPath() + "/admin/doctores?accion=listar");
+            response.sendRedirect(request.getContextPath() + "/DoctorAdminController?accion=listar");
         }
     }
     
@@ -277,49 +256,13 @@ public class DoctorAdminController extends HttpServlet {
                 request.getSession().setAttribute("error", "Doctor no encontrado");
             }
             
-            response.sendRedirect(request.getContextPath() + "/admin/doctores?accion=listar");
+            response.sendRedirect(request.getContextPath() + "/DoctorAdminController?accion=listar");
             
         } catch (Exception e) {
             e.printStackTrace();
             request.getSession().setAttribute("error", "Error al cambiar estado: " + e.getMessage());
-            response.sendRedirect(request.getContextPath() + "/admin/doctores?accion=listar");
+            response.sendRedirect(request.getContextPath() + "/DoctorAdminController?accion=listar");
         }
     }
     
-    // ======= JSON helpers =======
-    private String escapeJson(String s) {
-        if (s == null) return "";
-        return s.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r");
-    }
-    
-    private String doctoresToJson(List<Doctor> doctores) {
-        StringBuilder sb = new StringBuilder();
-        sb.append('[');
-        boolean first = true;
-        for (Doctor d : doctores) {
-            if (!first) sb.append(',');
-            first = false;
-            sb.append('{');
-            sb.append("\"idDoctor\":").append(d.getIdDoctor()).append(',');
-            sb.append("\"cedula\":\"").append(escapeJson(d.getCedula())).append("\"").append(',');
-            sb.append("\"nombre\":\"").append(escapeJson(d.getNombre())).append("\"").append(',');
-            sb.append("\"apellido\":\"").append(escapeJson(d.getApellido())).append("\"").append(',');
-            sb.append("\"email\":\"").append(escapeJson(d.getEmail())).append("\"").append(',');
-            sb.append("\"telefono\":\"").append(escapeJson(d.getTelefono())).append("\"").append(',');
-            sb.append("\"foto\":\"").append(escapeJson(d.getFoto())).append("\"").append(',');
-            sb.append("\"descripcion\":\"").append(escapeJson(d.getDescripcion())).append("\"").append(',');
-            sb.append("\"activo\":").append(d.isActivo()).append(',');
-            if (d.getEspecialidad() != null) {
-                sb.append("\"especialidad\":{");
-                sb.append("\"idEspecialidad\":").append(d.getEspecialidad().getIdEspecialidad()).append(',');
-                sb.append("\"titulo\":\"").append(escapeJson(d.getEspecialidad().getTitulo())).append("\"");
-                sb.append('}');
-            } else {
-                sb.append("\"especialidad\":null");
-            }
-            sb.append('}');
-        }
-        sb.append(']');
-        return sb.toString();
-    }
 }

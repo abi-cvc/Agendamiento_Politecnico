@@ -12,6 +12,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
+    <meta http-equiv="refresh" content="0; url=inicio-admin.jsp">
+    <!-- Deprecated: moved to inicio-admin.jsp -->
 </head>
 
 <body>
@@ -22,8 +24,8 @@
     <nav>
         <ul>
             <li><a href="inicio-admin.html" class="font-bold">Inicio</a></li>
-            <li><a href="DoctorAdminController" class="font-bold">Gestionar Doctores</a></li>
-            <li><a href="EstudianteAdminController" class="font-bold">Gestionar Estudiantes</a></li>
+            <li><a href="admin/doctores" class="font-bold">Gestionar Doctores</a></li>
+            <li><a href="admin/estudiantes" class="font-bold">Gestionar Estudiantes</a></li>
             <li><a href="especialidades?accion=listarAdmin" class="font-bold">Gestionar Especialidades</a></li>
             <li><a href="EvaluacionController?accion=listar" class="font-bold">Gestionar Evaluaciones</a></li>
             <li class="login mt-2 mb-2" id="authButton">
@@ -44,7 +46,7 @@
         <h2>👨‍⚕️ Gestionar Doctores</h2>
         <p>Administra la información de los profesionales de salud, sus especialidades y horarios de atención.</p>
         <div class="mt-4">
-            <a href="DoctorAdminController" class="btn btn-primary">
+            <a href="admin/doctores" class="btn btn-primary">
                 Ir a Doctores
             </a>
         </div>
@@ -54,7 +56,7 @@
         <h2>👥 Gestionar Estudiantes</h2>
         <p>Administra los estudiantes registrados en el sistema, actualiza su información y estado.</p>
         <div class="mt-4">
-            <a href="EstudianteAdminController" class="btn btn-primary">
+            <a href="admin/estudiantes" class="btn btn-primary">
                 Ir a Estudiantes
             </a>
         </div>
@@ -94,8 +96,8 @@
             <h3>Panel Admin</h3>
             <ul class="footer-links">
                 <li><a href="inicio-admin.html">Inicio</a></li>
-                <li><a href="DoctorAdminController">Gestionar Doctores</a></li>
-                <li><a href="EstudianteAdminController">Gestionar Estudiantes</a></li>
+                <li><a href="admin/doctores">Gestionar Doctores</a></li>
+                <li><a href="admin/estudiantes">Gestionar Estudiantes</a></li>
                 <li><a href="especialidades?accion=listarAdmin">Gestionar Especialidades</a></li>
             </ul>
         </div>
