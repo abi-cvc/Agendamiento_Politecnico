@@ -1,113 +1,48 @@
 // ===== AUTENTICACIÓN TEMPORAL CON USUARIOS HARDCODEADOS =====
-// Este archivo es temporal mientras se soluciona la conexión a BD
+// ACTUALIZADO: Redirige según el rol del usuario y permite enviar al servlet de login cuando se usa el formulario real
 
-// ===== BASE DE DATOS SIMULADA =====
+// ===== BASE DE DATOS SIMULADA (solo para desarrollo rápido) =====
 const usuariosDB = [
     {
         id: 1,
         nombre: "Carol Velasquez",
         email: "carol.velasquez@epn.edu.ec",
         password: "123456",
-        carrera: "Ingeniería en Sistemas",
-        rol: "estudiante"
+        rol: "estudiante",
+        idPaciente: '1725896347'
     },
-    {
-        id: 2,
-        nombre: "Erick Caicedo",
-        email: "erick.caicedo@epn.edu.ec",
-        password: "123456",
-        carrera: "Ingeniería en Sistemas",
-        rol: "estudiante"
-    },
-    {
-        id: 3,
-        nombre: "Belen Cholango",
-        email: "belen.cholango@epn.edu.ec",
-        password: "123456",
-        carrera: "Ingeniería en Sistemas",
-        rol: "estudiante"
-    },
-    {
-        id: 4,
-        nombre: "Nohemy Llumiquinga",
-        email: "nohemy.llumiquinga@epn.edu.ec",
-        password: "123456",
-        carrera: "Ingeniería en Sistemas",
-        rol: "estudiante"
-    },
-    // Doctores por especialidad
-    {
-        id: 5,
-        nombre: "Dr. Roberto García",
-        email: "doctor.nutricion@epn.edu.ec",
-        password: "doc123",
-        carrera: "Nutrición",
-        rol: "doctor",
-        especialidad: "nutricion"
-    },
-    {
-        id: 6,
-        nombre: "Dra. Ana Martínez",
-        email: "doctor.odontologia@epn.edu.ec",
-        password: "doc123",
-        carrera: "Odontología",
-        rol: "doctor",
-        especialidad: "odontologia"
-    },
-    {
-        id: 7,
-        nombre: "Dr. Luis Fernández",
-        email: "doctor.psicologia@epn.edu.ec",
-        password: "doc123",
-        carrera: "Psicología",
-        rol: "doctor",
-        especialidad: "psicologia"
-    },
-    {
-        id: 8,
-        nombre: "Dra. María Sánchez",
-        email: "doctor.medicina@epn.edu.ec",
-        password: "doc123",
-        carrera: "Medicina General",
-        rol: "doctor",
-        especialidad: "medicina-general"
-    },
-    {
-        id: 9,
-        nombre: "Enf. Patricia Ruiz",
-        email: "doctor.enfermeria@epn.edu.ec",
-        password: "doc123",
-        carrera: "Enfermería",
-        rol: "doctor",
-        especialidad: "enfermeria"
-    },
-    // Administrador
+	{
+	        id: 1,
+	        nombre: "Carol Velasquez",
+	        email: "carol.velasquez@epn.edu.ec",
+	        password: "123456",
+	        rol: "estudiante",
+	        idPaciente: '1725896347'
+	    },
     {
         id: 10,
         nombre: "Admin Bienestar",
         email: "admin@epn.edu.ec",
         password: "admin123",
-        carrera: "Administración",
-        rol: "admin"
+        rol: "admin",
+        idAdmin: 'admin001'
     }
 ];
 
 // ===== FUNCIONES DE AUTENTICACIÓN =====
 
-// Iniciar sesión
 function loginTemporal(email, password, rol) {
     console.log('🔐 Login temporal - Buscando usuario:', email, 'rol:', rol);
     const usuario = usuariosDB.find(u => u.email === email && u.password === password && u.rol === rol);
     
     if (usuario) {
-        // Guardar sesión (sin la contraseña)
         const sesion = {
             id: usuario.id,
             nombre: usuario.nombre,
             email: usuario.email,
-            carrera: usuario.carrera,
             rol: usuario.rol,
-            especialidad: usuario.especialidad || null,
+            idPaciente: usuario.idPaciente || null,
+            idAdmin: usuario.idAdmin || null,
             loginTime: new Date().toISOString()
         };
         sessionStorage.setItem('usuarioActual', JSON.stringify(sesion));
@@ -115,25 +50,23 @@ function loginTemporal(email, password, rol) {
         return { success: true, usuario: sesion };
     } else {
         console.log('❌ Login temporal fallido');
-        return { success: false, mensaje: 'Correo o contraseña incorrectos' };
+        return { success: false, mensaje: 'Correo, contraseña o rol incorrectos' };
     }
 }
 
-// Cerrar sesión
 function logout() {
     console.log('🔓 Cerrando sesión');
     sessionStorage.removeItem('usuarioActual');
     sessionStorage.removeItem('paginaAnterior');
+    // Redirigir al JSP/HTML de inicio
     window.location.href = 'index.jsp';
 }
 
-// Verificar si hay sesión activa
 function verificarSesion() {
     const sesion = sessionStorage.getItem('usuarioActual');
     return sesion ? JSON.parse(sesion) : null;
 }
 
-// Proteger página (redirige al login si no hay sesión)
 function protegerPagina(rolesPermitidos = null) {
     const usuario = verificarSesion();
     if (!usuario) {
@@ -142,7 +75,6 @@ function protegerPagina(rolesPermitidos = null) {
         return null;
     }
     
-    // Si se especificaron roles permitidos, verificar que el usuario tenga uno de ellos
     if (rolesPermitidos && rolesPermitidos.length > 0) {
         if (!rolesPermitidos.includes(usuario.rol)) {
             console.log('⚠️ Rol no autorizado:', usuario.rol);
@@ -155,7 +87,6 @@ function protegerPagina(rolesPermitidos = null) {
     return usuario;
 }
 
-// ===== MOSTRAR/OCULTAR CONTRASEÑA =====
 function togglePassword() {
     const input = document.getElementById('password');
     const icon = document.getElementById('eyeIcon');
@@ -278,13 +209,12 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Solo agregar listener si el formulario existe
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            console.log('📤 Formulario enviado');
+            console.log('📤 Formulario enviado (temporal)');
             
             const rolElement = document.getElementById('rol');
-            const emailElement = document.getElementById('email');
+            const emailElement = document.getElementById('email') || document.getElementById('identificacion');
             const passwordElement = document.getElementById('password');
             const errorDiv = document.getElementById('errorMessage');
             
@@ -299,7 +229,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             console.log('Datos recibidos:', { rol, email, password: '****' });
             
-            // Validar que se seleccionó un rol
             if (!rol) {
                 if (errorDiv) {
                     errorDiv.textContent = 'Por favor selecciona tu rol';
@@ -308,16 +237,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            // Validar dominio
-            if (!email.endsWith('@epn.edu.ec')) {
-                if (errorDiv) {
-                    errorDiv.textContent = 'Debes usar tu correo institucional (@epn.edu.ec)';
-                    errorDiv.classList.add('show');
+            if (email && typeof email === 'string' && email.includes('@')) {
+                // email-like value
+                if (!email.endsWith('@epn.edu.ec')) {
+                    if (errorDiv) {
+                        errorDiv.textContent = 'Debes usar tu correo institucional (@epn.edu.ec)';
+                        errorDiv.classList.add('show');
+                    }
+                    return;
                 }
-                return;
             }
             
-            // Intentar login
+            // Intentar login temporal (si el proyecto aún no usa servlet)
             const resultado = loginTemporal(email, password, rol);
             
             if (resultado.success) {
@@ -334,6 +265,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     errorDiv.classList.add('show');
                 }
             }
+
         });
     }
 });

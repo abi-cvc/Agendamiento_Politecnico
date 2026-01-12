@@ -30,4 +30,15 @@ public class JPADAOFactory extends DAOFactory {
 	public IEvaluacionDAO getEvaluacionDAO() {
 		return new EvaluacionDAO();
 	}
+	
+    
+    @Override
+    public IEstudianteDAO getEstudianteDAO() {
+        return new EstudianteDAO();
+    }
+    
+    @Override
+    public IAdministradorDAO getAdministradorDAO() {
+        return new AdministradorDAO();
+    }
 }

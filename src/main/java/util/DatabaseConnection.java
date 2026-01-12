@@ -16,8 +16,7 @@ public class DatabaseConnection {
     // ========================================
     // CONFIGURACIÓN DE BASE DE DATOS
     // ========================================
-    
-    // TODO: CONFIGURAR ESTOS VALORES SEGÚN TU BASE DE DATOS
+   
     
     /**
      * URL de conexión a MySQL
@@ -40,8 +39,6 @@ public class DatabaseConnection {
     /**
      * Usuario de MySQL
      * DEFAULT en XAMPP/WAMP: "root"
-     * 
-     * TODO: Cambiar por tu usuario de MySQL
      */
     private static final String DB_USER = "root";
     
@@ -52,6 +49,7 @@ public class DatabaseConnection {
      * 
      * TODO: Cambiar por tu contraseña de MySQL
      */
+
     private static final String DB_PASSWORD = "1234";
     
     /**
