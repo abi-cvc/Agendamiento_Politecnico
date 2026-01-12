@@ -18,9 +18,7 @@
             <img src="<%= request.getContextPath() %>/images/logo.svg" alt="Logo">
         </div>
         <nav>
-            <ul>
-                <li><a href="<%= request.getContextPath() %>/inicio.jsp">Inicio</a></li>
-                
+            <ul>              
                 <li><a href="${contextPath}/inicio-admin.jsp">Inicio</a></li>
                 <li><a href="<%= request.getContextPath() %>/DoctorAdminController?accion=gestionarDoctores">Gestionar Doctores</a></li>
                 <li><a href="<%= request.getContextPath() %>/EstudianteAdminController?accion=gestionarEstudiantes">Gestionar Estudiantes</a></li>
