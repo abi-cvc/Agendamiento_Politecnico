@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Administrador - Bienestar Politécnico</title>
     <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/logo_epn.png">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/framework.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/framework.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
@@ -26,9 +26,21 @@
             <li><a href="${pageContext.request.contextPath}/EstudianteAdminController" class="font-bold">Gestionar Estudiantes</a></li>
             <li><a href="${pageContext.request.contextPath}/especialidades?accion=listarAdmin" class="font-bold">Gestionar Especialidades</a></li>
             <li><a href="${pageContext.request.contextPath}/EvaluacionController?accion=listar" class="font-bold">Gestionar Evaluaciones</a></li>
-            <li class="login mt-2 mb-2" id="authButton">
-                <a href="${pageContext.request.contextPath}/index.html" class="font-bold">Cerrar Sesión</a>
-            </li>
+            <li class="user-logged">
+               <div class="user-menu">
+                   <img src="<%= request.getContextPath() %>/images/user.svg" alt="Usuario" class="user-avatar">
+                   <span class="user-name">Admin</span>
+                   <div class="user-dropdown">
+                       <div class="dropdown-header">
+                           <strong>Admin Bienestar</strong>
+                           <small>admin@epn.edu.ec</small>
+                       </div>
+                       <a href="<%= request.getContextPath() %>/index.jsp" onclick="logout(); return false;">
+                           🚪 Cerrar Sesión
+                       </a>
+                   </div>
+               </div>
+           </li>
         </ul>
     </nav>
 </header>

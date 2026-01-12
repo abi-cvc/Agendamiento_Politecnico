@@ -55,11 +55,23 @@
             <li><a href="${pageContext.request.contextPath}/inicio-admin.jsp">Inicio</a></li>
             <li><a href="${pageContext.request.contextPath}/DoctorAdminController?accion=gestionarDoctores">Gestionar Doctores</a></li>
             <li><a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=gestionarEstudiantes" class="font-bold">Gestionar Estudiantes</a></li>
-            <li><a href="${pageContext.request.contextPath}/especialidades?accion=listarAdmin">Gestionar Especialidades</a></li>
-            <li><a href="${pageContext.request.contextPath}/EvaluacionController?accion=listar">Gestionar Evaluaciones</a></li>
-            <li class="login mt-2 mb-2">
-                <a href="${pageContext.request.contextPath}/index.html" class="font-bold">Cerrar Sesión</a>
-            </li>
+            <li><a href="<%= request.getContextPath() %>/especialidades?accion=listarAdmin" class="font-bold">Gestionar Especialidades</a></li>
+            <li><a href="<%= request.getContextPath() %>/evaluaciones?accion=listarAdmin">Gestionar Evaluaciones</a></li>
+            <li class="user-logged">
+               <div class="user-menu">
+                   <img src="<%= request.getContextPath() %>/images/user.svg" alt="Usuario" class="user-avatar">
+                   <span class="user-name">Admin</span>
+                   <div class="user-dropdown">
+                       <div class="dropdown-header">
+                           <strong>Admin Bienestar</strong>
+                           <small>admin@epn.edu.ec</small>
+                       </div>
+                       <a href="<%= request.getContextPath() %>/index.jsp" onclick="logout(); return false;">
+                           🚪 Cerrar Sesión
+                       </a>
+                   </div>
+               </div>
+           </li>
         </ul>
     </nav>
 </header>
