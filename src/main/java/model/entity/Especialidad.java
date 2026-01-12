@@ -32,8 +32,12 @@ public class Especialidad implements Serializable {
 	@Column(name = "icono", length = 50)
 	private String icono;
 	
+	@Column(name = "activo")
+	private Boolean activo = true;
+	
 	// Constructor vacío (requerido por JPA)
 	public Especialidad() {
+		this.activo = true;
 	}
 	
 	// Constructor con parámetros
@@ -43,6 +47,7 @@ public class Especialidad implements Serializable {
 		this.descripcion = descripcion;
 		this.servicios = servicios;
 		this.icono = icono;
+		this.activo = true;
 	}
 	
 	// Getters y Setters
@@ -94,8 +99,21 @@ public class Especialidad implements Serializable {
 		this.icono = icono;
 	}
 	
+	public Boolean getActivo() {
+		return activo;
+	}
+	
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
+	}
+	
+	// Método de utilidad para verificar si está activa
+	public boolean isActiva() {
+		return activo != null && activo;
+	}
+	
 	@Override
 	public String toString() {
-		return "Especialidad [idEspecialidad=" + idEspecialidad + ", nombre=" + nombre + ", titulo=" + titulo + "]";
+		return "Especialidad [idEspecialidad=" + idEspecialidad + ", nombre=" + nombre + ", titulo=" + titulo + ", activo=" + activo + "]";
 	}
 }

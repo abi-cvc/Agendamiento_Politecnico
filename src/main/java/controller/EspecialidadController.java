@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * Controller para manejar las peticiones relacionadas con Especialidades
- * ACTUALIZADO: Usa DAOFactory para obtener instancias de DAOs
+ * ACTUALIZADO: Usa DAOFactory y ahora incluye cambiarEstado en lugar de eliminar
  */
 @WebServlet("/especialidades")
 public class EspecialidadController extends HttpServlet {
@@ -79,8 +79,12 @@ public class EspecialidadController extends HttpServlet {
 			case "actualizar":
 				actualizarEspecialidad(request, response);
 				break;
+			case "cambiarEstado":
+				cambiarEstado(request, response);
+				break;
 			case "eliminar":
-				eliminarEspecialidad(request, response);
+				// Redirigir a cambiarEstado para mantener compatibilidad
+				cambiarEstado(request, response);
 				break;
 			default:
 				response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Acción no válida");
@@ -89,12 +93,12 @@ public class EspecialidadController extends HttpServlet {
 	}
 	
 	/**
-	 * Lista todas las especialidades
+	 * Lista todas las especialidades ACTIVAS (para vista pública)
 	 */
 	private void listarEspecialidades(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		List<Especialidad> especialidades = factory.getEspecialidadDAO().getAll();
+		List<Especialidad> especialidades = factory.getEspecialidadDAO().obtenerEspecialidadesActivas();
 		request.setAttribute("especialidades", especialidades);
 		request.getRequestDispatcher("/views/especialidades.jsp").forward(request, response);
 	}
@@ -200,7 +204,7 @@ public class EspecialidadController extends HttpServlet {
 	}
 	
 	/**
-	 * Lista especialidades para el panel de administrador
+	 * Lista TODAS las especialidades (activas e inactivas) para el panel de administrador
 	 */
 	private void listarEspecialidadesAdmin(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -247,7 +251,7 @@ public class EspecialidadController extends HttpServlet {
 			throws ServletException, IOException {
 		
 		String nombre = request.getParameter("nombre");
-		String titulo = request. getParameter("titulo");
+		String titulo = request.getParameter("titulo");
 		String descripcion = request.getParameter("descripcion");
 		String servicios = request.getParameter("servicios");
 		String icono = request.getParameter("icono");
@@ -286,21 +290,34 @@ public class EspecialidadController extends HttpServlet {
 	}
 	
 	/**
-	 * Elimina una especialidad
+	 * Cambia el estado de una especialidad (activo/inactivo)
+	 * NUEVO: Reemplaza eliminar
 	 */
-	private void eliminarEspecialidad(HttpServletRequest request, HttpServletResponse response)
+	private void cambiarEstado(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		int id = Integer.parseInt(request.getParameter("id"));
-		
 		try {
-			factory.getEspecialidadDAO().delete(id);
-			request.getSession().setAttribute("mensaje", "Especialidad eliminada exitosamente");
+			int id = Integer.parseInt(request.getParameter("id"));
+			Especialidad especialidad = factory.getEspecialidadDAO().getById(id);
+			
+			if (especialidad != null) {
+				// Cambiar estado
+				especialidad.setActivo(!especialidad.getActivo());
+				
+				// Guardar cambios
+				factory.getEspecialidadDAO().update(especialidad);
+				
+				String estadoNuevo = especialidad.getActivo() ? "activada" : "desactivada";
+				request.getSession().setAttribute("mensaje", "Especialidad " + estadoNuevo + " exitosamente");
+			} else {
+				request.getSession().setAttribute("error", "Especialidad no encontrada");
+			}
+			
 		} catch (Exception e) {
-			request.getSession().setAttribute("error", "No se pudo eliminar la especialidad:  " + e.getMessage());
+			e.printStackTrace();
+			request.getSession().setAttribute("error", "Error al cambiar estado: " + e.getMessage());
 		}
 		
 		response.sendRedirect(request.getContextPath() + "/especialidades?accion=listarAdmin");
 	}
-
 }

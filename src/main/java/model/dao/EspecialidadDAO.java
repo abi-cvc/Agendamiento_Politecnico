@@ -37,9 +37,16 @@ public class EspecialidadDAO extends JPAGenericDAO<Especialidad, Integer> implem
 	
 	@Override
 	public List<Especialidad> obtenerEspecialidadesActivas() {
-		// Si tienes un campo 'activo' en la entidad, usarlo
-		// Por ahora retorna todas
-		return getAll();
+		EntityManager em = getEntityManager();
+		try {
+			TypedQuery<Especialidad> query = em.createQuery(
+				"SELECT e FROM Especialidad e WHERE e.activo = true", 
+				Especialidad.class
+			);
+			return query.getResultList();
+		} finally {
+			em.close();
+		}
 	}
 	
 	@Override
@@ -113,7 +120,9 @@ public class EspecialidadDAO extends JPAGenericDAO<Especialidad, Integer> implem
 	/**
 	 * Elimina una especialidad por su ID
 	 * @param id ID de la especialidad a eliminar
+	 * @deprecated Las especialidades ahora se desactivan, no se eliminan
 	 */
+	@Deprecated
 	public void eliminar(int id) {
 		EntityManager em = JPAUtil.getEntityManager();
 		try {

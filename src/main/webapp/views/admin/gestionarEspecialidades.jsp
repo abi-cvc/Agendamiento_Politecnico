@@ -73,50 +73,72 @@
         <c:choose>
             <c:when test="${not empty especialidades}">
                 <table class="table-admin">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Ícono</th>
-                            <th>Nombre</th>
-                            <th>Título</th>
-                            <th>Descripción</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:forEach var="esp" items="${especialidades}">
-                            <tr>
-                                <td>${esp.idEspecialidad}</td>
-                                <td style="font-size: 1.5rem;">${esp.icono}</td>
-                                <td>${esp.nombre}</td>
-                                <td>${esp.titulo}</td>
-                                <td>
-                                    <div class="text-truncate" title="${esp.descripcion}">
-                                        ${esp.descripcion}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="btn-actions">
-                                        <a href="<%= request.getContextPath() %>/especialidades?accion=editar&id=${esp.idEspecialidad}" 
-                                           class="btn btn-sm btn-warning">
-                                            ✏️ Editar
-                                        </a>
-                                        <form action="<%= request.getContextPath() %>/especialidades" 
-                                              method="post" 
-                                              style="display: inline;"
-                                              onsubmit="return confirm('¿Está seguro de eliminar esta especialidad?\n\nEsta acción no se puede deshacer.');">
-                                            <input type="hidden" name="accion" value="eliminar">
-                                            <input type="hidden" name="id" value="${esp.idEspecialidad}">
-                                            <button type="submit" class="btn btn-sm btn-danger">
-                                                🗑️ Eliminar
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                    </tbody>
+                	<thead>
+					    <tr>
+					        <th>ID</th>
+					        <th>Ícono</th>
+					        <th>Nombre</th>
+					        <th>Título</th>
+					        <th>Descripción</th>
+					        <th>Estado</th> 
+					        <th>Acciones</th>
+					    </tr>
+					</thead>
+					
+					<tbody>
+					    <c:forEach var="esp" items="${especialidades}">
+					        <tr>
+					            <td>${esp.idEspecialidad}</td>
+					            <td style="font-size: 1.5rem;">${esp.icono}</td>
+					            <td>${esp.nombre}</td>
+					            <td>${esp.titulo}</td>
+					            <td>
+					                <div class="text-truncate" title="${esp.descripcion}">
+					                    ${esp.descripcion}
+					                </div>
+					            </td>
+					            <td>
+					                <c:choose>
+					                    <c:when test="${esp.activo}">
+					                        <span style="color: green;">✓ Activo</span>
+					                    </c:when>
+					                    <c:otherwise>
+					                        <span style="color: red;">✗ Inactivo</span>
+					                    </c:otherwise>
+					                </c:choose>
+					            </td>
+					            <td>
+					                <div class="btn-actions">
+					                    <a href="<%= request.getContextPath() %>/especialidades?accion=editar&id=${esp.idEspecialidad}" 
+					                       class="btn btn-sm btn-warning">✏️ Editar</a>
+					
+					                    <form action="<%= request.getContextPath() %>/especialidades" method="post" style="display: inline;">
+					                        <input type="hidden" name="accion" value="cambiarEstado">
+					                        <input type="hidden" name="id" value="${esp.idEspecialidad}">
+					                        
+					                        <c:choose>
+					                            <c:when test="${esp.activo}">
+					                                <button type="submit" class="btn btn-sm btn-danger" 
+					                                        onclick="return confirm('¿Desea desactivar esta especialidad?');">
+					                                    ⏸ Desactivar
+					                                </button>
+					                            </c:when>
+					                            <c:otherwise>
+					                                <button type="submit" class="btn btn-sm btn-primary" 
+					                                        onclick="return confirm('¿Desea activar esta especialidad?');"
+					                                        style="background-color: #28a745; border-color: #28a745;">
+					                                    ▶ Activar
+					                                </button>
+					                            </c:otherwise>
+					                        </c:choose>
+					                    </form>
+					                </div>
+					            </td>
+					        </tr>
+					    </c:forEach>
+					</tbody>                    
                 </table>
+                
             </c:when>
             <c:otherwise>
                 <div class="empty-state">

@@ -89,10 +89,10 @@
         </div>
 
         <div class="card hover-lift">
-            <h2>📊 Gestionar Evaluaciones</h2>
+            <h2>📊 Consultar Evaluaciones</h2>
             <p>Administra las evaluaciones y encuestas de satisfacción de los servicios médicos.</p>
             <div class="mt-4">
-                <a href="${pageContext.request.contextPath}/EvaluacionController?accion=listar" class="btn btn-primary">
+                <a href="${pageContext.request.contextPath}/evaluaciones?accion=listarAdmin" class="btn btn-primary">
                     Ir a Evaluaciones
                 </a>
             </div>
