@@ -18,8 +18,19 @@ import java.util.List;
 import java.time.LocalDateTime;
 
 /**
- * Controller completo para gestión de reseñas/evaluaciones
- * Trabaja exclusivamente con JSP (sin JSON)
+ * Controller para Reseñas (vista de ESTUDIANTE)
+ * 
+ * Funcionalidad:
+ * - Ver todas las reseñas de otros estudiantes
+ * - Crear nuevas reseñas (calificar doctores)
+ * - Filtrar reseñas por especialidad
+ * 
+ * NO INCLUYE:
+ * - Estadísticas (eso es para admin)
+ * - Edición/eliminación de reseñas
+ * - Rankings de doctores
+ * 
+ * @author Sistema de Agendamiento Politécnico
  */
 @WebServlet("/resenas")
 public class ResenasController extends HttpServlet {
@@ -32,34 +43,25 @@ public class ResenasController extends HttpServlet {
         factory = DAOFactory.getFactory();
     }
 
+    /**
+     * Maneja las peticiones GET (visualización de reseñas)
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
         String accion = request.getParameter("accion");
         
-        if (accion == null) {
-            accion = "cargarPagina";
+        // Si no se especifica acción, cargar página principal
+        if (accion == null || accion.isEmpty()) {
+            cargarPaginaResenas(request, response);
+            return;
         }
         
+        // Manejo de acciones GET
         switch (accion) {
-            case "cargarPagina":
-                cargarPaginaResenas(request, response);
-                break;
             case "filtrarPorEspecialidad":
                 filtrarPorEspecialidad(request, response);
-                break;
-            case "filtrarPorDoctor":
-                filtrarPorDoctor(request, response);
-                break;
-            case "verEstadisticas":
-                verEstadisticas(request, response);
-                break;
-            case "topDoctores":
-                verTopDoctores(request, response);
-                break;
-            case "misResenas":
-                verMisResenas(request, response);
                 break;
             default:
                 cargarPaginaResenas(request, response);
@@ -67,18 +69,22 @@ public class ResenasController extends HttpServlet {
         }
     }
     
+    /**
+     * Maneja las peticiones POST (creación de reseñas)
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
         String accion = request.getParameter("accion");
         
-        if (accion == null) {
+        if (accion == null || accion.isEmpty()) {
             request.getSession().setAttribute("error", "Acción no especificada");
             response.sendRedirect(request.getContextPath() + "/resenas");
             return;
         }
         
+        // Solo hay una acción POST: crear reseña
         if ("crear".equals(accion)) {
             crearResena(request, response);
         } else {
@@ -87,38 +93,42 @@ public class ResenasController extends HttpServlet {
         }
     }
     
+    // ========== MÉTODOS PRINCIPALES ==========
+    
     /**
-     * Carga la página principal de reseñas con todas las especialidades y evaluaciones
+     * Carga la página principal de reseñas
+     * Muestra todas las reseñas de todos los estudiantes
      */
     private void cargarPaginaResenas(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
         try {
-            // Cargar especialidades para el select
+            System.out.println("📋 Cargando página de reseñas...");
+            
+            // 1. Cargar especialidades (para el select del formulario)
             IEspecialidadDAO especialidadDAO = factory.getEspecialidadDAO();
             List<Especialidad> especialidades = especialidadDAO.getAll();
+            request.setAttribute("especialidades", especialidades);
             
-            // Cargar doctores para el select opcional
+            // 2. Cargar doctores (para el filtrado en cascada en JS)
             IDoctorDAO doctorDAO = factory.getDoctorDAO();
             List<Doctor> doctores = doctorDAO.getAll();
+            request.setAttribute("doctores", doctores);
             
-            // Cargar todas las evaluaciones
+            // 3. Cargar TODAS las evaluaciones (de todos los estudiantes)
             IEvaluacionDAO evaluacionDAO = factory.getEvaluacionDAO();
             List<Evaluacion> evaluaciones = evaluacionDAO.getAll();
-            
-            // Enviar datos a la vista
-            request.setAttribute("especialidades", especialidades);
-            request.setAttribute("doctores", doctores);
             request.setAttribute("evaluaciones", evaluaciones);
             request.setAttribute("totalEvaluaciones", evaluaciones.size());
             
-            System.out.println("✅ Página de reseñas cargada: " + especialidades.size() + 
-                             " especialidades, " + doctores.size() + " doctores, " + 
-                             evaluaciones.size() + " evaluaciones");
+            System.out.println("✅ Datos cargados: " + especialidades.size() + " especialidades, " 
+                             + doctores.size() + " doctores, " + evaluaciones.size() + " reseñas");
             
+            // 4. Forward a la vista JSP
             request.getRequestDispatcher("/resenas.jsp").forward(request, response);
             
         } catch (Exception e) {
+            System.err.println("❌ Error al cargar página de reseñas: " + e.getMessage());
             e.printStackTrace();
             request.setAttribute("error", "Error al cargar datos: " + e.getMessage());
             request.getRequestDispatcher("/resenas.jsp").forward(request, response);
@@ -127,6 +137,7 @@ public class ResenasController extends HttpServlet {
     
     /**
      * Crea una nueva reseña/evaluación
+     * Solo estudiantes autenticados pueden crear reseñas
      */
     private void crearResena(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -134,296 +145,183 @@ public class ResenasController extends HttpServlet {
         HttpSession session = request.getSession(false);
         
         try {
-            // Verificar sesión
-            if (session == null || session.getAttribute("usuario") == null) {
-                session = request.getSession();
-                session.setAttribute("error", "Debes iniciar sesión para dejar una reseña");
-                response.sendRedirect(request.getContextPath() + "/index.jsp");
-                return;
-            }
+            System.out.println("📝 Intentando crear nueva reseña...");
             
-            // Verificar que sea estudiante
-            String rol = (String) session.getAttribute("rol");
-            if (!"estudiante".equals(rol)) {
-                session.setAttribute("error", "Solo los estudiantes pueden dejar reseñas");
-                response.sendRedirect(request.getContextPath() + "/resenas");
-                return;
-            }
-            
-            // Obtener estudiante de la sesión
+            // Obtener estudiante desde la sesión
             Estudiante estudiante = (Estudiante) session.getAttribute("usuario");
+            System.out.println("👤 Usuario autenticado: " + estudiante.getNombreCompleto());
             
-            // Obtener parámetros del formulario
+            // ===== PASO 2: OBTENER Y VALIDAR PARÁMETROS =====
             String idDoctorStr = request.getParameter("idDoctor");
             String calificacionStr = request.getParameter("calificacion");
             String comentario = request.getParameter("comentario");
-            String idCitaStr = request.getParameter("idCita");
             
-            // Validaciones
-            if (idDoctorStr == null || calificacionStr == null || comentario == null) {
+            System.out.println("📥 Datos recibidos - Doctor: " + idDoctorStr + 
+                             ", Calificación: " + calificacionStr);
+            
+            // Validar que todos los campos estén presentes
+            if (idDoctorStr == null || idDoctorStr.isEmpty() ||
+                calificacionStr == null || calificacionStr.isEmpty() ||
+                comentario == null || comentario.isEmpty()) {
+                
+                System.out.println("❌ Validación fallida: campos vacíos");
                 session.setAttribute("error", "Todos los campos son requeridos");
                 response.sendRedirect(request.getContextPath() + "/resenas");
                 return;
             }
             
-            int idDoctor = Integer.parseInt(idDoctorStr);
-            int calificacion = Integer.parseInt(calificacionStr);
+            // Parsear valores numéricos
+            int idDoctor;
+            int calificacion;
+            try {
+                idDoctor = Integer.parseInt(idDoctorStr);
+                calificacion = Integer.parseInt(calificacionStr);
+            } catch (NumberFormatException e) {
+                System.out.println("❌ Error de formato numérico");
+                session.setAttribute("error", "Datos numéricos inválidos");
+                response.sendRedirect(request.getContextPath() + "/resenas");
+                return;
+            }
             
+            // ===== PASO 3: VALIDACIONES DE NEGOCIO =====
+            
+            // Validar rango de calificación (1-5 estrellas)
             if (calificacion < 1 || calificacion > 5) {
+                System.out.println("❌ Calificación fuera de rango: " + calificacion);
                 session.setAttribute("error", "La calificación debe ser entre 1 y 5 estrellas");
                 response.sendRedirect(request.getContextPath() + "/resenas");
                 return;
             }
             
-            if (comentario.trim().length() < 20) {
+            // Validar longitud del comentario
+            String comentarioLimpio = comentario.trim();
+            if (comentarioLimpio.length() < 20) {
+                System.out.println("❌ Comentario muy corto: " + comentarioLimpio.length() + " caracteres");
                 session.setAttribute("error", "El comentario debe tener al menos 20 caracteres");
                 response.sendRedirect(request.getContextPath() + "/resenas");
                 return;
             }
             
-            // Obtener el doctor
-            Doctor doctor = factory.getDoctorDAO().getById(idDoctor);
-            if (doctor == null) {
-                session.setAttribute("error", "Doctor no encontrado");
+            if (comentarioLimpio.length() > 500) {
+                System.out.println("❌ Comentario muy largo: " + comentarioLimpio.length() + " caracteres");
+                session.setAttribute("error", "El comentario no puede exceder 500 caracteres");
                 response.sendRedirect(request.getContextPath() + "/resenas");
                 return;
             }
             
-            // Crear la evaluación
+            // ===== PASO 4: VERIFICAR QUE EL DOCTOR EXISTE =====
+            Doctor doctor = factory.getDoctorDAO().getById(idDoctor);
+            if (doctor == null) {
+                System.out.println("❌ Doctor no encontrado: ID " + idDoctor);
+                session.setAttribute("error", "El doctor seleccionado no existe");
+                response.sendRedirect(request.getContextPath() + "/resenas");
+                return;
+            }
+            
+            System.out.println("✅ Doctor encontrado: Dr. " + doctor.getNombreCompleto());
+            
+            // ===== PASO 5: CREAR LA EVALUACIÓN =====
             Evaluacion evaluacion = new Evaluacion();
             evaluacion.setCalificacion(calificacion);
-            evaluacion.setComentario(comentario.trim());
+            evaluacion.setComentario(comentarioLimpio);
             evaluacion.setFechaEvaluacion(LocalDateTime.now());
             evaluacion.setDoctor(doctor);
             evaluacion.setEstudiante(estudiante);
+            // cita es opcional, por ahora no lo manejamos
             
-            // Si viene de una cita específica, asociarla
-            if (idCitaStr != null && !idCitaStr.isEmpty()) {
-                try {
-                    // Aquí podrías setear la cita si tu entidad Evaluacion tiene ese campo
-                    // evaluacion.setIdCita(Integer.parseInt(idCitaStr));
-                } catch (NumberFormatException e) {
-                    // Ignorar si no es válido
-                }
-            }
-            
-            // Guardar en la base de datos
+            // ===== PASO 6: GUARDAR EN BASE DE DATOS =====
             IEvaluacionDAO evaluacionDAO = factory.getEvaluacionDAO();
-            evaluacionDAO.create(evaluacion);
+            Evaluacion evaluacionGuardada = evaluacionDAO.create(evaluacion);
             
-            session.setAttribute("mensaje", "¡Reseña publicada exitosamente! Gracias por tu opinión.");
+            System.out.println("✅ Reseña guardada exitosamente - ID: " + evaluacionGuardada.getIdEvaluacion());
+            
+            // ===== PASO 7: RESPUESTA AL USUARIO =====
+            session.setAttribute("mensaje", "¡Reseña publicada exitosamente! Gracias por compartir tu experiencia.");
             response.sendRedirect(request.getContextPath() + "/resenas");
             
         } catch (NumberFormatException e) {
-            session.setAttribute("error", "Datos numéricos inválidos");
+            System.err.println("❌ Error de formato numérico: " + e.getMessage());
+            session.setAttribute("error", "Los datos numéricos son inválidos");
             response.sendRedirect(request.getContextPath() + "/resenas");
+            
         } catch (Exception e) {
+            System.err.println("❌ Error inesperado al guardar reseña: " + e.getMessage());
             e.printStackTrace();
-            session.setAttribute("error", "Error al guardar la reseña: " + e.getMessage());
+            session.setAttribute("error", "Error al guardar la reseña. Por favor, intenta nuevamente.");
             response.sendRedirect(request.getContextPath() + "/resenas");
         }
     }
     
     /**
-     * Filtra evaluaciones por especialidad
+     * Filtra las reseñas por especialidad
+     * Muestra solo las reseñas de doctores de una especialidad específica
      */
     private void filtrarPorEspecialidad(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
         try {
+            System.out.println("🔍 Filtrando reseñas por especialidad...");
+            
             String idEspecialidadStr = request.getParameter("idEspecialidad");
             
-            // Cargar especialidades y doctores (para los selects)
+            // 1. Cargar especialidades y doctores (necesarios para los selects)
             IEspecialidadDAO especialidadDAO = factory.getEspecialidadDAO();
             List<Especialidad> especialidades = especialidadDAO.getAll();
+            request.setAttribute("especialidades", especialidades);
             
             IDoctorDAO doctorDAO = factory.getDoctorDAO();
             List<Doctor> doctores = doctorDAO.getAll();
-            
-            request.setAttribute("especialidades", especialidades);
             request.setAttribute("doctores", doctores);
             
-            // Filtrar evaluaciones
+            // 2. Filtrar evaluaciones según la especialidad
             IEvaluacionDAO evaluacionDAO = factory.getEvaluacionDAO();
             List<Evaluacion> evaluaciones;
             
-            if (idEspecialidadStr != null && !idEspecialidadStr.isEmpty() && !"todas".equals(idEspecialidadStr)) {
+            // Si hay especialidad seleccionada y no es "todas"
+            if (idEspecialidadStr != null && !idEspecialidadStr.isEmpty() 
+                && !"todas".equals(idEspecialidadStr) && !"".equals(idEspecialidadStr)) {
+                
                 int idEspecialidad = Integer.parseInt(idEspecialidadStr);
+                System.out.println("📌 Filtrando por especialidad ID: " + idEspecialidad);
+                
                 evaluaciones = evaluacionDAO.getByEspecialidad(idEspecialidad);
                 
-                // Buscar la especialidad para mostrar el nombre
-                Especialidad espSeleccionada = especialidades.stream()
-                    .filter(e -> e.getIdEspecialidad() == idEspecialidad)
-                    .findFirst()
-                    .orElse(null);
+                // Buscar la especialidad seleccionada para mostrar info
+                Especialidad especialidadSeleccionada = null;
+                for (Especialidad esp : especialidades) {
+                    if (esp.getIdEspecialidad() == idEspecialidad) {
+                        especialidadSeleccionada = esp;
+                        break;
+                    }
+                }
                 
-                request.setAttribute("especialidadSeleccionada", espSeleccionada);
+                request.setAttribute("especialidadSeleccionada", especialidadSeleccionada);
+                System.out.println("✅ Filtrado: " + evaluaciones.size() + " reseñas encontradas");
+                
             } else {
+                // Mostrar todas las evaluaciones
+                System.out.println("📌 Mostrando todas las reseñas");
                 evaluaciones = evaluacionDAO.getAll();
             }
             
+            // 3. Enviar datos a la vista
             request.setAttribute("evaluaciones", evaluaciones);
             request.setAttribute("totalEvaluaciones", evaluaciones.size());
             request.setAttribute("filtroActivo", idEspecialidadStr);
             
+            // 4. Forward a la vista JSP
             request.getRequestDispatcher("/resenas.jsp").forward(request, response);
             
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.getSession().setAttribute("error", "Error al filtrar: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.err.println("❌ Error en ID de especialidad: " + e.getMessage());
+            request.getSession().setAttribute("error", "ID de especialidad inválido");
             response.sendRedirect(request.getContextPath() + "/resenas");
-        }
-    }
-    
-    /**
-     * Filtra evaluaciones por doctor
-     */
-    private void filtrarPorDoctor(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-        try {
-            int idDoctor = Integer.parseInt(request.getParameter("idDoctor"));
-            
-            // Cargar datos base
-            IEspecialidadDAO especialidadDAO = factory.getEspecialidadDAO();
-            List<Especialidad> especialidades = especialidadDAO.getAll();
-            
-            IDoctorDAO doctorDAO = factory.getDoctorDAO();
-            List<Doctor> doctores = doctorDAO.getAll();
-            Doctor doctorSeleccionado = doctorDAO.getById(idDoctor);
-            
-            // Filtrar evaluaciones del doctor
-            IEvaluacionDAO evaluacionDAO = factory.getEvaluacionDAO();
-            List<Evaluacion> evaluaciones = evaluacionDAO.getByDoctor(idDoctor);
-            
-            request.setAttribute("especialidades", especialidades);
-            request.setAttribute("doctores", doctores);
-            request.setAttribute("doctorSeleccionado", doctorSeleccionado);
-            request.setAttribute("evaluaciones", evaluaciones);
-            request.setAttribute("totalEvaluaciones", evaluaciones.size());
-            
-            request.getRequestDispatcher("/resenas.jsp").forward(request, response);
             
         } catch (Exception e) {
+            System.err.println("❌ Error al filtrar: " + e.getMessage());
             e.printStackTrace();
-            request.getSession().setAttribute("error", "Error al filtrar por doctor: " + e.getMessage());
+            request.getSession().setAttribute("error", "Error al filtrar reseñas: " + e.getMessage());
             response.sendRedirect(request.getContextPath() + "/resenas");
-        }
-    }
-    
-
-    /**
-     * Muestra estadísticas de evaluaciones
-     */
-    private void verEstadisticas(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-        try {
-            IEvaluacionDAO evaluacionDAO = factory.getEvaluacionDAO();
-            
-            // Calcular estadísticas
-            long totalResenas = evaluacionDAO.contarTodas();
-            double promedioGeneral = evaluacionDAO.obtenerPromedioGeneral();
-            
-            request.setAttribute("totalResenas", totalResenas);
-            request.setAttribute("promedioGeneral", promedioGeneral);
-            
-            // Cargar datos base
-            cargarDatosBase(request);
-            
-            request.getRequestDispatcher("/views/admin/estadisticas-resenas.jsp").forward(request, response);
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.getSession().setAttribute("error", "Error al obtener estadísticas: " + e.getMessage());
-            response.sendRedirect(request.getContextPath() + "/resenas");
-        }
-    }
-    
-    /**
-     * Muestra top doctores mejor calificados
-     */
-    private void verTopDoctores(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-        try {
-            int limite = 10; // Top 10 por defecto
-            String limiteParam = request.getParameter("limite");
-            if (limiteParam != null) {
-                limite = Integer.parseInt(limiteParam);
-            }
-            
-            IEvaluacionDAO evaluacionDAO = factory.getEvaluacionDAO();
-            IDoctorDAO doctorDAO = factory.getDoctorDAO();
-            
-            List<Doctor> doctores = doctorDAO.getAll();
-            
-            request.setAttribute("doctores", doctores);
-            request.setAttribute("limite", limite);
-            
-            // Cargar datos base
-            cargarDatosBase(request);
-            
-            request.getRequestDispatcher("/views/admin/top-doctores.jsp").forward(request, response);
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.getSession().setAttribute("error", "Error al obtener top doctores: " + e.getMessage());
-            response.sendRedirect(request.getContextPath() + "/resenas");
-        }
-    }
-    
-    /**
-     * Muestra las reseñas del estudiante logueado
-     */
-    private void verMisResenas(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-        HttpSession session = request.getSession(false);
-        
-        try {
-            if (session == null || session.getAttribute("usuario") == null) {
-                session = request.getSession();
-                session.setAttribute("error", "Debes iniciar sesión");
-                response.sendRedirect(request.getContextPath() + "/index.jsp");
-                return;
-            }
-            
-            Estudiante estudiante = (Estudiante) session.getAttribute("usuario");
-            
-            IEvaluacionDAO evaluacionDAO = factory.getEvaluacionDAO();
-            List<Evaluacion> misEvaluaciones = evaluacionDAO.getByEstudiante(estudiante.getIdEstudiante());
-            
-            request.setAttribute("evaluaciones", misEvaluaciones);
-            request.setAttribute("totalEvaluaciones", misEvaluaciones.size());
-            
-            // Cargar datos base
-            cargarDatosBase(request);
-            
-            request.getRequestDispatcher("/views/mis-resenas.jsp").forward(request, response);
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            session.setAttribute("error", "Error al cargar tus reseñas: " + e.getMessage());
-            response.sendRedirect(request.getContextPath() + "/resenas");
-        }
-    }
-    
-    /**
-     * Método auxiliar para cargar datos comunes
-     */
-    private void cargarDatosBase(HttpServletRequest request) {
-        try {
-            IEspecialidadDAO especialidadDAO = factory.getEspecialidadDAO();
-            IDoctorDAO doctorDAO = factory.getDoctorDAO();
-            
-            List<Especialidad> especialidades = especialidadDAO.getAll();
-            List<Doctor> doctores = doctorDAO.getAll();
-            
-            request.setAttribute("especialidades", especialidades);
-            request.setAttribute("doctores", doctores);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

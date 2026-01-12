@@ -41,7 +41,7 @@
             <li><a href="<%= request.getContextPath() %>/inicio.jsp" class="font-bold">Inicio</a></li>
             <li><a href="<%= request.getContextPath() %>/AgendarCitasController" class="font-bold">Especialidades</a></li>
             <li><a href="<%= request.getContextPath() %>/ConsultarCitasAgendadasController" class="font-bold">Mis Citas</a></li>
-            <li><a href="<%= request.getContextPath() %>/resenas" class="font-bold">Reseñas</a></li>
+            <li><a href="<%= request.getContextPath() %>/resenas" class="font-bold">Mis Reseñas</a></li>
             <li class="login mt-2 mb-2" id="authButton">
                 <a href="<%= request.getContextPath() %>/index.jsp" class="font-bold">Login</a>
             </li>

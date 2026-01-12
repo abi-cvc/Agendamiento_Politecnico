@@ -232,7 +232,7 @@ function actualizarNavegacionPorRol() {
             <li><a href="${contextPath}/inicio.jsp" class="font-bold">Inicio</a></li>
             <li><a href="${contextPath}/AgendarCitasController" class="font-bold">Especialidades</a></li>
             <li><a href="${contextPath}/ConsultarCitasAgendadasController" class="font-bold">Mis Citas</a></li>
-            <li><a href="${contextPath}/resenas" class="font-bold">Reseñas</a></li>
+            <li><a href="${contextPath}/resenas" class="font-bold">Mis Reseñas</a></li>
             <li class="user-logged">
                 <div class="user-menu">
                     <img src="${contextPath}/images/user.svg" alt="Usuario" class="user-avatar">
