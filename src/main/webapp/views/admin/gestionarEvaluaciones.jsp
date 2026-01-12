@@ -11,6 +11,9 @@
     <link rel="icon" type="image/png" href="<%= request.getContextPath() %>/images/logo_epn.png">
     <link rel="stylesheet" href="<%= request.getContextPath() %>/css/framework.css">
     <link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -76,7 +79,7 @@
                 <input type="hidden" name="accion" value="porDoctor">
                 <div class="form-group">
                     <label for="idDoctor">Seleccione un doctor:</label>
-                    <select name="idDoctor" id="idDoctor" class="form-control" required>
+                    <select name="idDoctor" id="idDoctor" class="form-label" required>
                         <option value="">-- Seleccione un doctor --</option>
                         <c:forEach var="doctor" items="${doctores}">
                             <option value="${doctor.idDoctor}">
@@ -90,7 +93,7 @@
         </div>
 
         <!-- Estadísticas Generales -->
-        <div class="estadisticas-generales">
+        <div class="div-card">
             <h3>📈 Estadísticas Generales</h3>
             <div class="stats-grid">
                 <div class="stat-card">

@@ -82,7 +82,7 @@
         
         <!-- ENCABEZADO -->
         <div class="admin-header">
-            <h1>👥 Gestionar Estudiantes</h1>
+            <h1>Gestionar Estudiantes</h1>
             <a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=gestionarEstudiantes&modal=nuevo" 
                class="btn btn-primary">
                 ➕ Nuevo Estudiante
@@ -105,7 +105,7 @@
         <% } %>
 
         <!-- SECCIÓN DE BÚSQUEDA -->
-        <div class="search-section">
+        <div class="filtros-evaluaciones">
             <h3>🔍 Buscar Estudiante</h3>
             <form method="get" action="${pageContext.request.contextPath}/EstudianteAdminController">
                 <input type="hidden" name="accion" value="buscar">

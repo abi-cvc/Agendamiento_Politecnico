@@ -83,7 +83,7 @@
         
         <!-- ENCABEZADO -->
         <div class="admin-header">
-            <h1>👨‍⚕️ Gestionar Doctores</h1>
+            <h1>Gestionar Doctores</h1>
             <a href="${pageContext.request.contextPath}/DoctorAdminController?accion=gestionarDoctores&modal=nuevo" 
                class="btn btn-primary">
                 ➕ Nuevo Doctor
@@ -106,7 +106,7 @@
         <% } %>
 
         <!-- SECCIÓN DE BÚSQUEDA -->
-        <div class="search-section">
+        <div class="filtros-evaluaciones">
             <h3>🔍 Buscar Doctor</h3>
             <form method="get" action="${pageContext.request.contextPath}/DoctorAdminController">
                 <input type="hidden" name="accion" value="buscar">
