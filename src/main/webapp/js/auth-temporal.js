@@ -120,7 +120,7 @@ function actualizarNavegacionPorRol() {
             <li><a href="${contextPath}/DoctorAdminController?accion=gestionarDoctores">Gestionar Doctores</a></li>
             <li><a href="${contextPath}/EstudianteAdminController?accion=gestionarEstudiantes">Gestionar Estudiantes</a></li>
             <li><a href="${contextPath}/especialidades?accion=listarAdmin">Gestionar Especialidades</a></li>
-            <li><a href="${contextPath}/evaluaciones?accion=listarAdmin">Gestionar Evaluaciones</a></li>
+            <li><a href="${contextPath}/evaluaciones?accion=listarAdmin">Consultar Evaluaciones</a></li>
             <li class="user-logged">
                 <div class="user-menu">
                     <img src="${contextPath}/images/user.svg" alt="Usuario" class="user-avatar">

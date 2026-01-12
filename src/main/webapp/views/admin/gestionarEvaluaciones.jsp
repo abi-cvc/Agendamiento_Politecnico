@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestionar Evaluaciones</title>
+    <title>Consultar Evaluaciones</title>
     <link rel="icon" type="image/png" href="<%= request.getContextPath() %>/images/logo_epn.png">
     <link rel="stylesheet" href="<%= request.getContextPath() %>/css/framework.css">
     <link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
@@ -24,7 +24,7 @@
                 <li><a href="${pageContext.request.contextPath}/DoctorAdminController?accion=gestionarDoctores">Gestionar Doctores</a></li>
             	<li><a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=gestionarEstudiantes" class="font-bold">Gestionar Estudiantes</a></li>
                 <li><a href="<%= request.getContextPath() %>/especialidades?accion=listarAdmin">Gestionar Especialidades</a></li>
-                <li><a href="<%= request.getContextPath() %>/evaluaciones?accion=listarAdmin" class="font-bold">Gestionar Evaluaciones</a></li>
+                <li><a href="<%= request.getContextPath() %>/evaluaciones?accion=listarAdmin" class="font-bold">Consultar Evaluaciones</a></li>
                 <li class="user-logged">
                 <div class="user-menu">
                     <img src="<%= request.getContextPath() %>/images/user.svg" alt="Usuario" class="user-avatar">

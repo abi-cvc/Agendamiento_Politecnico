@@ -25,7 +25,7 @@
             <li><a href="${pageContext.request.contextPath}/DoctorAdminController" class="font-bold">Gestionar Doctores</a></li>
             <li><a href="${pageContext.request.contextPath}/EstudianteAdminController" class="font-bold">Gestionar Estudiantes</a></li>
             <li><a href="${pageContext.request.contextPath}/especialidades?accion=listarAdmin" class="font-bold">Gestionar Especialidades</a></li>
-            <li><a href="${pageContext.request.contextPath}/EvaluacionController?accion=listar" class="font-bold">Gestionar Evaluaciones</a></li>
+            <li><a href="${pageContext.request.contextPath}/EvaluacionController?accion=listar" class="font-bold">Consultar Evaluaciones</a></li>
             <li class="user-logged">
                <div class="user-menu">
                    <img src="<%= request.getContextPath() %>/images/user.svg" alt="Usuario" class="user-avatar">
