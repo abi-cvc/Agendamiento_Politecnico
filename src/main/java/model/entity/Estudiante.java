@@ -31,8 +31,11 @@ public class Estudiante implements Serializable {
     @Column(name = "correo_estudiante", nullable = false, unique = true, length = 100)
     private String correoEstudiante;
     
-    @Column(name = "password_estudiante", nullable = false, length = 255)
+    @Column(name = "password_estudiante", length = 255)
     private String passwordEstudiante;
+    
+    @Column(name = "activo")
+    private boolean activo = true;
     
     // Relación OneToMany con Cita
     @OneToMany(mappedBy = "estudiante", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -158,12 +161,28 @@ public class Estudiante implements Serializable {
         this.correoEstudiante = correoEstudiante;
     }
     
+    public String getPasswordEstudiante() {
+        return passwordEstudiante;
+    }
+    
+    public void setPasswordEstudiante(String passwordEstudiante) {
+        this.passwordEstudiante = passwordEstudiante;
+    }
+    
     public List<Cita> getCitas() {
         return citas;
     }
     
     public void setCitas(List<Cita> citas) {
         this.citas = citas;
+    }
+    
+    public boolean isActivo() {
+        return activo;
+    }
+    
+    public void setActivo(boolean activo) {
+        this.activo = activo;
     }
     
     // Método auxiliar para obtener nombre completo
@@ -179,6 +198,7 @@ public class Estudiante implements Serializable {
                 ", nombreEstudiante='" + nombreEstudiante + '\'' +
                 ", apellidoEstudiante='" + apellidoEstudiante + '\'' +
                 ", correoEstudiante='" + correoEstudiante + '\'' +
+                ", activo=" + activo +
                 '}';
     }
 }

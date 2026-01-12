@@ -24,4 +24,9 @@ public interface IDoctorDAO extends GenericDAO<Doctor, Integer> {
      * Obtiene doctores activos
      */
     List<Doctor> obtenerDoctoresActivos();
+    
+    /**
+     * Obtiene un doctor por su cédula
+     */
+    Doctor obtenerPorCedula(String cedula);
 }

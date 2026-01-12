@@ -8,14 +8,17 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.dao.EstudianteDAO;
 import model.dao.AdministradorDAO;
+import model.dao.DAOFactory;
+import model.dao.DoctorDAO;
 import model.entity.Estudiante;
 import model.entity.Administrador;
+import model.entity.Doctor;
 
 import java.io.IOException;
 
 /**
  * Servlet para manejar el login del sistema
- * Soporta login de Estudiantes y Administradores
+ * Soporta login de Estudiantes y Administradores y Doctores
  */
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
@@ -24,11 +27,15 @@ public class LoginServlet extends HttpServlet {
     
     private EstudianteDAO estudianteDAO;
     private AdministradorDAO administradorDAO;
+    private DoctorDAO doctorDAO;
+    private DAOFactory factory;
     
     @Override
     public void init() throws ServletException {
         estudianteDAO = new EstudianteDAO();
         administradorDAO = new AdministradorDAO();
+        factory = DAOFactory.getFactory();
+        doctorDAO = (DoctorDAO) factory.getDoctorDAO();
     }
     
     @Override
@@ -122,15 +129,36 @@ public class LoginServlet extends HttpServlet {
     }
     
     /**
-     * Login para doctores (por implementar)
+     * Login para doctores
      */
     private void loginDoctor(HttpServletRequest request, HttpServletResponse response,
                             String cedula, String password) 
             throws ServletException, IOException {
         
-        // TODO: Implementar login de doctores
-        request.setAttribute("error", "Login de doctores aún no implementado");
-        request.getRequestDispatcher("/index.jsp").forward(request, response);
+        // Usar DoctorDAO para obtener doctor por cédula y validar password
+        try {
+            Doctor doctor = doctorDAO.obtenerPorCedula(cedula);
+            if (doctor != null && doctor.isActivo() && password != null && password.equals(doctor.getPassword())) {
+                HttpSession session = request.getSession();
+                session.setAttribute("usuario", doctor);
+                session.setAttribute("rol", "doctor");
+                session.setAttribute("nombreUsuario", doctor.getNombreCompleto());
+                session.setAttribute("idUsuario", doctor.getIdDoctor());
+                
+                System.out.println("✅ Login exitoso - Doctor: " + doctor.getNombreCompleto());
+                response.sendRedirect(request.getContextPath() + "/inicio.jsp");
+                return;
+            }
+            
+            // Login fallido
+            System.out.println("❌ Login fallido - Credenciales incorrectas (doctor)");
+            request.setAttribute("error", "Cédula o contraseña incorrectas");
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Error al autenticar doctor: " + e.getMessage());
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
+        }
     }
     
     @Override
