@@ -46,7 +46,7 @@
     
     <div class="admin-container">
         <div class="admin-header">
-            <h1>📊 Gestionar Evaluaciones de Doctores</h1>
+            <h1>Consultar Evaluaciones de Doctores</h1>
             <div class="admin-actions">
                 <button onclick="mostrarMejoresCalificados()" class="btn btn-success">
                     ⭐ Mejores Calificados
