@@ -37,8 +37,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestionar Estudiantes - Admin</title>
     <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/logo_epn.png">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/framework.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/framework.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">

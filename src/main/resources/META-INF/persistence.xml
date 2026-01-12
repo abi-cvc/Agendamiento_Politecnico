@@ -40,7 +40,7 @@
             <!-- Usuario de XAMPP MySQL (Default: root) -->
             <property name="jakarta.persistence.jdbc.user" value="root"/>
             
-            <!-- Contraseña de XAMPP MySQL (Default: vacía) -->
+            <!-- Contraseña de XAMPP MySQL -->
             <property name="jakarta.persistence.jdbc.password" value="1234"/>
 
             <!-- ============================================ -->

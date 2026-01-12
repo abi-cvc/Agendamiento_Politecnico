@@ -36,8 +36,9 @@ C:.
 |       |   |       ConsultarCitaAsignadaController.java
 |       |   |       ConsultarCitasAgendadasController.java
 |       |   |       DisponibilidadServlet.java
-|       |   |       DoctorController.java
+|       |   |       DoctorAdminController.java
 |       |   |       EspecialidadController.java
+|       |   |       EstudianteAdminController.java
 |       |   |       EvaluacionController.java
 |       |   |       LoginServlet.java
 |       |   |       LogoutServlet.java
@@ -54,10 +55,12 @@ C:.
 |       |   |   |       EstudianteDAO.java
 |       |   |   |       EvaluacionDAO.java
 |       |   |   |       GenericDAO.java
+|       |   |   |       IAdministradorDAO.java
 |       |   |   |       ICitaDAO.java
 |       |   |   |       IDisponibilidadDAO.java
 |       |   |   |       IDoctorDAO.java
 |       |   |   |       IEspecialidadDAO.java
+|       |   |   |       IEstudianteDAO.java
 |       |   |   |       IEvaluacionDAO.java
 |       |   |   |       JPADAOFactory.java
 |       |   |   |       JPAGenericDAO.java
@@ -77,15 +80,7 @@ C:.
 |       |           TestConnection.java
 |       |           
 |       +---resources
-|       |   |   add_passwords.sql
-|       |   |   crear_usuario_prueba.sql
-|       |   |   doctores_disponibilidad.sql
-|       |   |   especialidades.sql
-|       |   |   evaluaciones.sql
-|       |   |   init_database.sql
-|       |   |   insert_citas_prueba.sql
-|       |   |   insert_disponibilidades.sql
-|       |   |   update_database.sql
+|       |   |   agendamiento_politecnico.sql
 |       |   |   
 |       |   \---META-INF
 |       |           persistence.xml
@@ -96,6 +91,7 @@ C:.
 |           |   consultar-citas.jsp
 |           |   estructura.txt
 |           |   index.jsp
+|           |   inicio-admin.jsp
 |           |   inicio.jsp
 |           |   login-success.jsp
 |           |   resenas.jsp
@@ -133,11 +129,12 @@ C:.
 |               |   calendario.jsp
 |               |   confirmacion.jsp
 |               |   especialidades.jsp
-|               |   lista-doctores.jsp
 |               |   
 |               \---admin
 |                       evaluaciones-por-doctor.jsp
 |                       form-especialidad.jsp
+|                       gestionar-doctores.jsp
+|                       gestionar-estudiantes.jsp
 |                       gestionarEspecialidades.jsp
 |                       gestionarEvaluaciones.jsp
 |                       mejores-calificados.jsp
@@ -152,6 +149,7 @@ C:.
     |   |   consultar-citas.jsp
     |   |   estructura.txt
     |   |   index.jsp
+    |   |   inicio-admin.jsp
     |   |   inicio.jsp
     |   |   login-success.jsp
     |   |   resenas.jsp
@@ -189,11 +187,12 @@ C:.
     |   |   |   calendario.jsp
     |   |   |   confirmacion.jsp
     |   |   |   especialidades.jsp
-    |   |   |   lista-doctores.jsp
     |   |   |   
     |   |   \---admin
     |   |           evaluaciones-por-doctor.jsp
     |   |           form-especialidad.jsp
+    |   |           gestionar-doctores.jsp
+    |   |           gestionar-estudiantes.jsp
     |   |           gestionarEspecialidades.jsp
     |   |           gestionarEvaluaciones.jsp
     |   |           mejores-calificados.jsp
@@ -201,15 +200,13 @@ C:.
     |   |           
     |   \---WEB-INF
     |       +---classes
-    |       |   |   add_passwords.sql
-    |       |   |   crear_usuario_prueba.sql
+    |       |   |   databasefinal.sql
+    |       |   |   datos_completos.sql
     |       |   |   doctores_disponibilidad.sql
     |       |   |   especialidades.sql
     |       |   |   evaluaciones.sql
-    |       |   |   init_database.sql
     |       |   |   insert_citas_prueba.sql
     |       |   |   insert_disponibilidades.sql
-    |       |   |   update_database.sql
     |       |   |   
     |       |   +---controller
     |       |   |       AgendarCitasController.class
@@ -218,8 +215,10 @@ C:.
     |       |   |       ConsultarCitaAsignadaController.class
     |       |   |       ConsultarCitasAgendadasController.class
     |       |   |       DisponibilidadServlet.class
+    |       |   |       DoctorAdminController.class
     |       |   |       DoctorController.class
     |       |   |       EspecialidadController.class
+    |       |   |       EstudianteAdminController.class
     |       |   |       EvaluacionController.class
     |       |   |       LoginServlet.class
     |       |   |       LogoutServlet.class
@@ -239,10 +238,12 @@ C:.
     |       |   |   |       EstudianteDAO.class
     |       |   |   |       EvaluacionDAO.class
     |       |   |   |       GenericDAO.class
+    |       |   |   |       IAdministradorDAO.class
     |       |   |   |       ICitaDAO.class
     |       |   |   |       IDisponibilidadDAO.class
     |       |   |   |       IDoctorDAO.class
     |       |   |   |       IEspecialidadDAO.class
+    |       |   |   |       IEstudianteDAO.class
     |       |   |   |       IEvaluacionDAO.class
     |       |   |   |       JPADAOFactory.class
     |       |   |   |       JPAGenericDAO.class
@@ -277,15 +278,7 @@ C:.
     |               protobuf-java-3.25.1.jar
     |               
     +---classes
-    |   |   add_passwords.sql
-    |   |   crear_usuario_prueba.sql
-    |   |   doctores_disponibilidad.sql
-    |   |   especialidades.sql
-    |   |   evaluaciones.sql
-    |   |   init_database.sql
-    |   |   insert_citas_prueba.sql
-    |   |   insert_disponibilidades.sql
-    |   |   update_database.sql
+    |   |   agendamiento_politecnico.sql
     |   |   
     |   +---controller
     |   |       AgendarCitasController.class
@@ -294,8 +287,9 @@ C:.
     |   |       ConsultarCitaAsignadaController.class
     |   |       ConsultarCitasAgendadasController.class
     |   |       DisponibilidadServlet.class
-    |   |       DoctorController.class
+    |   |       DoctorAdminController.class
     |   |       EspecialidadController.class
+    |   |       EstudianteAdminController.class
     |   |       EvaluacionController.class
     |   |       LoginServlet.class
     |   |       LogoutServlet.class
@@ -315,10 +309,12 @@ C:.
     |   |   |       EstudianteDAO.class
     |   |   |       EvaluacionDAO.class
     |   |   |       GenericDAO.class
+    |   |   |       IAdministradorDAO.class
     |   |   |       ICitaDAO.class
     |   |   |       IDisponibilidadDAO.class
     |   |   |       IDoctorDAO.class
     |   |   |       IEspecialidadDAO.class
+    |   |   |       IEstudianteDAO.class
     |   |   |       IEvaluacionDAO.class
     |   |   |       JPADAOFactory.class
     |   |   |       JPAGenericDAO.class

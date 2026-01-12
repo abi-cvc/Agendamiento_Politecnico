@@ -50,9 +50,6 @@ public class Doctor implements Serializable {
     @Column(name = "password_doctor", length = 255)
     private String password;
     
-    @Column(name = "descripcion", length = 500)
-    private String descripcion;
-    
     @Column(name = "activo")
     private boolean activo = true;
     
@@ -136,14 +133,6 @@ public class Doctor implements Serializable {
     
     public void setPassword(String password) {
         this.password = password;
-    }
-    
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
     }
     
     public boolean isActivo() {
