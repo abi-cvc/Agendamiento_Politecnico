@@ -339,4 +339,32 @@ public class EvaluacionDAO extends JPAGenericDAO<Evaluacion, Integer> implements
             em.close();
         }
     }
+    
+    /**
+     * Obtiene evaluaciones filtradas por estudiante y especialidad
+     * Usado en ResenasController.filtrarPorEspecialidad()
+     */
+    @Override
+    public List<Evaluacion> getByEstudianteYEspecialidad(int idEstudiante, int idEspecialidad) {
+        EntityManager em = getEntityManager();
+        try {
+            TypedQuery<Evaluacion> query = em.createQuery(
+                "SELECT e FROM Evaluacion e " +
+                "WHERE e.estudiante.idEstudiante = :idEstudiante " +
+                "AND e.doctor.especialidad.idEspecialidad = :idEspecialidad " +
+                "ORDER BY e.fechaEvaluacion DESC",
+                Evaluacion.class
+            );
+            query.setParameter("idEstudiante", idEstudiante);
+            query.setParameter("idEspecialidad", idEspecialidad);
+            return query.getResultList();
+        } catch (Exception e) {
+            System.err.println("Error al obtener evaluaciones por estudiante y especialidad: " + e.getMessage());
+            e.printStackTrace();
+            return new ArrayList<>();
+        } finally {
+            em.close();
+        }
+    }
+
 }
