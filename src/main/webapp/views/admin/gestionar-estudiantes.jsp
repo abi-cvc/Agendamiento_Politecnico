@@ -9,8 +9,10 @@
     }
     
     // Determinar si mostrar el modal de creación
+    Object mostrarNuevoAttr = request.getAttribute("mostrarNuevoEstudianteForm");
+    boolean mostrarNuevoAttrFlag = (mostrarNuevoAttr instanceof Boolean) ? (Boolean) mostrarNuevoAttr : false;
     String mostrarModal = request.getParameter("modal");
-    boolean abrirModalCrear = "nuevo".equals(mostrarModal);
+    boolean abrirModalCrear = "nuevo".equals(mostrarModal) || mostrarNuevoAttrFlag;
     
     // Determinar si mostrar el modal de edición
     String idEditar = request.getParameter("editar");
@@ -54,7 +56,7 @@
         <ul>
             <li><a href="${pageContext.request.contextPath}/inicio-admin.jsp">Inicio</a></li>
             <li><a href="${pageContext.request.contextPath}/GestionarDoctores?accion=gestionarDoctores">Gestionar Doctores</a></li>
-            <li><a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=gestionarEstudiantes" class="font-bold">Gestionar Estudiantes</a></li>
+            <li><a href="${pageContext.request.contextPath}/GestionarEstudiantes?accion=gestionarEstudiantes" class="font-bold">Gestionar Estudiantes</a></li>
             <li><a href="<%= request.getContextPath() %>/especialidades?accion=listarAdmin" class="font-bold">Gestionar Especialidades</a></li>
             <li><a href="<%= request.getContextPath() %>/evaluaciones?accion=listarAdmin">Consultar Evaluaciones</a></li>
             <li class="user-logged">
@@ -83,7 +85,7 @@
         <!-- ENCABEZADO -->
         <div class="admin-header">
             <h1>Gestionar Estudiantes</h1>
-            <a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=gestionarEstudiantes&modal=nuevo" 
+            <a href="${pageContext.request.contextPath}/GestionarEstudiantes?accion=NuevoEstudiante" 
                class="btn btn-primary">
                 ➕ Nuevo Estudiante
             </a>
@@ -107,7 +109,7 @@
         <!-- SECCIÓN DE BÚSQUEDA -->
         <div class="filtros-evaluaciones">
             <h3>🔍 Buscar Estudiante</h3>
-            <form method="get" action="${pageContext.request.contextPath}/EstudianteAdminController">
+            <form method="get" action="${pageContext.request.contextPath}/GestionarEstudiantes">
                 <input type="hidden" name="accion" value="buscar">
                 <div class="search-wrapper">
                     <div class="form-group">
@@ -163,13 +165,13 @@
                                 <td>
                                     <div class="btn-actions">
                                         <!-- Edit link -->
-                                        <a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=gestionarEstudiantes&editar=<%= est.getIdEstudiante() %>" 
+                                        <a href="${pageContext.request.contextPath}/GestionarEstudiantes?accion=gestionarEstudiantes&editar=<%= est.getIdEstudiante() %>" 
                                            class="btn btn-sm btn-warning">
                                             ✏️ Editar
                                         </a>
 
                                         <!-- Toggle state form -->
-                                        <form method="post" action="${pageContext.request.contextPath}/EstudianteAdminController" style="display:inline-block;">
+                                        <form method="post" action="${pageContext.request.contextPath}/GestionarEstudiantes" style="display:inline-block;">
                                             <input type="hidden" name="accion" value="cambiarEstado">
                                             <input type="hidden" name="id" value="<%= est.getIdEstudiante() %>">
                                             <button type="submit" class="btn btn-sm <%= est.isActivo() ? "btn-danger" : "btn-primary" %>">
@@ -194,11 +196,11 @@
     <div class="modal-content">
         <div class="modal-header">
             <h2>➕ Nuevo Estudiante</h2>
-            <a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=gestionarEstudiantes" 
+            <a href="${pageContext.request.contextPath}/GestionarEstudiantes?accion=gestionarEstudiantes" 
                class="btn-close">&times;</a>
         </div>
-        <form method="post" action="${pageContext.request.contextPath}/EstudianteAdminController">
-            <input type="hidden" name="accion" value="crear">
+        <form method="post" action="${pageContext.request.contextPath}/GestionarEstudiantes?accion=crearNuevoEstudiante">
+            <input type="hidden" name="accion" value="crearNuevoEstudiante">
             
             <div class="form-group">
                 <label class="form-label">Cédula (ID Paciente) *</label>
@@ -226,7 +228,7 @@
             
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">💾 Guardar</button>
-                <a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=gestionarEstudiantes" 
+                <a href="${pageContext.request.contextPath}/GestionarEstudiantes?accion=gestionarEstudiantes" 
                    class="btn btn-secondary">Cancelar</a>
             </div>
         </form>
@@ -240,10 +242,10 @@
     <div class="modal-content">
         <div class="modal-header">
             <h2>✏️ Editar Estudiante</h2>
-            <a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=gestionarEstudiantes" 
+            <a href="${pageContext.request.contextPath}/GestionarEstudiantes?accion=gestionarEstudiantes" 
                class="btn-close">&times;</a>
         </div>
-        <form method="post" action="${pageContext.request.contextPath}/EstudianteAdminController">
+        <form method="post" action="${pageContext.request.contextPath}/GestionarEstudiantes">
             <input type="hidden" name="accion" value="actualizar">
             <input type="hidden" name="id" value="<%= estudianteEditar.getIdEstudiante() %>">
             
@@ -279,7 +281,7 @@
             
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">💾 Actualizar</button>
-                <a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=gestionarEstudiantes" 
+                <a href="${pageContext.request.contextPath}/GestionarEstudiantes?accion=gestionarEstudiantes" 
                    class="btn btn-secondary">Cancelar</a>
             </div>
         </form>
@@ -298,7 +300,7 @@
             <h3>Panel Admin</h3>
             <ul class="footer-links">
                 <li><a href="${pageContext.request.contextPath}/GestionarDoctores?accion=gestionarDoctores">Gestionar Doctores</a></li>
-                <li><a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=gestionarEstudiantes">Gestionar Estudiantes</a></li>
+                <li><a href="${pageContext.request.contextPath}/GestionarEstudiantes?accion=gestionarEstudiantes">Gestionar Estudiantes</a></li>
             </ul>
         </div>
         <div class="footer-section">

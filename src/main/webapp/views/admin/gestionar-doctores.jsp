@@ -58,7 +58,7 @@
         <ul>
             <li><a href="${pageContext.request.contextPath}/inicio-admin.jsp">Inicio</a></li>
             <li><a href="${pageContext.request.contextPath}/GestionarDoctores?accion=gestionarDoctores" class="font-bold">Gestionar Doctores</a></li>
-            <li><a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=gestionarEstudiantes">Gestionar Estudiantes</a></li>
+            <li><a href="${pageContext.request.contextPath}/GestionarEstudiantes?accion=gestionarEstudiantes">Gestionar Estudiantes</a></li>
             <li><a href="<%= request.getContextPath() %>/especialidades?accion=listarAdmin" class="font-bold">Gestionar Especialidades</a></li>
             <li><a href="<%= request.getContextPath() %>/evaluaciones?accion=listarAdmin">Consultar Evaluaciones</a></li>
             <li class="user-logged">
@@ -333,7 +333,7 @@
             <h3>Panel Admin</h3>
             <ul class="footer-links">
                 <li><a href="${pageContext.request.contextPath}/GestionarDoctores?accion=gestionarDoctores">Gestionar Doctores</a></li>
-                <li><a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=gestionarEstudiantes">Gestionar Estudiantes</a></li>
+                <li><a href="${pageContext.request.contextPath}/GestionarEstudiantes?accion=gestionarEstudiantes">Gestionar Estudiantes</a></li>
             </ul>
         </div>
         <div class="footer-section">

@@ -23,7 +23,7 @@
         <ul>
             <li><a href="${pageContext.request.contextPath}/inicio-admin.jsp" class="font-bold">Inicio</a></li>
             <li><a href="${pageContext.request.contextPath}/GestionarDoctores" class="font-bold">Gestionar Doctores</a></li>
-            <li><a href="${pageContext.request.contextPath}/EstudianteAdminController" class="font-bold">Gestionar Estudiantes</a></li>
+            <li><a href="${pageContext.request.contextPath}/GestionarEstudiantes" class="font-bold">Gestionar Estudiantes</a></li>
             <li><a href="${pageContext.request.contextPath}/especialidades?accion=listarAdmin" class="font-bold">Gestionar Especialidades</a></li>
             <li><a href="${pageContext.request.contextPath}/EvaluacionController?accion=listar" class="font-bold">Consultar Evaluaciones</a></li>
             <li class="user-logged">
@@ -72,7 +72,7 @@
             <h2>👥 Gestionar Estudiantes</h2>
             <p>Administra los estudiantes registrados en el sistema, actualiza su información y estado.</p>
             <div class="mt-4">
-                <a href="${pageContext.request.contextPath}/EstudianteAdminController" class="btn btn-primary">
+                <a href="${pageContext.request.contextPath}/GestionarEstudiantes" class="btn btn-primary">
                     Ir a Estudiantes
                 </a>
             </div>
@@ -115,7 +115,7 @@
             <ul class="footer-links">
                 <li><a href="${pageContext.request.contextPath}/inicio-admin.jsp">Inicio</a></li>
                 <li><a href="${pageContext.request.contextPath}/GestionarDoctores">Gestionar Doctores</a></li>
-                <li><a href="${pageContext.request.contextPath}/EstudianteAdminController">Gestionar Estudiantes</a></li>
+                <li><a href="${pageContext.request.contextPath}/GestionarEstudiantes">Gestionar Estudiantes</a></li>
                 <li><a href="${pageContext.request.contextPath}/especialidades?accion=listarAdmin">Gestionar Especialidades</a></li>
             </ul>
         </div>

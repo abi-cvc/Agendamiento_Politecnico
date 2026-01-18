@@ -25,7 +25,7 @@
             <ul>
                 <li><a href="<%= request.getContextPath() %>/inicio-admin.jsp">Inicio</a></li>
                 <li><a href="${pageContext.request.contextPath}/GestionarDoctores?accion=gestionarDoctores">Gestionar Doctores</a></li>
-            	<li><a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=gestionarEstudiantes" class="font-bold">Gestionar Estudiantes</a></li>
+            	<li><a href="${pageContext.request.contextPath}/GestionarEstudiantes?accion=gestionarEstudiantes" class="font-bold">Gestionar Estudiantes</a></li>
                 <li><a href="<%= request.getContextPath() %>/especialidades?accion=listarAdmin">Gestionar Especialidades</a></li>
                 <li><a href="<%= request.getContextPath() %>/evaluaciones?accion=listarAdmin" class="font-bold">Consultar Evaluaciones</a></li>
                 <li class="user-logged">
