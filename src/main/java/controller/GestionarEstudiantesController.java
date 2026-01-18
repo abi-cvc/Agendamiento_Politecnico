@@ -14,34 +14,6 @@ import java.util.List;
 /**
  * Controller para gestionar estudiantes desde el panel de administrador
  * Maneja: listar, buscar, crear, actualizar, cambiar estado
- *
- * Se refactorizó para seguir el mismo patrón que GestionarDoctoresController y
- * para reflejar exactamente el diagrama de robustez:
- *
- * Flujos (resumen):
- * 1: gestionarEstudiantes
- *   1.1: obtener(): estudiantes[]
- *   1.2: mostrar(estudiantes)
- *
- * 1.3 - 1.7: creación de estudiante
- *   1.3: solicitarNuevoEstudiante (mostrar formulario)
- *   1.4: mostrarFormulario (preparar datos para el formulario)
- *   1.5: creaNuevoEstudiante(datos) -> construir entidad
- *   1.6: crearNuevoEstudiante(datosEstudiante) -> persistencia
- *   1.7: mostrarConfirmacion (mensaje de éxito)
- *
- * 2: desactivar/activar estudiante
- *   2.1: mostrarConfirmacionDesactivar (UI)
- *   2.2: confirmarDesactivacion(cedula)
- *   2.3: cambiarEstadoEstudiante(nuevoEstado)
- *   2.4: actualizarVista (redirigir a lista)
- *
- * 3: editar estudiante
- *   3.1: obtenerEstudiante(cedula)
- *   3.2: mostrarFormulario (editar)
- *   3.3: actualizarDatos(datosEstudiante)
- *   3.4: guardarEstudiante(datosEstudiante)
- *   3.5: notificarExitoEdicion
  */
 @WebServlet(urlPatterns = {"/GestionarEstudiantes"})
 public class GestionarEstudiantesController extends HttpServlet {
