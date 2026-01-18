@@ -1,72 +1,31 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
 <%@ page import="model.entity.Estudiante" %>
-<%
-    List<Estudiante> estudiantes = (List<Estudiante>) request.getAttribute("estudiantes");
-    
-    if (estudiantes == null) {
-        estudiantes = new java.util.ArrayList<>();
-    }
-    
-    // Determinar si mostrar el modal de creación
-    Object mostrarNuevoAttr = request.getAttribute("mostrarNuevoEstudianteForm");
-    boolean mostrarNuevoAttrFlag = (mostrarNuevoAttr instanceof Boolean) ? (Boolean) mostrarNuevoAttr : false;
-    String mostrarModal = request.getParameter("modal");
-    boolean abrirModalCrear = "nuevo".equals(mostrarModal) || mostrarNuevoAttrFlag;
-    
-    // Determinar si mostrar el modal de edición
-    // Priorizar el atributo que puede setear el controlador (estudianteEdicion)
-    Object estudianteEdicionAttr = request.getAttribute("estudianteEdicion");
-    boolean abrirModalEditar = false;
-    Estudiante estudianteEditar = null;
-    if (estudianteEdicionAttr instanceof Estudiante) {
-        estudianteEditar = (Estudiante) estudianteEdicionAttr;
-        abrirModalEditar = true;
-    } else {
-        // Fallback: compatibilidad con el parámetro 'editar' que antes abría el modal
-        String idEditar = request.getParameter("editar");
-        abrirModalEditar = idEditar != null && !idEditar.trim().isEmpty();
-        if (abrirModalEditar) {
-            try {
-                int id = Integer.parseInt(idEditar);
-                for (Estudiante e : estudiantes) {
-                    if (e.getIdEstudiante() == id) {
-                        estudianteEditar = e;
-                        break;
-                    }
-                }
-            } catch (NumberFormatException e) {
-                abrirModalEditar = false;
-            }
-        }
-    }
-%>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestionar Estudiantes - Admin</title>
-    <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/logo_epn.png">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/framework.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css">
+    <link rel="icon" type="image/png" href="<%= request.getContextPath() %>/images/logo_epn.png">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/framework.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<!-- HEADER -->
 <header>
     <div class="logo">
-        <img src="${pageContext.request.contextPath}/images/logo.svg" alt="Logo">
+        <img src="<%= request.getContextPath() %>/images/logo.svg" alt="Logo">
     </div>
     <nav>
         <ul>
-            <li><a href="${pageContext.request.contextPath}/inicio-admin.jsp">Inicio</a></li>
-            <li><a href="${pageContext.request.contextPath}/GestionarDoctores?accion=gestionarDoctores">Gestionar Doctores</a></li>
-            <li><a href="${pageContext.request.contextPath}/GestionarEstudiantes?accion=gestionarEstudiantes" class="font-bold">Gestionar Estudiantes</a></li>
-            <li><a href="<%= request.getContextPath() %>/especialidades?accion=listarAdmin" class="font-bold">Gestionar Especialidades</a></li>
+            <li><a href="<%= request.getContextPath() %>/inicio-admin.jsp">Inicio</a></li>
+            <li><a href="<%= request.getContextPath() %>/GestionarDoctores?accion=gestionarDoctores">Gestionar Doctores</a></li>
+            <li><a href="<%= request.getContextPath() %>/GestionarEstudiantes?accion=gestionarEstudiantes" class="font-bold">Gestionar Estudiantes</a></li>
+            <li><a href="<%= request.getContextPath() %>/especialidades?accion=listarAdmin">Gestionar Especialidades</a></li>
             <li><a href="<%= request.getContextPath() %>/evaluaciones?accion=listarAdmin">Consultar Evaluaciones</a></li>
             <li class="user-logged">
                <div class="user-menu">
@@ -87,20 +46,14 @@
     </nav>
 </header>
 
-<!-- CONTENIDO PRINCIPAL -->
 <main>
     <div class="admin-container">
         
-        <!-- ENCABEZADO -->
         <div class="admin-header">
             <h1>Gestionar Estudiantes</h1>
-            <a href="${pageContext.request.contextPath}/GestionarEstudiantes?accion=NuevoEstudiante" 
-               class="btn btn-primary">
-                ➕ Nuevo Estudiante
-            </a>
+            <a href="<%= request.getContextPath() %>/GestionarEstudiantes?accion=NuevoEstudiante" class="btn btn-primary">➕ Nuevo Estudiante</a>
         </div>
 
-        <!-- MENSAJES -->
         <% if (session.getAttribute("mensaje") != null) { %>
             <div class="alert alert-success show">
                 <%= session.getAttribute("mensaje") %>
@@ -115,30 +68,27 @@
             </div>
         <% } %>
 
-        <!-- SECCIÓN DE BÚSQUEDA -->
         <div class="filtros-evaluaciones">
             <h3>🔍 Buscar Estudiante</h3>
-            <form method="get" action="${pageContext.request.contextPath}/GestionarEstudiantes">
+            <form method="get" action="<%= request.getContextPath() %>/GestionarEstudiantes">
                 <input type="hidden" name="accion" value="buscar">
                 <div class="search-wrapper">
                     <div class="form-group">
                         <label class="form-label">Cédula del Estudiante (ID Paciente)</label>
-                        <input type="text" 
-                               name="cedula" 
-                               class="form-input" 
-                               placeholder="Ingrese cédula para buscar..."
-                               value="<%= request.getParameter("cedula") != null ? request.getParameter("cedula") : "" %>">
+                        <input type="text" name="cedula" class="form-input" placeholder="Ingrese cédula para buscar..." value="<%= request.getParameter("cedula") != null ? request.getParameter("cedula") : "" %>">
                     </div>
                     <button type="submit" class="btn btn-primary">🔍 Buscar</button>
                 </div>
             </form>
         </div>
 
-        <!-- TABLA DE ESTUDIANTES -->
         <div class="card">
-            <h3 class="mb-3">📋 Lista de Estudiantes (<%= estudiantes.size() %>)</h3>
+            <%
+                List<Estudiante> estudiantes = (List<Estudiante>) request.getAttribute("estudiantes");
+            %>
+            <h3 class="mb-3">📋 Lista de Estudiantes (<%= estudiantes != null ? estudiantes.size() : 0 %>)</h3>
             
-            <% if (estudiantes.isEmpty()) { %>
+            <% if (estudiantes == null || estudiantes.isEmpty()) { %>
                 <div class="text-center p-4">
                     <p class="text-muted text-lg">
                         No se encontraron estudiantes
@@ -173,14 +123,9 @@
                                 </td>
                                 <td>
                                     <div class="btn-actions">
-                                        <!-- Edit link -->
-                                        <a href="${pageContext.request.contextPath}/GestionarEstudiantes?accion=editarEstudiante&id=<%= est.getIdEstudiante() %>" 
-                                           class="btn btn-sm btn-warning">
-                                            ✏️ Editar
-                                        </a>
+                                        <a href="<%= request.getContextPath() %>/GestionarEstudiantes?accion=editarEstudiante&id=<%= est.getIdEstudiante() %>" class="btn btn-sm btn-warning">✏️ Editar</a>
 
-                                        <!-- Toggle state form -->
-                                        <form method="post" action="${pageContext.request.contextPath}/GestionarEstudiantes" style="display:inline-block;">
+                                        <form method="post" action="<%= request.getContextPath() %>/GestionarEstudiantes" style="display:inline-block;">
                                             <input type="hidden" name="accion" value="confirmarDesactivacion">
                                             <input type="hidden" name="id" value="<%= est.getIdEstudiante() %>">
                                             <button type="submit" class="btn btn-sm <%= est.isActivo() ? "btn-danger" : "btn-primary" %>">
@@ -200,16 +145,17 @@
 </main>
 
 <!-- MODAL NUEVO ESTUDIANTE -->
-<% if (abrirModalCrear) { %>
+<%
+    Boolean abrirModalCrear = (Boolean) request.getAttribute("abrirModalCrear");
+    if (abrirModalCrear != null && abrirModalCrear) {
+%>
 <div class="modal-overlay active">
     <div class="modal-content">
         <div class="modal-header">
             <h2>➕ Nuevo Estudiante</h2>
-            <a href="${pageContext.request.contextPath}/GestionarEstudiantes?accion=gestionarEstudiantes" 
-               class="btn-close">&times;</a>
+            <a href="<%= request.getContextPath() %>/GestionarEstudiantes?accion=gestionarEstudiantes" class="btn-close">&times;</a>
         </div>
-        <form method="post" action="${pageContext.request.contextPath}/GestionarEstudiantes">
-            <!-- Enviar al servlet y dejar que doPost lea el parámetro 'accion' -->
+        <form method="post" action="<%= request.getContextPath() %>/GestionarEstudiantes">
             <input type="hidden" name="accion" value="solicitarNuevoEstudiante">
             
             <div class="form-group">
@@ -231,6 +177,7 @@
                 <label class="form-label">Email *</label>
                 <input type="email" name="email" class="form-input" required maxlength="100" placeholder="estudiante@epn.edu.ec">
             </div>
+            
             <div class="form-group">
                 <label class="form-label">Contraseña *</label>
                 <input type="password" name="password" class="form-input" required maxlength="255" placeholder="Contraseña para el estudiante">
@@ -238,8 +185,7 @@
             
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">💾 Guardar</button>
-                <a href="${pageContext.request.contextPath}/GestionarEstudiantes?accion=gestionarEstudiantes" 
-                   class="btn btn-secondary">Cancelar</a>
+                <a href="<%= request.getContextPath() %>/GestionarEstudiantes?accion=gestionarEstudiantes" class="btn btn-secondary">Cancelar</a>
             </div>
         </form>
     </div>
@@ -247,15 +193,18 @@
 <% } %>
 
 <!-- MODAL EDITAR ESTUDIANTE -->
-<% if (abrirModalEditar && estudianteEditar != null) { %>
+<%
+    Boolean abrirModalEditar = (Boolean) request.getAttribute("abrirModalEditar");
+    Estudiante estudianteEditar = (Estudiante) request.getAttribute("estudianteEditar");
+    if (abrirModalEditar != null && abrirModalEditar && estudianteEditar != null) {
+%>
 <div class="modal-overlay active">
     <div class="modal-content">
         <div class="modal-header">
             <h2>✏️ Editar Estudiante</h2>
-            <a href="${pageContext.request.contextPath}/GestionarEstudiantes?accion=gestionarEstudiantes" 
-               class="btn-close">&times;</a>
+            <a href="<%= request.getContextPath() %>/GestionarEstudiantes?accion=gestionarEstudiantes" class="btn-close">&times;</a>
         </div>
-        <form method="post" action="${pageContext.request.contextPath}/GestionarEstudiantes">
+        <form method="post" action="<%= request.getContextPath() %>/GestionarEstudiantes">
             <input type="hidden" name="accion" value="actualizar">
             <input type="hidden" name="id" value="<%= estudianteEditar.getIdEstudiante() %>">
             
@@ -266,24 +215,19 @@
             
             <div class="form-group">
                 <label class="form-label">Nombre *</label>
-                <input type="text" name="nombre" class="form-input" 
-                       value="<%= estudianteEditar.getNombreEstudiante() %>" 
-                       required maxlength="100">
+                <input type="text" name="nombre" class="form-input" value="<%= estudianteEditar.getNombreEstudiante() %>" required maxlength="100">
             </div>
             
             <div class="form-group">
                 <label class="form-label">Apellido *</label>
-                <input type="text" name="apellido" class="form-input" 
-                       value="<%= estudianteEditar.getApellidoEstudiante() %>" 
-                       required maxlength="100">
+                <input type="text" name="apellido" class="form-input" value="<%= estudianteEditar.getApellidoEstudiante() %>" required maxlength="100">
             </div>
             
             <div class="form-group">
                 <label class="form-label">Email *</label>
-                <input type="email" name="email" class="form-input" 
-                       value="<%= estudianteEditar.getCorreoEstudiante() %>" 
-                       required maxlength="100">
+                <input type="email" name="email" class="form-input" value="<%= estudianteEditar.getCorreoEstudiante() %>" required maxlength="100">
             </div>
+            
             <div class="form-group">
                 <label class="form-label">Contraseña (dejar vacío para mantener)</label>
                 <input type="password" name="password" class="form-input" maxlength="255">
@@ -291,15 +235,13 @@
             
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">💾 Actualizar</button>
-                <a href="${pageContext.request.contextPath}/GestionarEstudiantes?accion=gestionarEstudiantes" 
-                   class="btn btn-secondary">Cancelar</a>
+                <a href="<%= request.getContextPath() %>/GestionarEstudiantes?accion=gestionarEstudiantes" class="btn btn-secondary">Cancelar</a>
             </div>
         </form>
     </div>
 </div>
 <% } %>
 
-<!-- FOOTER -->
 <footer>
     <div class="footer-main">
         <div class="footer-section">
@@ -309,8 +251,10 @@
         <div class="footer-section">
             <h3>Panel Admin</h3>
             <ul class="footer-links">
-                <li><a href="${pageContext.request.contextPath}/GestionarDoctores?accion=gestionarDoctores">Gestionar Doctores</a></li>
-                <li><a href="${pageContext.request.contextPath}/GestionarEstudiantes?accion=gestionarEstudiantes">Gestionar Estudiantes</a></li>
+                <li><a href="<%= request.getContextPath() %>/GestionarDoctores?accion=gestionarDoctores">Gestionar Doctores</a></li>
+                <li><a href="<%= request.getContextPath() %>/GestionarEstudiantes?accion=gestionarEstudiantes">Gestionar Estudiantes</a></li>
+                <li><a href="<%= request.getContextPath() %>/especialidades?accion=listarAdmin">Gestionar Especialidades</a></li>
+            	<li><a href="<%= request.getContextPath() %>/evaluaciones?accion=listarAdmin">Consultar Evaluaciones</a></li>
             </ul>
         </div>
         <div class="footer-section">
@@ -323,5 +267,6 @@
     </div>
 </footer>
 
+<script src="<%= request.getContextPath() %>/js/gestionar-estudiantes.js"></script>
 </body>
 </html>

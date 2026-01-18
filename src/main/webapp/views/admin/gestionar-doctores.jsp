@@ -2,99 +2,40 @@
 <%@ page import="java.util.List" %>
 <%@ page import="model.entity.Doctor" %>
 <%@ page import="model.entity.Especialidad" %>
-<%
-    List<Doctor> doctores = (List<Doctor>) request.getAttribute("doctores");
-    
-    if (doctores == null) {
-        doctores = new java.util.ArrayList<>();
-    }
-    
-    // Determinar si mostrar el formulario/ modal de creación
-    // Ahora se acepta tanto el query param modal=nuevo (compat) como el atributo mostrarNuevoDoctorForm
-    Object mostrarNuevoAttr = request.getAttribute("mostrarNuevoDoctorForm");
-    boolean mostrarNuevoAttrFlag = (mostrarNuevoAttr instanceof Boolean) ? (Boolean) mostrarNuevoAttr : false;
-    String mostrarModal = request.getParameter("modal");
-    boolean abrirModalCrear = "nuevo".equals(mostrarModal) || mostrarNuevoAttrFlag;
-    
-    // Determinar si mostrar el modal de edición
-    String idEditar = request.getParameter("editar");
-    boolean abrirModalEditar = idEditar != null && !idEditar.trim().isEmpty();
-    Doctor doctorEditar = null;
-    if (abrirModalEditar) {
-        try {
-            int id = Integer.parseInt(idEditar);
-            for (Doctor d : doctores) {
-                if (d.getIdDoctor() == id) {
-                    doctorEditar = d;
-                    break;
-                }
-            }
-        } catch (NumberFormatException e) {
-            abrirModalEditar = false;
-        }
-    }
-%>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestionar Doctores - Admin</title>
-    <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/logo_epn.png">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/framework.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="<%= request.getContextPath() %>/images/logo_epn.png">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/framework.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
 </head>
 <body>
 
-<!-- HEADER -->
 <header>
     <div class="logo">
-        <img src="${pageContext.request.contextPath}/images/logo.svg" alt="Logo">
+        <img src="<%= request.getContextPath() %>/images/logo.svg" alt="Logo">
     </div>
     <nav>
         <ul>
-            <li><a href="${pageContext.request.contextPath}/inicio-admin.jsp">Inicio</a></li>
-            <li><a href="${pageContext.request.contextPath}/GestionarDoctores?accion=gestionarDoctores" class="font-bold">Gestionar Doctores</a></li>
-            <li><a href="${pageContext.request.contextPath}/GestionarEstudiantes?accion=gestionarEstudiantes">Gestionar Estudiantes</a></li>
-            <li><a href="<%= request.getContextPath() %>/especialidades?accion=listarAdmin" class="font-bold">Gestionar Especialidades</a></li>
+            <li><a href="<%= request.getContextPath() %>/inicio-admin.jsp">Inicio</a></li>
+            <li><a href="<%= request.getContextPath() %>/GestionarDoctores?accion=gestionarDoctores" class="font-bold">Gestionar Doctores</a></li>
+            <li><a href="<%= request.getContextPath() %>/GestionarEstudiantes?accion=gestionarEstudiantes">Gestionar Estudiantes</a></li>
+            <li><a href="<%= request.getContextPath() %>/especialidades?accion=listarAdmin">Gestionar Especialidades</a></li>
             <li><a href="<%= request.getContextPath() %>/evaluaciones?accion=listarAdmin">Consultar Evaluaciones</a></li>
-            <li class="user-logged">
-               <div class="user-menu">
-                   <img src="<%= request.getContextPath() %>/images/user.svg" alt="Usuario" class="user-avatar">
-                   <span class="user-name">Admin</span>
-                   <div class="user-dropdown">
-                       <div class="dropdown-header">
-                           <strong>Admin Bienestar</strong>
-                           <small>admin@epn.edu.ec</small>
-                       </div>
-                       <a href="<%= request.getContextPath() %>/index.jsp" onclick="logout(); return false;">
-                           🚪 Cerrar Sesión
-                       </a>
-                   </div>
-               </div>
-           </li>
         </ul>
     </nav>
 </header>
 
-<!-- CONTENIDO PRINCIPAL -->
 <main>
     <div class="admin-container">
-        
-        <!-- ENCABEZADO -->
         <div class="admin-header">
             <h1>Gestionar Doctores</h1>
-            <!-- Botón según diagrama: solicita el formulario con accion=NuevoDoctor y etiqueta exacta -->
-            <a href="${pageContext.request.contextPath}/GestionarDoctores?accion=NuevoDoctor" 
-               class="btn btn-primary">
-                NuevoDoctor
-            </a>
+            <a href="<%= request.getContextPath() %>/GestionarDoctores?accion=NuevoDoctor" class="btn btn-primary">➕ Nuevo Doctor</a>
         </div>
 
-        <!-- MENSAJES -->
         <% if (session.getAttribute("mensaje") != null) { %>
             <div class="alert alert-success show">
                 <%= session.getAttribute("mensaje") %>
@@ -109,37 +50,30 @@
             </div>
         <% } %>
 
-        <!-- SECCIÓN DE BÚSQUEDA -->
         <div class="filtros-evaluaciones">
             <h3>🔍 Buscar Doctor</h3>
-            <form method="get" action="${pageContext.request.contextPath}/GestionarDoctores">
+            <form method="get" action="<%= request.getContextPath() %>/GestionarDoctores">
                 <input type="hidden" name="accion" value="buscar">
                 <div class="search-wrapper">
                     <div class="form-group">
                         <label class="form-label">Cédula del Doctor</label>
-                        <input type="text" 
-                               name="cedula" 
-                               class="form-input" 
-                               placeholder="Ingrese cédula para buscar..."
-                               value="<%= request.getParameter("cedula") != null ? request.getParameter("cedula") : "" %>">
+                        <input type="text" name="cedula" class="form-input" placeholder="Ingrese cédula para buscar..." value="<%= request.getParameter("cedula") != null ? request.getParameter("cedula") : "" %>">
                     </div>
                     <button type="submit" class="btn btn-primary">🔍 Buscar</button>
                 </div>
             </form>
         </div>
 
-        <!-- TABLA DE DOCTORES -->
         <div class="card">
-            <h3 class="mb-3">📋 Lista de Doctores (<%= doctores.size() %>)</h3>
-            
-            <% if (doctores.isEmpty()) { %>
-                <div class="text-center p-4">
-                    <p class="text-muted text-lg">
-                        No se encontraron doctores
-                        <% if (request.getParameter("cedula") != null) { %>
-                            con la cédula "<%= request.getParameter("cedula") %>"
-                        <% } %>
-                    </p>
+            <%
+                List<Doctor> doctores = (List<Doctor>) request.getAttribute("doctores");
+            %>
+            <h3 class="mb-3">📋 Lista de Doctores (<%= doctores != null ? doctores.size() : 0 %>)</h3>
+
+            <% if (doctores == null || doctores.isEmpty()) { %>
+                <div class="empty-state">
+                    <p>No se encontraron doctores</p>
+                    <a href="<%= request.getContextPath() %>/GestionarDoctores?accion=NuevoDoctor" class="btn btn-primary mt-3">➕ Nuevo Doctor</a>
                 </div>
             <% } else { %>
                 <table class="table-admin">
@@ -162,167 +96,165 @@
                                 <td><%= doc.getNombre() + " " + doc.getApellido() %></td>
                                 <td><%= doc.getEmail() != null ? doc.getEmail() : "-" %></td>
                                 <td><%= doc.getTelefono() != null ? doc.getTelefono() : "-" %></td>
-                                <td>
-                                     <span class="estado-badge <%= doc.isActivo() ? "estado-activo" : "estado-inactivo" %>">
-                                         <%= doc.isActivo() ? "✓ Activo" : "✗ Inactivo" %>
-                                     </span>
-                                 </td>
+                                <td><span class="estado-badge <%= doc.isActivo() ? "estado-activo" : "estado-inactivo" %>"><%= doc.isActivo() ? "✓ Activo" : "✗ Inactivo" %></span></td>
                                 <td>
                                     <div class="btn-actions">
-                                        <!-- Editar: solicitarEdicionDoctor (GET con id) -->
-                                        <a href="${pageContext.request.contextPath}/GestionarDoctores?accion=solicitarEdicionDoctor&id=<%= doc.getIdDoctor() %>" 
-                                           class="btn btn-sm btn-warning">
-                                            ✏️ Editar
-                                        </a>
-                                        
-                                        <!-- Desactivar/Activar: usar POST para cambiar estado (mejor práctica) -->
-                                        <form method="post" action="${pageContext.request.contextPath}/GestionarDoctores" style="display:inline-block; margin:0;">
+                                        <a href="<%= request.getContextPath() %>/GestionarDoctores?accion=solicitarEdicionDoctor&id=<%= doc.getIdDoctor() %>" class="btn btn-sm btn-warning">✏️ Editar</a>
+
+                                        <form method="post" action="<%= request.getContextPath() %>/GestionarDoctores" style="display:inline-block; margin:0;">
                                             <input type="hidden" name="accion" value="confirmarDesactivacion">
                                             <input type="hidden" name="id" value="<%= doc.getIdDoctor() %>">
                                             <button type="submit" class="btn btn-sm <%= doc.isActivo() ? "btn-danger" : "btn-primary" %>">
                                                 <%= doc.isActivo() ? "⏸ Desactivar" : "▶ Activar" %>
                                             </button>
                                         </form>
-                                     </div>
-                                 </td>
-                             </tr>
-                         <% } %>
-                     </tbody>
-                 </table>
-             <% } %>
-         </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            <% } %>
+        </div>
 
     </div>
 </main>
 
-<!-- MODAL NUEVO DOCTOR (formulario) -->
-<% if (abrirModalCrear) { %>
+<!-- MODAL NUEVO DOCTOR -->
+<%
+    Boolean abrirModalCrear = (Boolean) request.getAttribute("abrirModalCrear");
+    List<Especialidad> especialidades = (List<Especialidad>) request.getAttribute("especialidades");
+    if (abrirModalCrear != null && abrirModalCrear) {
+%>
 <div class="modal-overlay active">
     <div class="modal-content">
         <div class="modal-header">
             <h2>➕ Nuevo Doctor</h2>
-            <a href="${pageContext.request.contextPath}/GestionarDoctores?accion=gestionarDoctores" class="btn-close">&times;</a>
+            <a href="<%= request.getContextPath() %>/GestionarDoctores?accion=gestionarDoctores" class="btn-close">&times;</a>
         </div>
-        <form method="post" action="${pageContext.request.contextPath}/GestionarDoctores">
+        <form method="post" action="<%= request.getContextPath() %>/GestionarDoctores">
             <input type="hidden" name="accion" value="solicitarNuevoDoctor">
-            
+
             <div class="form-group">
                 <label class="form-label">Cédula *</label>
-                <input type="text" name="cedula" class="form-input" required maxlength="10"
-                       value="<%= request.getAttribute("formCedula") != null ? request.getAttribute("formCedula") : "" %>">
+                <input type="text" name="cedula" class="form-input" required maxlength="10">
             </div>
-            
+
             <div class="form-group">
                 <label class="form-label">Nombre *</label>
-                <input type="text" name="nombre" class="form-input" required maxlength="100"
-                       value="<%= request.getAttribute("formNombre") != null ? request.getAttribute("formNombre") : "" %>">
+                <input type="text" name="nombre" class="form-input" required maxlength="100">
             </div>
-            
+
             <div class="form-group">
                 <label class="form-label">Apellido *</label>
-                <input type="text" name="apellido" class="form-input" required maxlength="100"
-                       value="<%= request.getAttribute("formApellido") != null ? request.getAttribute("formApellido") : "" %>">
+                <input type="text" name="apellido" class="form-input" required maxlength="100">
             </div>
-            
+
             <div class="form-group">
                 <label class="form-label">Email *</label>
-                <input type="email" name="email" class="form-input" required maxlength="100"
-                       value="<%= request.getAttribute("formEmail") != null ? request.getAttribute("formEmail") : "" %>">
+                <input type="email" name="email" class="form-input" required maxlength="100">
             </div>
-            
+
             <div class="grid grid-2 gap-lg">
                 <div class="form-group">
                     <label class="form-label">Contraseña *</label>
                     <input type="password" name="password" class="form-input" required maxlength="255" placeholder="Contraseña para el doctor">
                 </div>
-                
+
                 <div class="form-group">
                     <label class="form-label">Teléfono</label>
-                    <input type="text" name="telefono" class="form-input" maxlength="15"
-                           value="<%= request.getAttribute("formTelefono") != null ? request.getAttribute("formTelefono") : "" %>">
+                    <input type="text" name="telefono" class="form-input" maxlength="15">
                 </div>
             </div>
-            
+
             <div class="form-group">
                 <label class="form-label">Especialidad (opcional)</label>
                 <select name="idEspecialidad" class="form-select">
                     <option value="">-- Sin especialidad --</option>
-                    <% List<Especialidad> espes = (List<Especialidad>) request.getAttribute("especialidades");
-                       String sel = request.getAttribute("formIdEspecialidad") != null ? request.getAttribute("formIdEspecialidad").toString() : "";
-                       if (espes != null) {
-                           for (Especialidad esp : espes) { %>
-                        <option value="<%= esp.getIdEspecialidad() %>" <%= (sel.equals(String.valueOf(esp.getIdEspecialidad()))?"selected":"") %>><%= esp.getTitulo() %></option>
-                    <%       }
-                       }
-                    %>
+                    <% if (especialidades != null) {
+                        for (Especialidad esp : especialidades) { %>
+                            <option value="<%= esp.getIdEspecialidad() %>"><%= esp.getTitulo() %></option>
+                    <%  }
+                    } %>
                 </select>
             </div>
-            
+
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">💾 Guardar</button>
-                <a href="${pageContext.request.contextPath}/GestionarDoctores?accion=gestionarDoctores" class="btn btn-secondary">Cancelar</a>
+                <a href="<%= request.getContextPath() %>/GestionarDoctores?accion=gestionarDoctores" class="btn btn-secondary">Cancelar</a>
             </div>
         </form>
     </div>
 </div>
 <% } %>
 
-<!-- EDITAR DOCTOR (restaurado) -->
-<% if (request.getAttribute("mostrarEditarDoctorForm") != null && (Boolean)request.getAttribute("mostrarEditarDoctorForm")) {
-    Doctor d = (Doctor) request.getAttribute("doctor");
-    List<Especialidad> especialidadesEdit = (List<Especialidad>) request.getAttribute("especialidades");
+<!-- MODAL EDITAR DOCTOR -->
+<%
+    Boolean abrirModalEditar = (Boolean) request.getAttribute("abrirModalEditar");
+    Doctor doctorEditar = (Doctor) request.getAttribute("doctorEditar");
+    if (abrirModalEditar != null && abrirModalEditar && doctorEditar != null) {
 %>
 <div class="modal-overlay active">
     <div class="modal-content">
         <div class="modal-header">
             <h2>✏️ Editar Doctor</h2>
-            <a href="${pageContext.request.contextPath}/GestionarDoctores?accion=gestionarDoctores" class="btn-close">&times;</a>
+            <a href="<%= request.getContextPath() %>/GestionarDoctores?accion=gestionarDoctores" class="btn-close">&times;</a>
         </div>
-        <form method="post" action="${pageContext.request.contextPath}/GestionarDoctores">
+        <form method="post" action="<%= request.getContextPath() %>/GestionarDoctores">
             <input type="hidden" name="accion" value="actualizar">
-            <input type="hidden" name="id" value="<%= d.getIdDoctor() %>">
+            <input type="hidden" name="id" value="<%= doctorEditar.getIdDoctor() %>">
+            
             <div class="form-group">
                 <label class="form-label">Cédula</label>
-                <input type="text" class="form-input" value="<%= d.getCedula() %>" readonly>
+                <input type="text" class="form-input" value="<%= doctorEditar.getCedula() %>" readonly>
             </div>
+            
             <div class="form-group">
                 <label class="form-label">Nombre</label>
-                <input type="text" class="form-input" value="<%= d.getNombre() %>" readonly>
+                <input type="text" class="form-input" value="<%= doctorEditar.getNombre() %>" readonly>
             </div>
+            
             <div class="form-group">
                 <label class="form-label">Apellido</label>
-                <input type="text" class="form-input" value="<%= d.getApellido() %>" readonly>
+                <input type="text" class="form-input" value="<%= doctorEditar.getApellido() %>" readonly>
             </div>
+            
             <div class="form-group">
                 <label class="form-label">Email</label>
-                <input type="email" class="form-input" name="email" value="<%= d.getEmail() != null ? d.getEmail() : "" %>">
+                <input type="email" class="form-input" name="email" value="<%= doctorEditar.getEmail() != null ? doctorEditar.getEmail() : "" %>">
             </div>
+            
             <div class="form-group">
                 <label class="form-label">Teléfono</label>
-                <input type="text" name="telefono" class="form-input" value="<%= d.getTelefono() != null ? d.getTelefono() : "" %>" maxlength="15">
+                <input type="text" name="telefono" class="form-input" value="<%= doctorEditar.getTelefono() != null ? doctorEditar.getTelefono() : "" %>" maxlength="15">
             </div>
+            
             <div class="form-group">
                 <label class="form-label">Especialidad</label>
                 <select name="idEspecialidad" class="form-select">
                     <option value="">-- Sin especialidad --</option>
-                    <% if (especialidadesEdit != null) {
-                        for (Especialidad esp : especialidadesEdit) { %>
-                            <option value="<%= esp.getIdEspecialidad() %>" <%= (d.getEspecialidad()!=null && d.getEspecialidad().getIdEspecialidad()==esp.getIdEspecialidad())?"selected":"" %>><%= esp.getTitulo() %></option>
-                    <%  }
-                       }
+                    <% if (especialidades != null) {
+                        for (Especialidad esp : especialidades) { 
+                            boolean seleccionado = (doctorEditar.getEspecialidad() != null && 
+                                                   doctorEditar.getEspecialidad().getIdEspecialidad() == esp.getIdEspecialidad());
                     %>
+                            <option value="<%= esp.getIdEspecialidad() %>" <%= seleccionado ? "selected" : "" %>>
+                                <%= esp.getTitulo() %>
+                            </option>
+                    <%  }
+                    } %>
                 </select>
             </div>
+            
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">💾 Actualizar</button>
-                <a href="${pageContext.request.contextPath}/GestionarDoctores?accion=gestionarDoctores" class="btn btn-secondary">Cancelar</a>
+                <a href="<%= request.getContextPath() %>/GestionarDoctores?accion=gestionarDoctores" class="btn btn-secondary">Cancelar</a>
             </div>
         </form>
     </div>
 </div>
 <% } %>
 
-<!-- FOOTER -->
 <footer>
     <div class="footer-main">
         <div class="footer-section">
@@ -332,8 +264,10 @@
         <div class="footer-section">
             <h3>Panel Admin</h3>
             <ul class="footer-links">
-                <li><a href="${pageContext.request.contextPath}/GestionarDoctores?accion=gestionarDoctores">Gestionar Doctores</a></li>
-                <li><a href="${pageContext.request.contextPath}/GestionarEstudiantes?accion=gestionarEstudiantes">Gestionar Estudiantes</a></li>
+                <li><a href="<%= request.getContextPath() %>/GestionarDoctores?accion=gestionarDoctores">Gestionar Doctores</a></li>
+                <li><a href="<%= request.getContextPath() %>/GestionarEstudiantes?accion=gestionarEstudiantes">Gestionar Estudiantes</a></li>
+                <li><a href="<%= request.getContextPath() %>/especialidades?accion=listarAdmin">Gestionar Especialidades</a></li>
+            	<li><a href="<%= request.getContextPath() %>/evaluaciones?accion=listarAdmin">Consultar Evaluaciones</a></li>
             </ul>
         </div>
         <div class="footer-section">
@@ -346,5 +280,6 @@
     </div>
 </footer>
 
+<script src="<%= request.getContextPath() %>/js/gestionar-doctores.js"></script>
 </body>
 </html>
