@@ -15,20 +15,29 @@
     boolean abrirModalCrear = "nuevo".equals(mostrarModal) || mostrarNuevoAttrFlag;
     
     // Determinar si mostrar el modal de edición
-    String idEditar = request.getParameter("editar");
-    boolean abrirModalEditar = idEditar != null && !idEditar.trim().isEmpty();
+    // Priorizar el atributo que puede setear el controlador (estudianteEdicion)
+    Object estudianteEdicionAttr = request.getAttribute("estudianteEdicion");
+    boolean abrirModalEditar = false;
     Estudiante estudianteEditar = null;
-    if (abrirModalEditar) {
-        try {
-            int id = Integer.parseInt(idEditar);
-            for (Estudiante e : estudiantes) {
-                if (e.getIdEstudiante() == id) {
-                    estudianteEditar = e;
-                    break;
+    if (estudianteEdicionAttr instanceof Estudiante) {
+        estudianteEditar = (Estudiante) estudianteEdicionAttr;
+        abrirModalEditar = true;
+    } else {
+        // Fallback: compatibilidad con el parámetro 'editar' que antes abría el modal
+        String idEditar = request.getParameter("editar");
+        abrirModalEditar = idEditar != null && !idEditar.trim().isEmpty();
+        if (abrirModalEditar) {
+            try {
+                int id = Integer.parseInt(idEditar);
+                for (Estudiante e : estudiantes) {
+                    if (e.getIdEstudiante() == id) {
+                        estudianteEditar = e;
+                        break;
+                    }
                 }
+            } catch (NumberFormatException e) {
+                abrirModalEditar = false;
             }
-        } catch (NumberFormatException e) {
-            abrirModalEditar = false;
         }
     }
 %>
@@ -165,14 +174,14 @@
                                 <td>
                                     <div class="btn-actions">
                                         <!-- Edit link -->
-                                        <a href="${pageContext.request.contextPath}/GestionarEstudiantes?accion=gestionarEstudiantes&editar=<%= est.getIdEstudiante() %>" 
+                                        <a href="${pageContext.request.contextPath}/GestionarEstudiantes?accion=editarEstudiante&id=<%= est.getIdEstudiante() %>" 
                                            class="btn btn-sm btn-warning">
                                             ✏️ Editar
                                         </a>
 
                                         <!-- Toggle state form -->
                                         <form method="post" action="${pageContext.request.contextPath}/GestionarEstudiantes" style="display:inline-block;">
-                                            <input type="hidden" name="accion" value="cambiarEstado">
+                                            <input type="hidden" name="accion" value="confirmarDesactivacion">
                                             <input type="hidden" name="id" value="<%= est.getIdEstudiante() %>">
                                             <button type="submit" class="btn btn-sm <%= est.isActivo() ? "btn-danger" : "btn-primary" %>">
                                                 <%= est.isActivo() ? "⏸ Desactivar" : "▶ Activar" %>
@@ -199,8 +208,9 @@
             <a href="${pageContext.request.contextPath}/GestionarEstudiantes?accion=gestionarEstudiantes" 
                class="btn-close">&times;</a>
         </div>
-        <form method="post" action="${pageContext.request.contextPath}/GestionarEstudiantes?accion=crearNuevoEstudiante">
-            <input type="hidden" name="accion" value="crearNuevoEstudiante">
+        <form method="post" action="${pageContext.request.contextPath}/GestionarEstudiantes">
+            <!-- Enviar al servlet y dejar que doPost lea el parámetro 'accion' -->
+            <input type="hidden" name="accion" value="solicitarNuevoEstudiante">
             
             <div class="form-group">
                 <label class="form-label">Cédula (ID Paciente) *</label>

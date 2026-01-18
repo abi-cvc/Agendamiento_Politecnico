@@ -42,14 +42,14 @@ public class GestionarDoctoresController extends HttpServlet {
                 gestionarDoctores(request, response); // metodo principal
                 break;
             case "buscar":
-                buscarDoctor(request, response); // filtro independiente
+                buscarDoctor(request, response); // Buscar: Filtro puntual por cédula
                 break;
             case "NuevoDoctor":
                 // 1.3: solicitarNuevoDoctor (mostrar formulario)
                 mostrarFormulario(request, response);
                 break;
             case "solicitarEdicionDoctor":
-                // 3: solicitarEdicionDoctor(cedula)
+                // 3: solicitarEdicionDoctor()
                 solicitarEdicionDoctor(request, response);
                 break;
              default:
@@ -75,7 +75,7 @@ public class GestionarDoctoresController extends HttpServlet {
                 solicitarNuevoDoctor(request, response);
                 break;
             case "actualizar":
-            	// 1.8: obtenerDoctor(idDoctor) y 1.9: mostrarConfirmacion
+            	// 3.4: actualizarDoctor()
                 actualizarDoctor(request, response);
                 break;
             case "confirmarDesactivacion":
@@ -136,13 +136,6 @@ public class GestionarDoctoresController extends HttpServlet {
                 // Si no hay cédula, listar todos
                 List<Doctor> doctores = factory.getDoctorDAO().getAll();
                 request.setAttribute("doctores", doctores);
-            }
-            // Sólo cargar especialidades si se solicitó el formulario por modal (compatibilidad)
-            if ("nuevo".equals(request.getParameter("modal"))) {
-                List<Especialidad> especialidades = factory.getEspecialidadDAO().getAll();
-                request.setAttribute("especialidades", especialidades);
-                // marcar para mostrar el formulario si se requiere
-                request.setAttribute("mostrarNuevoDoctorForm", true);
             }
 
             // mostrar lista
