@@ -1,4 +1,5 @@
 // ===== INICIALIZACIÓN =====
+
 document.addEventListener('DOMContentLoaded', function() {
     // Configurar sistema de calificación
     configurarCalificacion();
@@ -16,44 +17,43 @@ document.addEventListener('DOMContentLoaded', function() {
 // ===== FILTRADO EN CASCADA: ESPECIALIDAD → DOCTOR =====
 function configurarFiltradoCascada() {
     const especialidadSelect = document.getElementById('especialidadResena');
-    const doctorSelect = document.getElementById('idDoctor');
+    const doctorSelect = document.getElementById('doctor');
     
     if (!especialidadSelect || !doctorSelect) {
-        console.error('No se encontraron los selectores necesarios');
+        console.error('❌ No se encontraron los selectores necesarios');
         return;
     }
     
-    console.log('Filtrado en cascada configurado correctamente');
+    if (typeof doctoresDisponibles === 'undefined') {
+        console.error('❌ doctoresDisponibles no está definido');
+        return;
+    }
+    
+    console.log('✅ Filtrado configurado. Doctores:', doctoresDisponibles.length);
     
     especialidadSelect.addEventListener('change', function() {
         const especialidadId = parseInt(this.value);
+        console.log('🔍 Especialidad seleccionada:', especialidadId);
         
-        console.log('Especialidad seleccionada:', especialidadId);
-        console.log('Doctores disponibles:', doctoresDisponibles);
-        
-        // Limpiar opciones del select de doctores
         doctorSelect.innerHTML = '<option value="">Selecciona un doctor</option>';
         
-        if (!especialidadId || isNaN(especialidadId)) {
+        if (!especialidadId) {
             doctorSelect.disabled = true;
-            console.log('No hay especialidad válida seleccionada');
             return;
         }
         
-        // Filtrar doctores por especialidad seleccionada
         const doctoresFiltrados = doctoresDisponibles.filter(
             doc => doc.especialidadId === especialidadId
         );
         
-        console.log('Doctores filtrados:', doctoresFiltrados);
+        console.log('👨‍⚕️ Doctores filtrados:', doctoresFiltrados);
         
         if (doctoresFiltrados.length === 0) {
-            doctorSelect.innerHTML = '<option value="">No hay doctores disponibles en esta especialidad</option>';
+            doctorSelect.innerHTML = '<option value="">No hay doctores disponibles</option>';
             doctorSelect.disabled = true;
             return;
         }
         
-        // Agregar doctores filtrados al select
         doctoresFiltrados.forEach(doctor => {
             const option = document.createElement('option');
             option.value = doctor.id;
@@ -62,9 +62,10 @@ function configurarFiltradoCascada() {
         });
         
         doctorSelect.disabled = false;
-        console.log('Select de doctores habilitado con', doctoresFiltrados.length, 'opciones');
+        console.log('✅ Select habilitado con', doctoresFiltrados.length, 'opciones');
     });
 }
+
 
 // ===== SISTEMA DE CALIFICACIÓN CON ESTRELLAS =====
 function configurarCalificacion() {

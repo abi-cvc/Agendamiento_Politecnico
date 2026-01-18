@@ -74,45 +74,40 @@
                 <input type="hidden" name="accion" value="crear">
                 
                 <!-- Seleccionar Especialidad -->
-                <div class="form-group">
-                    <label for="especialidadResena">Especialidad/Servicio <span class="required">*</span></label>
-                    <select id="especialidadResena" name="idEspecialidad" required>
-                        <option value="">Selecciona una especialidad</option>
-                        <c:choose>
-                            <c:when test="${not empty especialidades}">
-                                <c:forEach var="esp" items="${especialidades}">
-                                    <option value="${esp.idEspecialidad}">
-                                        ${esp.icono} ${esp.titulo}
-                                    </option>
-                                </c:forEach>
-                            </c:when>
-                            <c:otherwise>
-                                <option value="">No hay especialidades disponibles</option>
-                            </c:otherwise>
-                        </c:choose>
-                    </select>
-                    
-                    <!-- Debug info -->
-                    <c:if test="${not empty especialidades}">
-                        <small class="text-muted" style="display: block; margin-top: 0.5rem;">
-                           ${especialidades.size()} especialidades disponibles
-                        </small>
-                    </c:if>
-                    <c:if test="${empty especialidades}">
-                        <small class="text-muted" style="display: block; margin-top: 0.5rem; color: red;">
-                            No se cargaron especialidades. <a href="${pageContext.request.contextPath}/resenas">Recargar</a>
-                        </small>
-                    </c:if>
-                </div>
+				<div class="form-group">
+				    <label for="especialidad">Especialidad/Servicio <span class="required">*</span></label>
+				    <select id="especialidadResena" name="especialidadResena" required>
+				        <option value="">Selecciona una especialidad</option>
+				        <c:choose>
+				            <c:when test="${not empty especialidades}">
+				                <c:forEach var="esp" items="${especialidades}">
+				                    <option value="${esp.idEspecialidad}">
+				                        ${esp.icono} ${esp.titulo}
+				                    </option>
+				                </c:forEach>
+				            </c:when>
+				            <c:otherwise>
+				                <option value="">No hay especialidades disponibles</option>
+				            </c:otherwise>
+				        </c:choose>
+				    </select>
+				    
+				    <c:if test="${not empty especialidades}">
+				        <small class="text-muted" style="display: block; margin-top: 0.5rem;">
+				           ${especialidades.size()} especialidades disponibles
+				        </small>
+				    </c:if>
+				</div>
+				
+				<!-- Seleccionar Doctor (filtrado por especialidad) -->
+				<div class="form-group">
+				    <label for="doctor">Doctor/Profesional <span class="required">*</span></label>
+				    <select id="doctor" name="idDoctor" required disabled>
+				        <option value="">Primero selecciona una especialidad</option>
+				    </select>
+				    <small class="text-muted">Selecciona una especialidad primero</small>
+				</div>
 
-                <!-- Seleccionar Doctor (filtrado por especialidad) -->
-                <div class="form-group">
-                    <label for="idDoctor">Doctor/Profesional <span class="required">*</span></label>
-                    <select id="idDoctor" name="idDoctor" required disabled>
-                        <option value="">Primero selecciona una especialidad</option>
-                    </select>
-                    <small class="text-muted">Selecciona una especialidad primero</small>
-                </div>
 
                 <!-- Calificación -->
                 <div class="form-group">
@@ -137,7 +132,7 @@
                     <small class="text-muted">Mínimo 20 caracteres, máximo 500</small>
                 </div>
 
-                <button type="submit" class="btn-agendar">Publicar Reseña</button>
+                <button type="submit" class="btn-agendar">Enviar Reseña</button>
             </form>
         </div>
 
@@ -148,10 +143,10 @@
                 <span class="badge">
                     <c:choose>
                         <c:when test="${not empty totalEvaluaciones}">
-                            ${totalEvaluaciones} reseñas
+                            ${totalEvaluaciones} reseñas realizadas
                         </c:when>
                         <c:otherwise>
-                            0 reseñas
+                            No has hecho reseñas.
                         </c:otherwise>
                     </c:choose>
                 </span>
@@ -216,8 +211,7 @@
                                 
                                 <div class="resena-footer flex-between">
                                     <span class="resena-fecha text-muted text-sm">
-                                        <fmt:formatDate value="${evaluacion.fechaEvaluacion}" 
-                                                        pattern="dd 'de' MMMM 'de' yyyy" />
+                                        ${fechasFormateadas[evaluacion.idEvaluacion]}
                                     </span>
                                 </div>
                             </div>
@@ -253,11 +247,14 @@
     console.log('Doctores disponibles:', doctoresDisponibles);
     console.log('Total doctores:', doctoresDisponibles.length);
     console.log('Especialidades en page:', ${not empty especialidades});
+    console.log('📊 Doctores cargados desde JSP:', doctoresDisponibles.length);
 </script>
 
 <!-- JS -->
 <script src="${pageContext.request.contextPath}/js/auth-temporal.js"></script>
+<!-- JS específico para reseñas -->
 <script src="${pageContext.request.contextPath}/js/resenas.js"></script>
+
 
 </body>
 </html>

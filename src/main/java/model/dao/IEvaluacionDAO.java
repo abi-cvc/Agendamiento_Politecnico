@@ -99,6 +99,15 @@ public interface IEvaluacionDAO extends GenericDAO<Evaluacion, Integer> {
     List<Evaluacion> getByEspecialidad(int idEspecialidad);
     
     /**
+     * Obtiene evaluaciones filtradas por estudiante y especialidad (NUEVO)
+     * Usado en filtrarPorEspecialidad() del ResenasController
+     * @param idEstudiante ID del estudiante
+     * @param idEspecialidad ID de la especialidad
+     * @return Lista de evaluaciones del estudiante en esa especialidad
+     */
+    List<Evaluacion> getByEstudianteYEspecialidad(int idEstudiante, int idEspecialidad);
+    
+    /**
      * Alias para obtenerPorDoctor (compatibilidad con controller)
      */
     default List<Evaluacion> getByDoctor(int idDoctor) {
