@@ -9,9 +9,12 @@
         doctores = new java.util.ArrayList<>();
     }
     
-    // Determinar si mostrar el modal de creación
+    // Determinar si mostrar el formulario/ modal de creación
+    // Ahora se acepta tanto el query param modal=nuevo (compat) como el atributo mostrarNuevoDoctorForm
+    Object mostrarNuevoAttr = request.getAttribute("mostrarNuevoDoctorForm");
+    boolean mostrarNuevoAttrFlag = (mostrarNuevoAttr instanceof Boolean) ? (Boolean) mostrarNuevoAttr : false;
     String mostrarModal = request.getParameter("modal");
-    boolean abrirModalCrear = "nuevo".equals(mostrarModal);
+    boolean abrirModalCrear = "nuevo".equals(mostrarModal) || mostrarNuevoAttrFlag;
     
     // Determinar si mostrar el modal de edición
     String idEditar = request.getParameter("editar");
@@ -54,7 +57,7 @@
     <nav>
         <ul>
             <li><a href="${pageContext.request.contextPath}/inicio-admin.jsp">Inicio</a></li>
-            <li><a href="${pageContext.request.contextPath}/DoctorAdminController?accion=gestionarDoctores" class="font-bold">Gestionar Doctores</a></li>
+            <li><a href="${pageContext.request.contextPath}/GestionarDoctores?accion=gestionarDoctores" class="font-bold">Gestionar Doctores</a></li>
             <li><a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=gestionarEstudiantes">Gestionar Estudiantes</a></li>
             <li><a href="<%= request.getContextPath() %>/especialidades?accion=listarAdmin" class="font-bold">Gestionar Especialidades</a></li>
             <li><a href="<%= request.getContextPath() %>/evaluaciones?accion=listarAdmin">Consultar Evaluaciones</a></li>
@@ -84,9 +87,10 @@
         <!-- ENCABEZADO -->
         <div class="admin-header">
             <h1>Gestionar Doctores</h1>
-            <a href="${pageContext.request.contextPath}/DoctorAdminController?accion=gestionarDoctores&modal=nuevo" 
+            <!-- Botón según diagrama: solicita el formulario con accion=NuevoDoctor y etiqueta exacta -->
+            <a href="${pageContext.request.contextPath}/GestionarDoctores?accion=NuevoDoctor" 
                class="btn btn-primary">
-                ➕ Nuevo Doctor
+                NuevoDoctor
             </a>
         </div>
 
@@ -108,7 +112,7 @@
         <!-- SECCIÓN DE BÚSQUEDA -->
         <div class="filtros-evaluaciones">
             <h3>🔍 Buscar Doctor</h3>
-            <form method="get" action="${pageContext.request.contextPath}/DoctorAdminController">
+            <form method="get" action="${pageContext.request.contextPath}/GestionarDoctores">
                 <input type="hidden" name="accion" value="buscar">
                 <div class="search-wrapper">
                     <div class="form-group">
@@ -165,64 +169,65 @@
                                  </td>
                                 <td>
                                     <div class="btn-actions">
-                                        <a href="${pageContext.request.contextPath}/DoctorAdminController?accion=gestionarDoctores&editar=<%= doc.getIdDoctor() %>" 
+                                        <!-- Editar: solicitarEdicionDoctor (GET con id) -->
+                                        <a href="${pageContext.request.contextPath}/GestionarDoctores?accion=solicitarEdicionDoctor&id=<%= doc.getIdDoctor() %>" 
                                            class="btn btn-sm btn-warning">
                                             ✏️ Editar
                                         </a>
                                         
-                                        <form method="post" 
-                                              action="${pageContext.request.contextPath}/DoctorAdminController" 
-                                              style="display:inline-block;">
-                                            <input type="hidden" name="accion" value="cambiarEstado">
+                                        <!-- Desactivar/Activar: usar POST para cambiar estado (mejor práctica) -->
+                                        <form method="post" action="${pageContext.request.contextPath}/GestionarDoctores" style="display:inline-block; margin:0;">
+                                            <input type="hidden" name="accion" value="confirmarDesactivacion">
                                             <input type="hidden" name="id" value="<%= doc.getIdDoctor() %>">
-                                            <button type="submit" 
-                                                    class="btn btn-sm <%= doc.isActivo() ? "btn-danger" : "btn-primary" %>"
-                                                    onclick="return confirm('¿Está seguro de <%= doc.isActivo() ? "desactivar" : "activar" %> a este doctor?')">
+                                            <button type="submit" class="btn btn-sm <%= doc.isActivo() ? "btn-danger" : "btn-primary" %>">
                                                 <%= doc.isActivo() ? "⏸ Desactivar" : "▶ Activar" %>
                                             </button>
                                         </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        <% } %>
-                    </tbody>
-                </table>
-            <% } %>
-        </div>
+                                     </div>
+                                 </td>
+                             </tr>
+                         <% } %>
+                     </tbody>
+                 </table>
+             <% } %>
+         </div>
 
     </div>
 </main>
 
-<!-- MODAL NUEVO DOCTOR -->
+<!-- MODAL NUEVO DOCTOR (formulario) -->
 <% if (abrirModalCrear) { %>
 <div class="modal-overlay active">
     <div class="modal-content">
         <div class="modal-header">
             <h2>➕ Nuevo Doctor</h2>
-            <a href="${pageContext.request.contextPath}/DoctorAdminController?accion=gestionarDoctores" 
-               class="btn-close">&times;</a>
+            <a href="${pageContext.request.contextPath}/GestionarDoctores?accion=gestionarDoctores" class="btn-close">&times;</a>
         </div>
-        <form method="post" action="${pageContext.request.contextPath}/DoctorAdminController">
-            <input type="hidden" name="accion" value="crear">
+        <form method="post" action="${pageContext.request.contextPath}/GestionarDoctores">
+            <input type="hidden" name="accion" value="solicitarNuevoDoctor">
             
             <div class="form-group">
                 <label class="form-label">Cédula *</label>
-                <input type="text" name="cedula" class="form-input" required maxlength="10">
+                <input type="text" name="cedula" class="form-input" required maxlength="10"
+                       value="<%= request.getAttribute("formCedula") != null ? request.getAttribute("formCedula") : "" %>">
             </div>
             
             <div class="form-group">
                 <label class="form-label">Nombre *</label>
-                <input type="text" name="nombre" class="form-input" required maxlength="100">
+                <input type="text" name="nombre" class="form-input" required maxlength="100"
+                       value="<%= request.getAttribute("formNombre") != null ? request.getAttribute("formNombre") : "" %>">
             </div>
             
             <div class="form-group">
                 <label class="form-label">Apellido *</label>
-                <input type="text" name="apellido" class="form-input" required maxlength="100">
+                <input type="text" name="apellido" class="form-input" required maxlength="100"
+                       value="<%= request.getAttribute("formApellido") != null ? request.getAttribute("formApellido") : "" %>">
             </div>
             
             <div class="form-group">
                 <label class="form-label">Email *</label>
-                <input type="email" name="email" class="form-input" required maxlength="100">
+                <input type="email" name="email" class="form-input" required maxlength="100"
+                       value="<%= request.getAttribute("formEmail") != null ? request.getAttribute("formEmail") : "" %>">
             </div>
             
             <div class="grid grid-2 gap-lg">
@@ -233,7 +238,8 @@
                 
                 <div class="form-group">
                     <label class="form-label">Teléfono</label>
-                    <input type="text" name="telefono" class="form-input" maxlength="15">
+                    <input type="text" name="telefono" class="form-input" maxlength="15"
+                           value="<%= request.getAttribute("formTelefono") != null ? request.getAttribute("formTelefono") : "" %>">
                 </div>
             </div>
             
@@ -241,71 +247,75 @@
                 <label class="form-label">Especialidad (opcional)</label>
                 <select name="idEspecialidad" class="form-select">
                     <option value="">-- Sin especialidad --</option>
-                    <% for (Especialidad esp : (List<Especialidad>) request.getAttribute("especialidades")) { %>
-                        <option value="<%= esp.getIdEspecialidad() %>"><%= esp.getTitulo() %></option>
-                    <% } %>
+                    <% List<Especialidad> espes = (List<Especialidad>) request.getAttribute("especialidades");
+                       String sel = request.getAttribute("formIdEspecialidad") != null ? request.getAttribute("formIdEspecialidad").toString() : "";
+                       if (espes != null) {
+                           for (Especialidad esp : espes) { %>
+                        <option value="<%= esp.getIdEspecialidad() %>" <%= (sel.equals(String.valueOf(esp.getIdEspecialidad()))?"selected":"") %>><%= esp.getTitulo() %></option>
+                    <%       }
+                       }
+                    %>
                 </select>
             </div>
             
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">💾 Guardar</button>
-                <a href="${pageContext.request.contextPath}/DoctorAdminController?accion=gestionarDoctores" 
-                   class="btn btn-secondary">Cancelar</a>
+                <a href="${pageContext.request.contextPath}/GestionarDoctores?accion=gestionarDoctores" class="btn btn-secondary">Cancelar</a>
             </div>
         </form>
     </div>
 </div>
 <% } %>
 
-<!-- MODAL EDITAR DOCTOR -->
-<% if (abrirModalEditar && doctorEditar != null) { %>
+<!-- EDITAR DOCTOR (restaurado) -->
+<% if (request.getAttribute("mostrarEditarDoctorForm") != null && (Boolean)request.getAttribute("mostrarEditarDoctorForm")) {
+    Doctor d = (Doctor) request.getAttribute("doctor");
+    List<Especialidad> especialidadesEdit = (List<Especialidad>) request.getAttribute("especialidades");
+%>
 <div class="modal-overlay active">
     <div class="modal-content">
         <div class="modal-header">
             <h2>✏️ Editar Doctor</h2>
-            <a href="${pageContext.request.contextPath}/DoctorAdminController?accion=gestionarDoctores" 
-               class="btn-close">&times;</a>
+            <a href="${pageContext.request.contextPath}/GestionarDoctores?accion=gestionarDoctores" class="btn-close">&times;</a>
         </div>
-        <form method="post" action="${pageContext.request.contextPath}/DoctorAdminController">
+        <form method="post" action="${pageContext.request.contextPath}/GestionarDoctores">
             <input type="hidden" name="accion" value="actualizar">
-            <input type="hidden" name="id" value="<%= doctorEditar.getIdDoctor() %>">
-            
+            <input type="hidden" name="id" value="<%= d.getIdDoctor() %>">
             <div class="form-group">
                 <label class="form-label">Cédula</label>
-                <input type="text" class="form-input" value="<%= doctorEditar.getCedula() %>" readonly>
+                <input type="text" class="form-input" value="<%= d.getCedula() %>" readonly>
             </div>
-            
             <div class="form-group">
                 <label class="form-label">Nombre</label>
-                <input type="text" class="form-input" value="<%= doctorEditar.getNombre() %>" readonly>
+                <input type="text" class="form-input" value="<%= d.getNombre() %>" readonly>
             </div>
-            
             <div class="form-group">
                 <label class="form-label">Apellido</label>
-                <input type="text" class="form-input" value="<%= doctorEditar.getApellido() %>" readonly>
+                <input type="text" class="form-input" value="<%= d.getApellido() %>" readonly>
             </div>
-            
             <div class="form-group">
                 <label class="form-label">Email</label>
-                <input type="email" class="form-input" value="<%= doctorEditar.getEmail() %>" readonly>
+                <input type="email" class="form-input" name="email" value="<%= d.getEmail() != null ? d.getEmail() : "" %>">
             </div>
-            
             <div class="form-group">
                 <label class="form-label">Teléfono</label>
-                <input type="text" name="telefono" class="form-input" 
-                       value="<%= doctorEditar.getTelefono() != null ? doctorEditar.getTelefono() : "" %>" 
-                       maxlength="15">
+                <input type="text" name="telefono" class="form-input" value="<%= d.getTelefono() != null ? d.getTelefono() : "" %>" maxlength="15">
             </div>
-            
             <div class="form-group">
-                <label class="form-label">Contraseña (dejar vacío para mantener)</label>
-                <input type="password" name="password" class="form-input" maxlength="255">
+                <label class="form-label">Especialidad</label>
+                <select name="idEspecialidad" class="form-select">
+                    <option value="">-- Sin especialidad --</option>
+                    <% if (especialidadesEdit != null) {
+                        for (Especialidad esp : especialidadesEdit) { %>
+                            <option value="<%= esp.getIdEspecialidad() %>" <%= (d.getEspecialidad()!=null && d.getEspecialidad().getIdEspecialidad()==esp.getIdEspecialidad())?"selected":"" %>><%= esp.getTitulo() %></option>
+                    <%  }
+                       }
+                    %>
+                </select>
             </div>
-            
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">💾 Actualizar</button>
-                <a href="${pageContext.request.contextPath}/DoctorAdminController?accion=gestionarDoctores" 
-                   class="btn btn-secondary">Cancelar</a>
+                <a href="${pageContext.request.contextPath}/GestionarDoctores?accion=gestionarDoctores" class="btn btn-secondary">Cancelar</a>
             </div>
         </form>
     </div>
@@ -322,7 +332,7 @@
         <div class="footer-section">
             <h3>Panel Admin</h3>
             <ul class="footer-links">
-                <li><a href="${pageContext.request.contextPath}/DoctorAdminController?accion=gestionarDoctores">Gestionar Doctores</a></li>
+                <li><a href="${pageContext.request.contextPath}/GestionarDoctores?accion=gestionarDoctores">Gestionar Doctores</a></li>
                 <li><a href="${pageContext.request.contextPath}/EstudianteAdminController?accion=gestionarEstudiantes">Gestionar Estudiantes</a></li>
             </ul>
         </div>

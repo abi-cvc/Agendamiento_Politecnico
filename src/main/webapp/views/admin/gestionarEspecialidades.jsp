@@ -23,7 +23,7 @@
         <nav>
             <ul>              
                 <li><a href="${contextPath}/inicio-admin.jsp">Inicio</a></li>
-                <li><a href="<%= request.getContextPath() %>/DoctorAdminController?accion=gestionarDoctores">Gestionar Doctores</a></li>
+                <li><a href="<%= request.getContextPath() %>/GestionarDoctores?accion=gestionarDoctores">Gestionar Doctores</a></li>
                 <li><a href="<%= request.getContextPath() %>/EstudianteAdminController?accion=gestionarEstudiantes">Gestionar Estudiantes</a></li>
                 <li><a href="<%= request.getContextPath() %>/especialidades?accion=listarAdmin" class="font-bold">Gestionar Especialidades</a></li>
                 <li><a href="<%= request.getContextPath() %>/evaluaciones?accion=listarAdmin">Consultar Evaluaciones</a></li>

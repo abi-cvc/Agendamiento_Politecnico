@@ -117,7 +117,7 @@ function actualizarNavegacionPorRol() {
         console.log('📋 Mostrando navegación de ADMIN');
         nav.innerHTML = `
             <li><a href="${contextPath}/inicio-admin.jsp">Inicio</a></li>
-            <li><a href="${contextPath}/DoctorAdminController?accion=gestionarDoctores">Gestionar Doctores</a></li>
+            <li><a href="${contextPath}/GestionarDoctores?accion=gestionarDoctores">Gestionar Doctores</a></li>
             <li><a href="${contextPath}/EstudianteAdminController?accion=gestionarEstudiantes">Gestionar Estudiantes</a></li>
             <li><a href="${contextPath}/especialidades?accion=listarAdmin">Gestionar Especialidades</a></li>
             <li><a href="${contextPath}/evaluaciones?accion=listarAdmin">Consultar Evaluaciones</a></li>

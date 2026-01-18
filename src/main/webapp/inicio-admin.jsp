@@ -22,7 +22,7 @@
     <nav>
         <ul>
             <li><a href="${pageContext.request.contextPath}/inicio-admin.jsp" class="font-bold">Inicio</a></li>
-            <li><a href="${pageContext.request.contextPath}/DoctorAdminController" class="font-bold">Gestionar Doctores</a></li>
+            <li><a href="${pageContext.request.contextPath}/GestionarDoctores" class="font-bold">Gestionar Doctores</a></li>
             <li><a href="${pageContext.request.contextPath}/EstudianteAdminController" class="font-bold">Gestionar Estudiantes</a></li>
             <li><a href="${pageContext.request.contextPath}/especialidades?accion=listarAdmin" class="font-bold">Gestionar Especialidades</a></li>
             <li><a href="${pageContext.request.contextPath}/EvaluacionController?accion=listar" class="font-bold">Consultar Evaluaciones</a></li>
@@ -62,7 +62,7 @@
             <h2>👨‍⚕️ Gestionar Doctores</h2>
             <p>Administra la información de los profesionales de salud, sus especialidades y horarios de atención.</p>
             <div class="mt-4">
-                <a href="${pageContext.request.contextPath}/DoctorAdminController" class="btn btn-primary">
+                <a href="${pageContext.request.contextPath}/GestionarDoctores" class="btn btn-primary">
                     Ir a Doctores
                 </a>
             </div>
@@ -114,7 +114,7 @@
             <h3>Panel Admin</h3>
             <ul class="footer-links">
                 <li><a href="${pageContext.request.contextPath}/inicio-admin.jsp">Inicio</a></li>
-                <li><a href="${pageContext.request.contextPath}/DoctorAdminController">Gestionar Doctores</a></li>
+                <li><a href="${pageContext.request.contextPath}/GestionarDoctores">Gestionar Doctores</a></li>
                 <li><a href="${pageContext.request.contextPath}/EstudianteAdminController">Gestionar Estudiantes</a></li>
                 <li><a href="${pageContext.request.contextPath}/especialidades?accion=listarAdmin">Gestionar Especialidades</a></li>
             </ul>
