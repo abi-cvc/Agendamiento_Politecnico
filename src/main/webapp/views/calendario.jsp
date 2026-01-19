@@ -43,6 +43,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="context-path" content="<%= request.getContextPath() %>">
     <title>Bienestar Politécnico - Calendario de Disponibilidad</title>
     <link rel="icon" type="image/png" href="../images/logo_epn.png">
     <link rel="stylesheet" href="./css/framework.css">
@@ -209,7 +210,7 @@
 
                 <c:choose>
                     <c:when test="${not empty disponibilidades}">
-                        <form id="formAgendarCita" action="../agendarCita" method="POST">
+                        <form id="formAgendarCita" action="<%= request.getContextPath() %>/agendarCita" method="POST">
                             <input type="hidden" name="idDoctor" value="${doctor.idDoctor}">
                             <input type="hidden" name="especialidad" value="${nombreEspecialidad}">
                             <input type="hidden" id="fechaSeleccionada" name="fechaCita" value="">

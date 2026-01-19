@@ -11,14 +11,22 @@ const usuariosDB = [
         rol: "estudiante",
         idPaciente: '1725896347'
     },
-	{
-	        id: 1,
-	        nombre: "Carol Velasquez",
-	        email: "carol.velasquez@epn.edu.ec",
-	        password: "123456",
-	        rol: "estudiante",
-	        idPaciente: '1725896347'
-	    },
+    {
+        id: 2,
+        nombre: "Juanito Perez",
+        email: "juanito.perez@epn.edu.ec",
+        password: "123456",
+        rol: "doctor",
+        idDoctor: '1725896485'
+    },
+    {
+        id: 3,
+        nombre: "Maria Gonzalez",
+        email: "maria.gonzalez@epn.edu.ec",
+        password: "123456",
+        rol: "doctor",
+        idDoctor: '1723456789'
+    },
     {
         id: 10,
         nombre: "Admin Bienestar",
@@ -29,12 +37,45 @@ const usuariosDB = [
     }
 ];
 
+
 // ===== FUNCIONES DE AUTENTICACIÓN =====
 
 function loginTemporal(email, password, rol) {
     console.log('🔐 Login temporal - Buscando usuario:', email, 'rol:', rol);
-    const usuario = usuariosDB.find(u => u.email === email && u.password === password && u.rol === rol);
-    
+    console.log('📦 Total usuarios en DB:', usuariosDB.length);
+    console.log('📦 Usuarios disponibles:', JSON.stringify(usuariosDB, null, 2));
+    console.log('🔍 Email recibido:', `"${email}"`, 'longitud:', email.length);
+    console.log('🔍 Contraseña recibida:', `"${password}"`, 'longitud:', password.length);
+    console.log('🔍 Rol recibido:', `"${rol}"`);
+
+    // Limpiar los valores de entrada
+    const emailLimpio = email.trim();
+    const passwordLimpio = password.trim();
+
+    console.log('🧹 Después de trim - Email:', `"${emailLimpio}"`, 'Password longitud:', passwordLimpio.length);
+
+    const usuario = usuariosDB.find(u => {
+        const emailMatch = u.email === emailLimpio;
+        const passwordMatch = u.password === passwordLimpio;
+        const rolMatch = u.rol === rol;
+
+        console.log(`\n🔍 Comparando con ${u.nombre}:`);
+        console.log('  Email DB:', `"${u.email}"`);
+        console.log('  Email Input:', `"${emailLimpio}"`);
+        console.log('  Email Match:', emailMatch);
+        console.log('  Password DB:', `"${u.password}"`);
+        console.log('  Password Input:', `"${passwordLimpio}"`);
+        console.log('  Password Match:', passwordMatch);
+        console.log('  Rol DB:', `"${u.rol}"`);
+        console.log('  Rol Input:', `"${rol}"`);
+        console.log('  Rol Match:', rolMatch);
+        console.log('  ✅ TODO MATCH:', emailMatch && passwordMatch && rolMatch);
+
+        return emailMatch && passwordMatch && rolMatch;
+    });
+
+    console.log('\n🎯 Resultado de búsqueda:', usuario ? `Encontrado: ${usuario.nombre}` : 'No encontrado');
+
     if (usuario) {
         const sesion = {
             id: usuario.id,
@@ -43,6 +84,7 @@ function loginTemporal(email, password, rol) {
             rol: usuario.rol,
             idPaciente: usuario.idPaciente || null,
             idAdmin: usuario.idAdmin || null,
+            idDoctor: usuario.idDoctor || null,
             loginTime: new Date().toISOString()
         };
         sessionStorage.setItem('usuarioActual', JSON.stringify(sesion));
@@ -58,7 +100,6 @@ function logout() {
     console.log('🔓 Cerrando sesión');
     sessionStorage.removeItem('usuarioActual');
     sessionStorage.removeItem('paginaAnterior');
-    // Redirigir al JSP/HTML de inicio
     window.location.href = 'index.jsp';
 }
 
@@ -74,7 +115,7 @@ function protegerPagina(rolesPermitidos = null) {
         window.location.href = 'index.jsp';
         return null;
     }
-    
+
     if (rolesPermitidos && rolesPermitidos.length > 0) {
         if (!rolesPermitidos.includes(usuario.rol)) {
             console.log('⚠️ Rol no autorizado:', usuario.rol);
@@ -83,16 +124,16 @@ function protegerPagina(rolesPermitidos = null) {
             return null;
         }
     }
-    
+
     return usuario;
 }
 
 function togglePassword() {
     const input = document.getElementById('password');
     const icon = document.getElementById('eyeIcon');
-    
+
     if (!input || !icon) return;
-    
+
     if (input.type === 'password') {
         input.type = 'text';
         icon.innerHTML = '<path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>';
@@ -106,14 +147,43 @@ function togglePassword() {
 function actualizarNavegacionPorRol() {
     const usuario = verificarSesion();
     const nav = document.querySelector('nav ul');
-    
+
     if (!nav) return;
+
+    // Obtener el contextPath de múltiples formas para mayor robustez
+    let contextPath = '';
     
-    // Obtener el contexto de la aplicación
-    const contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf('/', 1)) || '';
+    // Método 1: Desde el meta tag (más confiable en JSP)
+    const metaContext = document.querySelector('meta[name="context-path"]');
+    if (metaContext && metaContext.content) {
+        contextPath = metaContext.content;
+        console.log('✅ Context path desde meta tag:', contextPath);
+    }
     
+    // Método 2: Si no hay meta tag, desde window.location.pathname
+    if (!contextPath || contextPath === '') {
+        const path = window.location.pathname;
+        console.log('🌍 Window location pathname:', path);
+        
+        if (path.indexOf('/', 1) > 0) {
+            contextPath = path.substring(0, path.indexOf('/', 1));
+        }
+        
+        // Si el path contiene '01_MiProyecto', asegurarnos de incluirlo
+        if (path.includes('/01_MiProyecto')) {
+            contextPath = '/01_MiProyecto';
+        }
+    }
+    
+    // Fallback: Si no se detectó contexto, usar '/01_MiProyecto' por defecto
+    if (!contextPath || contextPath === '') {
+        contextPath = '/01_MiProyecto';
+        console.warn('⚠️ No se pudo detectar contextPath, usando fallback:', contextPath);
+    }
+    
+    console.log('🌍 Context path final:', contextPath);
+
     if (usuario && usuario.rol === 'admin') {
-        // ===== NAVEGACIÓN DE ADMINISTRADOR =====
         console.log('📋 Mostrando navegación de ADMIN');
         nav.innerHTML = `
             <li><a href="${contextPath}/inicio-admin.jsp">Inicio</a></li>
@@ -136,7 +206,6 @@ function actualizarNavegacionPorRol() {
             </li>
         `;
     } else if (usuario && usuario.rol === 'doctor') {
-        // ===== NAVEGACIÓN DE DOCTOR =====
         console.log('👨‍⚕️ Mostrando navegación de DOCTOR');
         nav.innerHTML = `
             <li><a href="${contextPath}/inicio.jsp" class="font-bold">Inicio</a></li>
@@ -157,7 +226,6 @@ function actualizarNavegacionPorRol() {
             </li>
         `;
     } else if (usuario && usuario.rol === 'estudiante') {
-        // ===== NAVEGACIÓN DE ESTUDIANTE =====
         console.log('🎓 Mostrando navegación de ESTUDIANTE');
         nav.innerHTML = `
             <li><a href="${contextPath}/inicio.jsp" class="font-bold">Inicio</a></li>
@@ -179,7 +247,6 @@ function actualizarNavegacionPorRol() {
             </li>
         `;
     } else {
-        // ===== NAVEGACIÓN PÚBLICA (sin sesión) =====
         console.log('🌐 Mostrando navegación PÚBLICA');
         nav.innerHTML = `
             <li><a href="${contextPath}/inicio.jsp" class="font-bold">Inicio</a></li>
@@ -193,16 +260,13 @@ function actualizarNavegacionPorRol() {
 // ===== EJECUTAR AL CARGAR CUALQUIER PÁGINA =====
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 Auth temporal cargado');
-    
-    // Actualizar navegación según rol
+
     actualizarNavegacionPorRol();
-    
-    // Si estamos en la página de login (index.jsp)
+
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
         console.log('📝 Formulario de login encontrado');
-        
-        // Si ya hay sesión, redirigir al inicio
+
         if (verificarSesion()) {
             console.log('✅ Ya hay sesión activa, redirigiendo');
             window.location.href = 'inicio.jsp';
@@ -212,23 +276,23 @@ document.addEventListener('DOMContentLoaded', function() {
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
             console.log('📤 Formulario enviado (temporal)');
-            
+
             const rolElement = document.getElementById('rol');
             const emailElement = document.getElementById('email') || document.getElementById('identificacion');
             const passwordElement = document.getElementById('password');
             const errorDiv = document.getElementById('errorMessage');
-            
+
             if (!rolElement || !emailElement || !passwordElement) {
                 console.error('❌ Elementos del formulario no encontrados');
                 return;
             }
-            
+
             const rol = rolElement.value;
             const email = emailElement.value.trim();
-            const password = passwordElement.value;
-            
+            const password = passwordElement.value.trim();
+
             console.log('Datos recibidos:', { rol, email, password: '****' });
-            
+
             if (!rol) {
                 if (errorDiv) {
                     errorDiv.textContent = 'Por favor selecciona tu rol';
@@ -236,9 +300,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 return;
             }
-            
+
             if (email && typeof email === 'string' && email.includes('@')) {
-                // email-like value
                 if (!email.endsWith('@epn.edu.ec')) {
                     if (errorDiv) {
                         errorDiv.textContent = 'Debes usar tu correo institucional (@epn.edu.ec)';
@@ -247,15 +310,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
             }
-            
-            // Intentar login temporal (si el proyecto aún no usa servlet)
+
             const resultado = loginTemporal(email, password, rol);
-            
+
             if (resultado.success) {
                 if (errorDiv) {
                     errorDiv.classList.remove('show');
                 }
-                // Redirigir a página anterior o inicio.jsp
                 const urlAnterior = sessionStorage.getItem('paginaAnterior');
                 window.location.href = urlAnterior || 'inicio.jsp';
                 sessionStorage.removeItem('paginaAnterior');
@@ -265,7 +326,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     errorDiv.classList.add('show');
                 }
             }
-
         });
     }
 });

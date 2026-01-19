@@ -16,6 +16,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="context-path" content="<%= request.getContextPath() %>">
     <title>Agendar Cita Médica - Bienestar Politécnico</title>
 
     <!-- CSS -->
@@ -65,7 +66,7 @@
             <div id="formMessage" class="form-message"></div>
 
             <form id="agendamientoForm"
-                  action="../AgendarCitasController"
+                  action="<%= request.getContextPath() %>/AgendarCitasController"
                   method="post">
                   
                 <%-- Paso 7 del diagrama: crearCita(idDoctor, fecha, motivo) --%>

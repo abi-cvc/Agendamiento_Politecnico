@@ -14,6 +14,24 @@ const doctoresDB = [
 ];
 */
 
+// ===== FUNCIÓN HELPER PARA OBTENER CONTEXT PATH =====
+function getContextPath() {
+    // Intentar obtener desde meta tag
+    const metaContext = document.querySelector('meta[name="context-path"]');
+    if (metaContext && metaContext.content) {
+        return metaContext.content;
+    }
+    
+    // Fallback: calcular desde pathname
+    const path = window.location.pathname;
+    if (path.indexOf('/', 1) > 0) {
+        return path.substring(0, path.indexOf('/', 1));
+    }
+    
+    // Último fallback
+    return '/01_MiProyecto';
+}
+
 // ===== HORARIOS DISPONIBLES (8:00am - 5:00pm, rangos de una hora) =====
 const horariosBase = [
     "8:00am-9:00am", "9:00am-10:00am", "10:00am-11:00am", "11:00am-12:00pm", 
@@ -32,7 +50,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (!usuario) {
         sessionStorage.setItem('paginaAnterior', 'views/agendamientos.jsp');
-        window.location.href = '../index.jsp';
+        const contextPath = getContextPath();
+        window.location.href = `${contextPath}/index.jsp`;
         return;
     }
 
@@ -143,7 +162,8 @@ function cargarDoctoresPorEspecialidad() {
     
     // Hacer petición AJAX para obtener doctores de esta especialidad
     // Por ahora, recargamos la página con el parámetro de especialidad
-    window.location.href = `agendamientos.jsp?especialidad=${especialidadSeleccionada}`;
+    const contextPath = getContextPath();
+    window.location.href = `${contextPath}/views/agendamientos.jsp?especialidad=${especialidadSeleccionada}`;
 }
 
 // ===== CARGAR HORARIOS DISPONIBLES DESDE BD =====
@@ -160,7 +180,7 @@ function cargarHorariosDisponibles() {
     horariosContainer.innerHTML = '<p class="no-horarios">⏳ Cargando horarios disponibles...</p>';
     
     // Construir URL de la API
-    const contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf("/", 2));
+    const contextPath = getContextPath();
     const apiUrl = `${contextPath}/api/disponibilidad?idDoctor=${doctorId}&fecha=${fecha}`;
     
     console.log('=== CARGANDO HORARIOS DESDE BD ===');

@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="context-path" content="<%= request.getContextPath() %>">
     <title>Bienestar Politécnico</title>
 
     <link rel="icon" type="image/png" href="<%= request.getContextPath() %>/images/logo_epn.png">
@@ -107,7 +108,7 @@
 </footer>
 
 <!-- ✅ CARGAR AUTH TEMPORAL -->
-<script src="<%= request.getContextPath() %>/js/auth-temporal.js"></script>
+<script src="<%= request.getContextPath() %>/js/auth-temporal.js?v=<%= System.currentTimeMillis() %>"></script>
 
 </body>
 </html>
