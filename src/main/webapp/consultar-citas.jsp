@@ -290,7 +290,7 @@
 <!-- JS -->
 <script src="${pageContext.request.contextPath}/js/auth-temporal.js"></script>
 <script src="${pageContext.request.contextPath}/js/consultar-citas.js"></script>
-<script src="${pageContext.request.contextPath}/js/cancelar-cita.js"></script>
+<script src="${pageContext.request.contextPath}/js/cancelar-cita-rest.js"></script>
 
 </body>
 </html>

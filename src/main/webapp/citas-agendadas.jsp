@@ -273,7 +273,7 @@
 <!-- JS -->
 <script src="${pageContext.request.contextPath}/js/auth-temporal.js"></script>
 <script src="${pageContext.request.contextPath}/js/atender-cita-nuevo.js"></script>
-<script src="${pageContext.request.contextPath}/js/cancelar-cita.js"></script>
+<script src="${pageContext.request.contextPath}/js/cancelar-cita-rest.js"></script>
 
 <!-- Debug: Mostrar citas en consola -->
 <script>

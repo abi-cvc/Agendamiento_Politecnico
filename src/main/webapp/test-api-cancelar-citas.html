@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba API REST - Cancelar Citas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 150px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        .btn-success {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #27ae60;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .response-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .response-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .response-error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .response-info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loader.active {
+            display: block;
+        }
+
+        .info-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .endpoint-info {
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Prueba API REST - Cancelar Citas</h1>
+        <p class="subtitle">Interfaz de prueba para los endpoints REST</p>
+
+        <div class="info-box">
+            <strong>ℹ️ Información:</strong> Esta página permite probar los endpoints REST de cancelación de citas.
+            Ingresa un ID de cita válido (por ejemplo: 1, 2, 3, etc.)
+        </div>
+
+        <!-- Sección 1: Obtener Confirmación -->
+        <div class="section">
+            <h2>📋 1. Obtener Confirmación de Cancelación</h2>
+            <div class="endpoint-info">
+                GET /rest/api/citas/{idCita}/cancelar/confirmacion
+            </div>
+            <div class="input-group">
+                <label for="idCitaConfirm">ID de la Cita:</label>
+                <input type="number" id="idCitaConfirm" placeholder="Ej: 1" min="1">
+            </div>
+            <div class="btn-group">
+                <button class="btn-primary" onclick="obtenerConfirmacion()">
+                    🔍 Obtener Información
+                </button>
+            </div>
+            <div class="loader" id="loader1"></div>
+            <div id="response1" class="response-box response-info" style="display: none;"></div>
+        </div>
+
+        <!-- Sección 2: Confirmar Cancelación -->
+        <div class="section">
+            <h2>❌ 2. Confirmar Cancelación</h2>
+            <div class="endpoint-info">
+                POST /rest/api/citas/{idCita}/cancelar
+            </div>
+            <div class="input-group">
+                <label for="idCitaCancel">ID de la Cita:</label>
+                <input type="number" id="idCitaCancel" placeholder="Ej: 1" min="1">
+            </div>
+            <div class="btn-group">
+                <button class="btn-danger" onclick="cancelarCita()">
+                    ⚠️ Cancelar Cita
+                </button>
+            </div>
+            <div class="loader" id="loader2"></div>
+            <div id="response2" class="response-box response-info" style="display: none;"></div>
+        </div>
+
+        <!-- Sección 3: Consultar Estado -->
+        <div class="section">
+            <h2>🔄 3. Consultar Estado de la Cita</h2>
+            <div class="endpoint-info">
+                GET /rest/api/citas/{idCita}
+            </div>
+            <div class="input-group">
+                <label for="idCitaConsult">ID de la Cita:</label>
+                <input type="number" id="idCitaConsult" placeholder="Ej: 1" min="1">
+            </div>
+            <div class="btn-group">
+                <button class="btn-success" onclick="consultarCita()">
+                    📊 Consultar Estado
+                </button>
+            </div>
+            <div class="loader" id="loader3"></div>
+            <div id="response3" class="response-box response-info" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Configuración base
+        const BASE_URL = window.location.origin + '/Agendamiento_Politecnico5/rest';
+
+        // Función auxiliar para mostrar respuesta
+        function mostrarRespuesta(responseId, data, isError = false) {
+            const responseBox = document.getElementById(responseId);
+            responseBox.style.display = 'block';
+            responseBox.className = `response-box ${isError ? 'response-error' : 'response-success'}`;
+            responseBox.textContent = JSON.stringify(data, null, 2);
+        }
+
+        // Función auxiliar para mostrar loader
+        function toggleLoader(loaderId, show) {
+            const loader = document.getElementById(loaderId);
+            if (show) {
+                loader.classList.add('active');
+            } else {
+                loader.classList.remove('active');
+            }
+        }
+
+        // 1. Obtener Confirmación de Cancelación
+        async function obtenerConfirmacion() {
+            const idCita = document.getElementById('idCitaConfirm').value;
+            
+            if (!idCita) {
+                alert('Por favor ingresa un ID de cita válido');
+                return;
+            }
+
+            toggleLoader('loader1', true);
+            document.getElementById('response1').style.display = 'none';
+
+            try {
+                const response = await fetch(`${BASE_URL}/api/citas/${idCita}/cancelar/confirmacion`);
+                const data = await response.json();
+                
+                toggleLoader('loader1', false);
+                mostrarRespuesta('response1', data, !data.success);
+
+                if (data.success) {
+                    const confirmar = confirm(
+                        `${data.data.mensaje}\n\n` +
+                        `Fecha: ${data.data.fecha}\n` +
+                        `Hora: ${data.data.hora}\n` +
+                        `Estado: ${data.data.estadoActual}\n` +
+                        `${data.data.doctor ? 'Doctor: ' + data.data.doctor.nombre : ''}`
+                    );
+
+                    if (confirmar) {
+                        document.getElementById('idCitaCancel').value = idCita;
+                    }
+                }
+            } catch (error) {
+                toggleLoader('loader1', false);
+                mostrarRespuesta('response1', {
+                    error: 'Error de conexión',
+                    detalle: error.message
+                }, true);
+            }
+        }
+
+        // 2. Cancelar Cita
+        async function cancelarCita() {
+            const idCita = document.getElementById('idCitaCancel').value;
+            
+            if (!idCita) {
+                alert('Por favor ingresa un ID de cita válido');
+                return;
+            }
+
+            const confirmar = confirm('⚠️ ¿Estás seguro de que deseas cancelar esta cita?');
+            if (!confirmar) return;
+
+            toggleLoader('loader2', true);
+            document.getElementById('response2').style.display = 'none';
+
+            try {
+                const response = await fetch(`${BASE_URL}/api/citas/${idCita}/cancelar`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                
+                toggleLoader('loader2', false);
+                mostrarRespuesta('response2', data, !data.success);
+
+                if (data.success) {
+                    alert('✅ ' + data.mensaje);
+                    // Actualizar automáticamente el estado
+                    document.getElementById('idCitaConsult').value = idCita;
+                }
+            } catch (error) {
+                toggleLoader('loader2', false);
+                mostrarRespuesta('response2', {
+                    error: 'Error de conexión',
+                    detalle: error.message
+                }, true);
+            }
+        }
+
+        // 3. Consultar Estado de la Cita
+        async function consultarCita() {
+            const idCita = document.getElementById('idCitaConsult').value;
+            
+            if (!idCita) {
+                alert('Por favor ingresa un ID de cita válido');
+                return;
+            }
+
+            toggleLoader('loader3', true);
+            document.getElementById('response3').style.display = 'none';
+
+            try {
+                const response = await fetch(`${BASE_URL}/api/citas/${idCita}`);
+                const data = await response.json();
+                
+                toggleLoader('loader3', false);
+                mostrarRespuesta('response3', data, !data.success);
+            } catch (error) {
+                toggleLoader('loader3', false);
+                mostrarRespuesta('response3', {
+                    error: 'Error de conexión',
+                    detalle: error.message
+                }, true);
+            }
+        }
+    </script>
+</body>
+</html>
