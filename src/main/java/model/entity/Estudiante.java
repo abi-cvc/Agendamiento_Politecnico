@@ -1,6 +1,9 @@
 package model.entity;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.List;
 
@@ -10,6 +13,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "estudiante")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Estudiante implements Serializable {
     
     private static final long serialVersionUID = 1L;
@@ -39,6 +43,7 @@ public class Estudiante implements Serializable {
     
     // Relación OneToMany con Cita
     @OneToMany(mappedBy = "estudiante", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Cita> citas;
     
     // ===== CONSTRUCTORES =====
@@ -186,6 +191,7 @@ public class Estudiante implements Serializable {
     }
     
     // Método auxiliar para obtener nombre completo
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     public String getNombreCompleto() {
         return nombreEstudiante + " " + apellidoEstudiante;
     }

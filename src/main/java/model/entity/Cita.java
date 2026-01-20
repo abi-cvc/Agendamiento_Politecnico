@@ -1,6 +1,8 @@
 package model.entity;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,6 +16,7 @@ import java.time.LocalTime;
  */
 @Entity
 @Table(name = "cita")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Cita implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -47,16 +50,19 @@ public class Cita implements Serializable {
 	// ===== RELACIÓN ORM CON ESPECIALIDAD =====
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_especialidad", nullable = false)
+	@JsonIgnore
 	private Especialidad especialidad;
 	
 	// ===== RELACIÓN ORM CON DOCTOR (según diagrama de robustez) =====
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_doctor")
+	@JsonIgnore
 	private Doctor doctor;
 	
 	// ===== RELACIÓN ORM CON ESTUDIANTE =====
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_estudiante")
+	@JsonIgnore
 	private Estudiante estudiante;
 	
 	// ===== MÉTODOS DE CICLO DE VIDA JPA =====

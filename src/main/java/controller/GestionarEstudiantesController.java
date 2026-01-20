@@ -11,19 +11,59 @@ import model.entity.Estudiante;
 import java.io.IOException;
 import java.util.List;
 
+// ===== IMPORTS PARA CONSUMIR REST API =====
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import org.glassfish.jersey.client.ClientConfig;
+import com.recursos.JacksonConfig;
+
 /**
  * Controller para gestionar estudiantes desde el panel de administrador
  * Maneja: listar, buscar, crear, actualizar, cambiar estado
+ * 
+ * ACTUALIZADO: Ahora consume el servicio REST en lugar de acceder directamente al DAO
  */
 @WebServlet(urlPatterns = {"/GestionarEstudiantes"})
 public class GestionarEstudiantesController extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    private DAOFactory factory;
+    // ===== COMENTADO: Ya no se usa directamente, se usa vía REST =====
+    // private DAOFactory factory;
+    
+    // ===== NUEVO: Cliente REST para consumir RecursoEstudiante =====
+    private Client client;
+    private String baseUrl;
 
     @Override
     public void init() throws ServletException {
-        factory = DAOFactory.getFactory();
+        // ===== COMENTADO: Inicialización antigua del DAO =====
+        // factory = DAOFactory.getFactory();
+        
+        // ===== NUEVO: Inicializar cliente REST con JacksonConfig =====
+        ClientConfig config = new ClientConfig();
+        config.register(JacksonConfig.class); // ✅ IMPORTANTE: Registrar configurador de Jackson
+        
+        client = ClientBuilder.newClient(config);
+        
+        // URL base del servicio REST (ajustar según tu contexto)
+        String contextPath = getServletContext().getContextPath();
+        baseUrl = "http://localhost:8080" + contextPath + "/rest/estudiantes";
+        System.out.println("✅ GestionarEstudiantesController inicializado con REST API: " + baseUrl);
+        System.out.println("✅ Cliente Jersey configurado con JacksonConfig");
+    }
+    
+    @Override
+    public void destroy() {
+        // Cerrar el cliente REST al destruir el servlet
+        if (client != null) {
+            client.close();
+        }
+        super.destroy();
     }
 
     @Override
@@ -108,9 +148,28 @@ public class GestionarEstudiantesController extends HttpServlet {
 
     /**
      * 1.1: obtener(): estudiantes[]
+     * ACTUALIZADO: Consume REST API en lugar de DAO directo
      */
     private List<Estudiante> obtener() throws Exception {
-        return factory.getEstudianteDAO().getAll();
+        // ===== ANTIGUO: Acceso directo al DAO =====
+        // return factory.getEstudianteDAO().getAll();
+        
+        // ===== NUEVO: Consumir servicio REST =====
+        try {
+            WebTarget target = client.target(baseUrl);
+            Response response = target.request(MediaType.APPLICATION_JSON).get();
+            
+            if (response.getStatus() == 200) {
+                List<Estudiante> estudiantes = response.readEntity(new GenericType<List<Estudiante>>() {});
+                System.out.println("✅ REST: Obtenidos " + estudiantes.size() + " estudiantes");
+                return estudiantes;
+            } else {
+                throw new Exception("Error REST: " + response.getStatus());
+            }
+        } catch (Exception e) {
+            System.err.println("❌ ERROR al consumir REST /estudiantes: " + e.getMessage());
+            throw e;
+        }
     }
 
     /**
@@ -145,6 +204,7 @@ public class GestionarEstudiantesController extends HttpServlet {
     /**
      * Busca un estudiante por cédula (idPaciente)
      * // 3.1: obtenerEstudiante() = y 2: desactivarEstudiante()
+     * ACTUALIZADO: Consume REST API
      */
     private void buscarEstudiante(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -153,11 +213,17 @@ public class GestionarEstudiantesController extends HttpServlet {
             List<Estudiante> estudiantes;
             
             if (idPaciente != null && !idPaciente.trim().isEmpty()) {
-                // 3.1: obtenerEstudiante() y 2: desactivarEstudiante()
-                Estudiante estudiante = factory.getEstudianteDAO().buscarPorIdPaciente(idPaciente);
+                // ===== ANTIGUO: Acceso directo al DAO =====
+                // Estudiante estudiante = factory.getEstudianteDAO().buscarPorIdPaciente(idPaciente);
                 
-                if (estudiante != null) {
+                // ===== NUEVO: Consumir servicio REST /buscar/{cedula} =====
+                WebTarget target = client.target(baseUrl + "/buscar/" + idPaciente);
+                Response restResponse = target.request(MediaType.APPLICATION_JSON).get();
+                
+                if (restResponse.getStatus() == 200) {
+                    Estudiante estudiante = restResponse.readEntity(Estudiante.class);
                     estudiantes = java.util.Collections.singletonList(estudiante);
+                    System.out.println("✅ REST: Estudiante encontrado con cédula " + idPaciente);
                 } else {
                     estudiantes = new java.util.ArrayList<>();
                     request.getSession().setAttribute("error", "No se encontró ningún estudiante con ese ID de paciente");
@@ -227,6 +293,7 @@ public class GestionarEstudiantesController extends HttpServlet {
     /**
      * 1.6: crearNuevoEstudiante(datosEstudiante)
      * 1.7: mostrarConfirmacion
+     * ACTUALIZADO: Consume REST API
      */
     private void crearNuevoEstudiante(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -240,18 +307,32 @@ public class GestionarEstudiantesController extends HttpServlet {
                 return;
             }
 
-            if (factory.getEstudianteDAO().existePorIdPaciente(idPaciente)) {
-                request.getSession().setAttribute("error", "Ya existe un estudiante con ese ID de paciente");
-                response.sendRedirect(request.getContextPath() + "/GestionarEstudiantes?accion=gestionarEstudiantes");
-                return;
-            }
+            // ===== ANTIGUO: Validación con DAO directo =====
+            // if (factory.getEstudianteDAO().existePorIdPaciente(idPaciente)) {
+            //     request.getSession().setAttribute("error", "Ya existe un estudiante con ese ID de paciente");
+            //     response.sendRedirect(request.getContextPath() + "/GestionarEstudiantes?accion=gestionarEstudiantes");
+            //     return;
+            // }
 
+            // 1.5: creaNuevoEstudiante(datos)
             Estudiante nuevoEstudiante = creaNuevoEstudiante(request);
-            // 1.6: crearNuevoEstudiante(datosEstudiante)
-            factory.getEstudianteDAO().create(nuevoEstudiante);
-
-            // 1.7: mostrarConfirmacion
-            mostrarConfirmacion(request, "Estudiante creado exitosamente");
+            
+            // ===== ANTIGUO: Crear con DAO directo =====
+            // factory.getEstudianteDAO().create(nuevoEstudiante);
+            
+            // ===== NUEVO: Crear vía REST POST /estudiantes/add =====
+            WebTarget target = client.target(baseUrl + "/add");
+            Response restResponse = target.request(MediaType.APPLICATION_JSON)
+                    .post(Entity.entity(nuevoEstudiante, MediaType.APPLICATION_JSON));
+            
+            if (restResponse.getStatus() == 200 || restResponse.getStatus() == 204) {
+                System.out.println("✅ REST: Estudiante creado exitosamente");
+                // 1.7: mostrarConfirmacion
+                mostrarConfirmacion(request, "Estudiante creado exitosamente");
+            } else {
+                request.getSession().setAttribute("error", "Error al crear estudiante: " + restResponse.getStatus());
+            }
+            
             response.sendRedirect(request.getContextPath() + "/GestionarEstudiantes?accion=gestionarEstudiantes");
 
         } catch (Exception e) {
@@ -272,6 +353,7 @@ public class GestionarEstudiantesController extends HttpServlet {
      * 3: editarEstudiante(cedula)
      * 3.1: obtenerEstudiante(cedula)
      * 3.2: mostrarFormulario (editar)
+     * ACTUALIZADO: Consume REST API
      */
     private void editarEstudiante(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -281,12 +363,31 @@ public class GestionarEstudiantesController extends HttpServlet {
         try {
             Estudiante estudiante = null;
             
-            // 3.1: obtenerEstudiante(cedula)
+            // 3.1: obtenerEstudiante(cedula o id)
             if (cedula != null && !cedula.trim().isEmpty()) {
-                estudiante = factory.getEstudianteDAO().buscarPorIdPaciente(cedula);
+                // ===== ANTIGUO: Acceso directo al DAO =====
+                // estudiante = factory.getEstudianteDAO().buscarPorIdPaciente(cedula);
+                
+                // ===== NUEVO: Consumir REST /buscar/{cedula} =====
+                WebTarget target = client.target(baseUrl + "/buscar/" + cedula);
+                Response restResponse = target.request(MediaType.APPLICATION_JSON).get();
+                if (restResponse.getStatus() == 200) {
+                    estudiante = restResponse.readEntity(Estudiante.class);
+                    System.out.println("✅ REST: Estudiante encontrado para editar (cédula: " + cedula + ")");
+                }
             } else if (idParam != null && !idParam.trim().isEmpty()) {
                 int id = Integer.parseInt(idParam);
-                estudiante = factory.getEstudianteDAO().getById(id);
+                
+                // ===== ANTIGUO: Acceso directo al DAO =====
+                // estudiante = factory.getEstudianteDAO().getById(id);
+                
+                // ===== NUEVO: Consumir REST /{id} =====
+                WebTarget target = client.target(baseUrl + "/" + id);
+                Response restResponse = target.request(MediaType.APPLICATION_JSON).get();
+                if (restResponse.getStatus() == 200) {
+                    estudiante = restResponse.readEntity(Estudiante.class);
+                    System.out.println("✅ REST: Estudiante encontrado para editar (ID: " + id + ")");
+                }
             }
 
             if (estudiante != null) {
@@ -310,28 +411,62 @@ public class GestionarEstudiantesController extends HttpServlet {
      * 3.3: actualizarDatos(datosEstudiante)
      * 3.4: guardarEstudiante(datosEstudiante)
      * 3.5: notificarExitoEdicion
+     * ACTUALIZADO: Consume REST API
      */
     private void actualizarEstudiante(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
             int id = Integer.parseInt(request.getParameter("id"));
+            String idPaciente = request.getParameter("cedula");
             String nombre = request.getParameter("nombre");
             String apellido = request.getParameter("apellido");
             String email = request.getParameter("email");
             String password = request.getParameter("password");
 
-            Estudiante estudiante = factory.getEstudianteDAO().getById(id);
-            if (estudiante != null) {
+            // ===== ANTIGUO: Obtener y actualizar con DAO directo =====
+            // Estudiante estudiante = factory.getEstudianteDAO().getById(id);
+            // if (estudiante != null) {
+            //     estudiante.setNombreEstudiante(nombre);
+            //     estudiante.setApellidoEstudiante(apellido);
+            //     estudiante.setCorreoEstudiante(email);
+            //     if (password != null && !password.trim().isEmpty()) {
+            //         estudiante.setPasswordEstudiante(password);
+            //     }
+            //     // 3.4: guardarEstudiante
+            //     factory.getEstudianteDAO().update(estudiante);
+            //     // 3.5: notificarExitoEdicion
+            //     mostrarConfirmacion(request, "Estudiante actualizado exitosamente");
+            // } else {
+            //     request.getSession().setAttribute("error", "Estudiante no encontrado");
+            // }
+            
+            // ===== NUEVO: Primero obtener el estudiante vía REST =====
+            WebTarget targetGet = client.target(baseUrl + "/" + id);
+            Response getResponse = targetGet.request(MediaType.APPLICATION_JSON).get();
+            
+            if (getResponse.getStatus() == 200) {
+                Estudiante estudiante = getResponse.readEntity(Estudiante.class);
+                
+                // Actualizar datos
                 estudiante.setNombreEstudiante(nombre);
                 estudiante.setApellidoEstudiante(apellido);
                 estudiante.setCorreoEstudiante(email);
                 if (password != null && !password.trim().isEmpty()) {
                     estudiante.setPasswordEstudiante(password);
                 }
-                // 3.4: guardarEstudiante
-                factory.getEstudianteDAO().update(estudiante);
-                // 3.5: notificarExitoEdicion
-                mostrarConfirmacion(request, "Estudiante actualizado exitosamente");
+                
+                // ===== NUEVO: Actualizar vía REST PUT /estudiantes/update =====
+                WebTarget targetUpdate = client.target(baseUrl + "/update");
+                Response updateResponse = targetUpdate.request(MediaType.APPLICATION_JSON)
+                        .put(Entity.entity(estudiante, MediaType.APPLICATION_JSON));
+                
+                if (updateResponse.getStatus() == 200 || updateResponse.getStatus() == 204) {
+                    System.out.println("✅ REST: Estudiante actualizado exitosamente");
+                    // 3.5: notificarExitoEdicion
+                    mostrarConfirmacion(request, "Estudiante actualizado exitosamente");
+                } else {
+                    request.getSession().setAttribute("error", "Error al actualizar estudiante: " + updateResponse.getStatus());
+                }
             } else {
                 request.getSession().setAttribute("error", "Estudiante no encontrado");
             }
@@ -350,6 +485,7 @@ public class GestionarEstudiantesController extends HttpServlet {
      * 2.2: confirmarDesactivacion(cedula)
      * 2.3: cambiarEstadoEstudiante(nuevoEstado)
      * 2.4: actualizarVista
+     * ACTUALIZADO: Consume REST API
      */
     private void confirmarDesactivacion(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -361,17 +497,49 @@ public class GestionarEstudiantesController extends HttpServlet {
             // 2.2: obtenerEstudiante por id o cedula
             if (idParam != null && !idParam.trim().isEmpty()) {
                 int id = Integer.parseInt(idParam);
-                estudiante = factory.getEstudianteDAO().getById(id);
+                
+                // ===== ANTIGUO: Acceso directo al DAO =====
+                // estudiante = factory.getEstudianteDAO().getById(id);
+                
+                // ===== NUEVO: Consumir REST /{id} =====
+                WebTarget target = client.target(baseUrl + "/" + id);
+                Response restResponse = target.request(MediaType.APPLICATION_JSON).get();
+                if (restResponse.getStatus() == 200) {
+                    estudiante = restResponse.readEntity(Estudiante.class);
+                    System.out.println("✅ REST: Estudiante encontrado para cambiar estado (ID: " + id + ")");
+                }
             } else if (cedula != null && !cedula.trim().isEmpty()) {
-                estudiante = factory.getEstudianteDAO().buscarPorIdPaciente(cedula);
+                // ===== ANTIGUO: Acceso directo al DAO =====
+                // estudiante = factory.getEstudianteDAO().buscarPorIdPaciente(cedula);
+                
+                // ===== NUEVO: Consumir REST /buscar/{cedula} =====
+                WebTarget target = client.target(baseUrl + "/buscar/" + cedula);
+                Response restResponse = target.request(MediaType.APPLICATION_JSON).get();
+                if (restResponse.getStatus() == 200) {
+                    estudiante = restResponse.readEntity(Estudiante.class);
+                    System.out.println("✅ REST: Estudiante encontrado para cambiar estado (cédula: " + cedula + ")");
+                }
             }
 
             if (estudiante != null) {
                 // 2.3: cambiarEstadoEstudiante(nuevoEstado)
                 estudiante.setActivo(!estudiante.isActivo());
-                factory.getEstudianteDAO().update(estudiante);
-                String nuevoEstado = estudiante.isActivo() ? "activado" : "desactivado";
-                mostrarConfirmacion(request, "Estudiante " + nuevoEstado + " exitosamente");
+                
+                // ===== ANTIGUO: Actualizar con DAO directo =====
+                // factory.getEstudianteDAO().update(estudiante);
+                
+                // ===== NUEVO: Actualizar vía REST PUT /estudiantes/update =====
+                WebTarget targetUpdate = client.target(baseUrl + "/update");
+                Response updateResponse = targetUpdate.request(MediaType.APPLICATION_JSON)
+                        .put(Entity.entity(estudiante, MediaType.APPLICATION_JSON));
+                
+                if (updateResponse.getStatus() == 200 || updateResponse.getStatus() == 204) {
+                    String nuevoEstado = estudiante.isActivo() ? "activado" : "desactivado";
+                    System.out.println("✅ REST: Estudiante " + nuevoEstado + " exitosamente");
+                    mostrarConfirmacion(request, "Estudiante " + nuevoEstado + " exitosamente");
+                } else {
+                    request.getSession().setAttribute("error", "Error al cambiar estado: " + updateResponse.getStatus());
+                }
             } else {
                 request.getSession().setAttribute("error", "Estudiante no encontrado");
             }
