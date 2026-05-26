@@ -310,15 +310,9 @@
     
 
     <% if (usuarioSesion != null && rolSesion != null) { %>
-    <script>
-        if (!sessionStorage.getItem('usuarioActual')) {
-            sessionStorage.setItem('usuarioActual', JSON.stringify({
-                nombre: '<%= nombreSesion != null ? nombreSesion.replace("'","\'") : "" %>',
-                email:  '<%= emailSesion %>',
-                rol:    '<%= rolSesion %>'
-            }));
-        }
-    </script>
+    <meta name="session-nombre" content="<%= nombreSesion != null ? nombreSesion : "" %>">
+    <meta name="session-email"  content="<%= emailSesion %>">
+    <meta name="session-rol"    content="<%= rolSesion %>">
     <% } %>
     <script src="<%= request.getContextPath() %>/js/auth-temporal.js"></script>
 

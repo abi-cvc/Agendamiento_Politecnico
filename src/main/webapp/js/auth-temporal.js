@@ -253,10 +253,26 @@ function actualizarNavegacionPorRol() {
     }
 }
 
+// ===== SINCRONIZAR SESIÓN DEL SERVIDOR CON sessionStorage =====
+function sincronizarSesionServidor() {
+    if (sessionStorage.getItem('usuarioActual')) return;
+    const nombre = document.querySelector('meta[name="session-nombre"]');
+    const email  = document.querySelector('meta[name="session-email"]');
+    const rol    = document.querySelector('meta[name="session-rol"]');
+    if (nombre && email && rol && rol.content) {
+        sessionStorage.setItem('usuarioActual', JSON.stringify({
+            nombre: nombre.content,
+            email:  email.content,
+            rol:    rol.content
+        }));
+    }
+}
+
 // ===== EJECUTAR AL CARGAR CUALQUIER PÁGINA =====
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 Auth temporal cargado');
 
+    sincronizarSesionServidor();
     actualizarNavegacionPorRol();
 
     const loginForm = document.getElementById('loginForm');
