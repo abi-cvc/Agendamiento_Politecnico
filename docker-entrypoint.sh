@@ -15,7 +15,9 @@ rm -f "$WAR"
 # Reemplazar configuración de base de datos si se pasan variables de entorno
 if [ -n "$DB_URL" ]; then
   echo ">>> Configurando DB_URL..."
-  sed -i "s|jdbc:mysql://[^\"]*|$DB_URL|g" "$PERSISTENCE"
+  # Escapar & → &amp; para XML válido
+  ESCAPED_URL=$(echo "$DB_URL" | sed 's/&/\&amp;/g')
+  sed -i "s|jdbc:mysql://[^\"]*|$ESCAPED_URL|g" "$PERSISTENCE"
 fi
 
 if [ -n "$DB_USER" ]; then
