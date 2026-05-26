@@ -30,10 +30,13 @@ public class DisponibilidadDAO extends JPAGenericDAO<Disponibilidad, Integer> im
         try {
             TypedQuery<Disponibilidad> query = em.createQuery(
                 "SELECT d FROM Disponibilidad d WHERE d.doctor.idDoctor = :idDoctor " +
+                "AND d.disponible = true AND d.fecha >= :hoy AND d.fecha <= :limite " +
                 "ORDER BY d.fecha, d.horaInicio",
                 Disponibilidad.class
             );
             query.setParameter("idDoctor", idDoctor);
+            query.setParameter("hoy", LocalDate.now());
+            query.setParameter("limite", LocalDate.now().plusDays(21));
             return query.getResultList();
         } catch (Exception e) {
             System.err.println("Error al obtener disponibilidades por doctor: " + e.getMessage());
@@ -129,16 +132,17 @@ public class DisponibilidadDAO extends JPAGenericDAO<Disponibilidad, Integer> im
      */
     public List<LocalDate> obtenerFechasDisponibles(int idDoctor) {
         EntityManager em = getEntityManager();
-        
+
         try {
             TypedQuery<LocalDate> query = em.createQuery(
                 "SELECT DISTINCT d.fecha FROM Disponibilidad d " +
                 "WHERE d.doctor.idDoctor = :idDoctor AND d.disponible = true " +
-                "AND d.fecha >= :hoy ORDER BY d.fecha",
+                "AND d.fecha >= :hoy AND d.fecha <= :limite ORDER BY d.fecha",
                 LocalDate.class
             );
             query.setParameter("idDoctor", idDoctor);
             query.setParameter("hoy", LocalDate.now());
+            query.setParameter("limite", LocalDate.now().plusDays(21));
             return query.getResultList();
         } catch (Exception e) {
             System.err.println("Error al obtener fechas disponibles: " + e.getMessage());
