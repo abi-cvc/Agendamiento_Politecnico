@@ -1,0 +1,105 @@
+!SESSION 2026-02-11 18:09:53.488 -----------------------------------------------
+eclipse.buildId=4.38.0.20251204-0849
+java.version=21.0.9
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=es_EC
+Framework arguments:  -product org.eclipse.epp.package.jee.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.jee.product -data C:\Users\User\git\Agendamiento_Politecnico
+
+!ENTRY ch.qos.logback.classic 1 0 2026-02-11 18:10:19.676
+!MESSAGE Activated before the state location was initialized. Retry after the state location is initialized.
+
+!ENTRY ch.qos.logback.classic 1 0 2026-02-11 18:10:22.744
+!MESSAGE Logback config file: C:\Users\User\git\Agendamiento_Politecnico\.metadata\.plugins\org.eclipse.m2e.logback\logback.2.7.101.20251017-1242.xml
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2026-02-11 18:10:46.897
+!MESSAGE [Info] Starting language server with binary lsp agent.
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2026-02-11 18:10:46.904
+!MESSAGE [Info] Found native binary in fragment bundle: com.microsoft.copilot.eclipse.core.agent.win32
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2026-02-11 18:10:47.268
+!MESSAGE [Info] Lsp agent started successfully.
+
+!ENTRY org.eclipse.egit.ui 2 0 2026-02-11 18:10:48.579
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\User'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.lsp4e 1 0 2026-02-11 18:11:14.667
+!MESSAGE [Info]	[lsp] GitHub Copilot Language Server 1.401.0 initialized
+
+!ENTRY org.eclipse.lsp4e 1 0 2026-02-11 18:11:16.322
+!MESSAGE [Info]	[default] Policy watcher started for GitHub Copilot Plugin
+
+!ENTRY org.eclipse.lsp4e 4 0 2026-02-11 18:11:16.437
+!MESSAGE [Error]	[state-database] Failed to initialize state database Error: State database initialization timed out
+    at C:\snapshot\copilot-client\agent\src\state\stateDatabase.ts:243:23
+    at c0.initializeWithTimeout (C:\snapshot\copilot-client\agent\src\state\stateDatabase.ts:240:9)
+
+!ENTRY org.eclipse.lsp4e 1 0 2026-02-11 18:11:17.105
+!MESSAGE [Info]	[certificates] Removed 10 expired certificates
+
+!ENTRY org.eclipse.lsp4e 1 0 2026-02-11 18:11:17.617
+!MESSAGE [Info]	[GithubAvailableEmbeddingTypes] Got embeddings. Primary: metis-1024-I16-Binary. Deprecated: 
+
+!ENTRY org.eclipse.lsp4e 1 0 2026-02-11 18:11:18.020
+!MESSAGE [Info]	[AutoModelService] Auto model cache cleared due to token update
+
+!ENTRY org.eclipse.lsp4e 1 0 2026-02-11 18:11:18.021
+!MESSAGE [Info]	[Semantic Search] Semantic search is disabled { reason: 'watchedFiles capability is not available' }
+
+!ENTRY org.eclipse.lsp4e 1 0 2026-02-11 18:11:18.022
+!MESSAGE [Info]	[CopilotMCP] MCP state changed from false to true
+!SESSION 2026-04-21 21:21:47.909 -----------------------------------------------
+eclipse.buildId=4.38.0.20251204-0849
+java.version=21.0.9
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=es_EC
+Framework arguments:  -product org.eclipse.epp.package.jee.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.jee.product -data C:\Users\User\git\Agendamiento_Politecnico
+
+!ENTRY ch.qos.logback.classic 1 0 2026-04-21 21:21:55.248
+!MESSAGE Activated before the state location was initialized. Retry after the state location is initialized.
+
+!ENTRY ch.qos.logback.classic 1 0 2026-04-21 21:21:58.386
+!MESSAGE Logback config file: C:\Users\User\git\Agendamiento_Politecnico\.metadata\.plugins\org.eclipse.m2e.logback\logback.2.7.101.20251017-1242.xml
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2026-04-21 21:22:17.500
+!MESSAGE [Info] Starting language server with binary lsp agent.
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2026-04-21 21:22:17.503
+!MESSAGE [Info] Found native binary in fragment bundle: com.microsoft.copilot.eclipse.core.agent.win32
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2026-04-21 21:22:17.780
+!MESSAGE [Info] Lsp agent started successfully.
+
+!ENTRY org.eclipse.egit.ui 2 0 2026-04-21 21:22:18.065
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\User'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.lsp4e 1 0 2026-04-21 21:22:40.569
+!MESSAGE [Info]	[lsp] GitHub Copilot Language Server 1.401.0 initialized
+
+!ENTRY org.eclipse.lsp4e 1 0 2026-04-21 21:22:40.766
+!MESSAGE [Info]	[default] Policy watcher started for GitHub Copilot Plugin
+
+!ENTRY org.eclipse.lsp4e 1 0 2026-04-21 21:22:41.279
+!MESSAGE [Info]	[certificates] Removed 10 expired certificates
+
+!ENTRY org.eclipse.lsp4e 1 0 2026-04-21 21:22:41.712
+!MESSAGE [Info]	[GithubAvailableEmbeddingTypes] Got embeddings. Primary: metis-1024-I16-Binary. Deprecated: 
+
+!ENTRY org.eclipse.lsp4e 1 0 2026-04-21 21:22:42.241
+!MESSAGE [Info]	[AutoModelService] Auto model cache cleared due to token update
+
+!ENTRY org.eclipse.lsp4e 1 0 2026-04-21 21:22:42.245
+!MESSAGE [Info]	[Semantic Search] Semantic search is disabled { reason: 'watchedFiles capability is not available' }
+
+!ENTRY org.eclipse.lsp4e 1 0 2026-04-21 21:22:42.248
+!MESSAGE [Info]	[CopilotMCP] MCP state changed from false to true
