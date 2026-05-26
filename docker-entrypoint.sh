@@ -8,8 +8,7 @@ PERSISTENCE="$APP_DIR/WEB-INF/classes/META-INF/persistence.xml"
 # Extraer el WAR para poder modificar persistence.xml en runtime
 echo ">>> Extrayendo WAR..."
 mkdir -p "$APP_DIR"
-cd "$APP_DIR"
-jar -xf "$WAR"
+unzip -q "$WAR" -d "$APP_DIR"
 rm -f "$WAR"
 
 # Reemplazar configuración de base de datos si se pasan variables de entorno

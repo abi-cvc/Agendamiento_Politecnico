@@ -13,6 +13,9 @@ RUN mvn package -DskipTests -B
 # ─── Stage 2: Runtime ─────────────────────────────────────────────────────────
 FROM tomcat:10.1-jre17
 
+# Instalar unzip para extraer el WAR en runtime
+RUN apt-get update && apt-get install -y unzip && rm -rf /var/lib/apt/lists/*
+
 # Limpiar webapps por defecto
 RUN rm -rf /usr/local/tomcat/webapps/*
 
