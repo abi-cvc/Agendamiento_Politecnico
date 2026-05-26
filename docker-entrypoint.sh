@@ -14,9 +14,11 @@ rm -f "$WAR"
 # Reemplazar configuración de base de datos si se pasan variables de entorno
 if [ -n "$DB_URL" ]; then
   echo ">>> Configurando DB_URL..."
-  # Escapar & → &amp; para XML válido
-  ESCAPED_URL=$(echo "$DB_URL" | sed 's/&/\&amp;/g')
-  sed -i "s|jdbc:mysql://[^\"]*|$ESCAPED_URL|g" "$PERSISTENCE"
+  # Paso 1: & → &amp;  (XML válido)
+  XML_URL=$(printf '%s' "$DB_URL" | sed 's/&/\&amp;/g')
+  # Paso 2: & → \&  (evita que sed interprete & como backreference)
+  SED_URL=$(printf '%s' "$XML_URL" | sed 's/&/\\&/g')
+  sed -i "s|jdbc:mysql://[^\"]*|$SED_URL|g" "$PERSISTENCE"
 fi
 
 if [ -n "$DB_USER" ]; then
