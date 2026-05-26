@@ -164,21 +164,17 @@ function actualizarNavegacionPorRol() {
     if (!contextPath || contextPath === '') {
         const path = window.location.pathname;
         console.log('🌍 Window location pathname:', path);
-        
+
         if (path.indexOf('/', 1) > 0) {
             contextPath = path.substring(0, path.indexOf('/', 1));
-        }
-        
-        // Si el path contiene '01_MiProyecto', asegurarnos de incluirlo
-        if (path.includes('/01_MiProyecto')) {
-            contextPath = '/01_MiProyecto';
+        } else {
+            contextPath = '';
         }
     }
     
-    // Fallback: Si no se detectó contexto, usar '/01_MiProyecto' por defecto
-    if (!contextPath || contextPath === '') {
-        contextPath = '/01_MiProyecto';
-        console.warn('⚠️ No se pudo detectar contextPath, usando fallback:', contextPath);
+    // Fallback: contexto raíz (ROOT.war en producción)
+    if (contextPath === undefined) {
+        contextPath = '';
     }
     
     console.log('🌍 Context path final:', contextPath);
