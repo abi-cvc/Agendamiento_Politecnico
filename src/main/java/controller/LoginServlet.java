@@ -44,21 +44,21 @@ public class LoginServlet extends HttpServlet {
         
         // Obtener parámetros del formulario
         String rol = request.getParameter("rol");
-        String identificacion = request.getParameter("identificacion");
+        String email = request.getParameter("email");
         String password = request.getParameter("password");
-        
+
         System.out.println("=== INTENTO DE LOGIN ===");
         System.out.println("Rol: " + rol);
-        System.out.println("Identificación: " + identificacion);
+        System.out.println("Email: " + email);
         System.out.println("Password: " + (password != null ? "****" : "null"));
-        
+
         try {
             if ("estudiante".equals(rol)) {
-                loginEstudiante(request, response, identificacion, password);
+                loginEstudiante(request, response, email, password);
             } else if ("admin".equals(rol)) {
-                loginAdministrador(request, response, identificacion, password);
+                loginAdministrador(request, response, email, password);
             } else if ("doctor".equals(rol)) {
-                loginDoctor(request, response, identificacion, password);
+                loginDoctor(request, response, email, password);
             } else {
                 request.setAttribute("error", "Rol no válido");
                 request.getRequestDispatcher("/index.jsp").forward(request, response);
@@ -74,10 +74,15 @@ public class LoginServlet extends HttpServlet {
      * Login para estudiantes
      */
     private void loginEstudiante(HttpServletRequest request, HttpServletResponse response,
-                                 String idPaciente, String password) 
+                                 String correo, String password)
             throws ServletException, IOException {
-        
-        Estudiante estudiante = estudianteDAO.validarCredenciales(idPaciente, password);
+
+        Estudiante estudiantePorCorreo = estudianteDAO.buscarPorCorreo(correo);
+        Estudiante estudiante = null;
+        if (estudiantePorCorreo != null && estudiantePorCorreo.isActivo()
+                && password != null && password.equals(estudiantePorCorreo.getPasswordEstudiante())) {
+            estudiante = estudiantePorCorreo;
+        }
         
         if (estudiante != null) {
             // Login exitoso
@@ -103,10 +108,15 @@ public class LoginServlet extends HttpServlet {
      * Login para administradores
      */
     private void loginAdministrador(HttpServletRequest request, HttpServletResponse response,
-                                   String idAdmin, String password) 
+                                   String correo, String password)
             throws ServletException, IOException {
-        
-        Administrador admin = administradorDAO.validarCredenciales(idAdmin, password);
+
+        Administrador adminPorCorreo = administradorDAO.buscarPorCorreo(correo);
+        Administrador admin = null;
+        if (adminPorCorreo != null && adminPorCorreo.isActivo()
+                && adminPorCorreo.iniciarSesion(password)) {
+            admin = adminPorCorreo;
+        }
         
         if (admin != null) {
             // Login exitoso
@@ -137,7 +147,7 @@ public class LoginServlet extends HttpServlet {
         
         // Usar DoctorDAO para obtener doctor por cédula y validar password
         try {
-            Doctor doctor = doctorDAO.obtenerPorCedula(cedula);
+            Doctor doctor = doctorDAO.obtenerPorEmail(cedula);
             if (doctor != null && doctor.isActivo() && password != null && password.equals(doctor.getPassword())) {
                 HttpSession session = request.getSession();
                 session.setAttribute("usuario", doctor);

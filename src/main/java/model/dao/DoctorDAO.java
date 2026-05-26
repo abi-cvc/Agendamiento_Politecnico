@@ -125,6 +125,27 @@ public class DoctorDAO extends JPAGenericDAO<Doctor, Integer> implements IDoctor
     }
     
     /**
+     * Obtiene un doctor por email
+     */
+    public Doctor obtenerPorEmail(String email) {
+        EntityManager em = getEntityManager();
+        try {
+            TypedQuery<Doctor> query = em.createQuery(
+                "SELECT d FROM Doctor d WHERE d.email = :email",
+                Doctor.class
+            );
+            query.setParameter("email", email);
+            List<Doctor> resultados = query.getResultList();
+            return resultados.isEmpty() ? null : resultados.get(0);
+        } catch (Exception e) {
+            System.err.println("Error al obtener doctor por email: " + e.getMessage());
+            return null;
+        } finally {
+            em.close();
+        }
+    }
+
+    /**
      * Obtiene un doctor por cédula
      */
     public Doctor obtenerPorCedula(String cedula) {

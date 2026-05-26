@@ -275,57 +275,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            console.log('📤 Formulario enviado (temporal)');
 
             const rolElement = document.getElementById('rol');
-            const emailElement = document.getElementById('email') || document.getElementById('identificacion');
-            const passwordElement = document.getElementById('password');
+            const emailElement = document.getElementById('email');
             const errorDiv = document.getElementById('errorMessage');
 
-            if (!rolElement || !emailElement || !passwordElement) {
-                console.error('❌ Elementos del formulario no encontrados');
-                return;
-            }
+            const rol = rolElement ? rolElement.value : '';
+            const email = emailElement ? emailElement.value.trim() : '';
 
-            const rol = rolElement.value;
-            const email = emailElement.value.trim();
-            const password = passwordElement.value.trim();
-
-            console.log('Datos recibidos:', { rol, email, password: '****' });
+            if (errorDiv) errorDiv.classList.remove('show');
 
             if (!rol) {
-                if (errorDiv) {
-                    errorDiv.textContent = 'Por favor selecciona tu rol';
-                    errorDiv.classList.add('show');
-                }
+                if (errorDiv) { errorDiv.textContent = 'Por favor selecciona tu rol'; errorDiv.classList.add('show'); }
                 return;
             }
 
-            if (email && typeof email === 'string' && email.includes('@')) {
-                if (!email.endsWith('@epn.edu.ec')) {
-                    if (errorDiv) {
-                        errorDiv.textContent = 'Debes usar tu correo institucional (@epn.edu.ec)';
-                        errorDiv.classList.add('show');
-                    }
-                    return;
-                }
+            if (!email.endsWith('@epn.edu.ec')) {
+                if (errorDiv) { errorDiv.textContent = 'Debes usar tu correo institucional (@epn.edu.ec)'; errorDiv.classList.add('show'); }
+                return;
             }
 
-            const resultado = loginTemporal(email, password, rol);
-
-            if (resultado.success) {
-                if (errorDiv) {
-                    errorDiv.classList.remove('show');
-                }
-                const urlAnterior = sessionStorage.getItem('paginaAnterior');
-                window.location.href = urlAnterior || 'inicio.jsp';
-                sessionStorage.removeItem('paginaAnterior');
-            } else {
-                if (errorDiv) {
-                    errorDiv.textContent = resultado.mensaje;
-                    errorDiv.classList.add('show');
-                }
-            }
+            // Validación OK: enviar al servidor
+            this.submit();
         });
     }
 });

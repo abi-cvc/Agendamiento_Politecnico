@@ -1,4 +1,14 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page import="model.entity.Estudiante, model.entity.Administrador, model.entity.Doctor" %>
+<%
+    Object usuarioSesion = session.getAttribute("usuario");
+    String rolSesion    = (String) session.getAttribute("rol");
+    String nombreSesion = (String) session.getAttribute("nombreUsuario");
+    String emailSesion  = "";
+    if (usuarioSesion instanceof Estudiante)     emailSesion = ((Estudiante)     usuarioSesion).getCorreoEstudiante();
+    else if (usuarioSesion instanceof Administrador) emailSesion = ((Administrador) usuarioSesion).getCorreoAdmin();
+    else if (usuarioSesion instanceof Doctor)    emailSesion = ((Doctor)         usuarioSesion).getEmail();
+%>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -298,7 +308,18 @@
     </footer>
     
 
+    <% if (usuarioSesion != null && rolSesion != null) { %>
+    <script>
+        if (!sessionStorage.getItem('usuarioActual')) {
+            sessionStorage.setItem('usuarioActual', JSON.stringify({
+                nombre: '<%= nombreSesion != null ? nombreSesion.replace("'","\'") : "" %>',
+                email:  '<%= emailSesion %>',
+                rol:    '<%= rolSesion %>'
+            }));
+        }
+    </script>
+    <% } %>
     <script src="<%= request.getContextPath() %>/js/auth-temporal.js"></script>
-    
+
 </body>
 </html>

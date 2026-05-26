@@ -41,7 +41,7 @@
         </div>
 
         <!-- FORMULARIO -->
-        <form id="loginForm" class="login-form">
+        <form id="loginForm" class="login-form" action="<%= request.getContextPath() %>/login" method="post">
 
             <div class="form-group">
                 <label for="rol">Selecciona tu rol</label>
@@ -87,7 +87,12 @@
             </div>
 
             <!-- Mensaje de error -->
-            <div id="errorMessage" class="alert alert-error"></div>
+            <%
+                String serverError = (String) request.getAttribute("error");
+            %>
+            <div id="errorMessage" class="alert alert-error<%= serverError != null ? " show" : "" %>">
+                <%= serverError != null ? serverError : "" %>
+            </div>
 
             <button type="submit" class="btn-login">
                 Iniciar Sesión
