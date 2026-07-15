@@ -1,0 +1,41 @@
+# ============================================================
+# docker-compose de DESARROLLO / DEMO LOCAL — NO USAR EN PRODUCCIÓN
+# Credenciales por defecto (root/1234) y sin TLS: solo para levantar
+# el proyecto en tu propia máquina.
+# ============================================================
+services:
+  db:
+    image: mysql:8.0
+    container_name: agendamiento-db
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: agendamiento_politecnico
+    ports:
+      # Bindeado solo a localhost: la DB no queda expuesta a la red,
+      # solo accesible desde la propia máquina (p. ej. con un cliente MySQL).
+      - "127.0.0.1:3306:3306"
+    volumes:
+      - ./src/main/resources/agendamiento_politecnico.sql:/docker-entrypoint-initdb.d/1-schema.sql
+      - ./src/main/resources/generar_disponibilidades.sql:/docker-entrypoint-initdb.d/2-disponibilidades.sql
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p1234"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    container_name: agendamiento-app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_URL: "jdbc:mysql://db:3306/agendamiento_politecnico?useSSL=false&serverTimezone=America/Guayaquil&allowPublicKeyRetrieval=true"
+      DB_USER: root
+      DB_PASSWORD: 1234
+    ports:
+      - "8080:8080"
+
+volumes:
+  db-data:
