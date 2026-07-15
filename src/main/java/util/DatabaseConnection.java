@@ -34,7 +34,7 @@ public class DatabaseConnection {
      * - Local XAMPP: "jdbc:mysql://localhost:3306/agendamiento_politecnico?useSSL=false&serverTimezone=America/Guayaquil&allowPublicKeyRetrieval=true"
      * - Remoto: "jdbc:mysql://192.168.1.100:3306/agendamiento_politecnico?useSSL=false&serverTimezone=America/Guayaquil"
      */
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/agendamiento_politecnico?useSSL=false&serverTimezone=America/Guayaquil&allowPublicKeyRetrieval=true";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/agendamiento_politecnico?useSSL=false&serverTimezone=America/Guayaquil&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8";
     
     /**
      * Usuario de MySQL

@@ -34,8 +34,8 @@
             <!-- useSSL=false: Desactiva SSL (no necesario en local) -->
             <!-- serverTimezone=America/Guayaquil: Zona horaria de Ecuador -->
             <!-- allowPublicKeyRetrieval=true: Necesario para MySQL 8.x -->
-            <property name="jakarta.persistence.jdbc.url" 
-                      value="jdbc:mysql://localhost:3306/agendamiento_politecnico?useSSL=false&amp;serverTimezone=America/Guayaquil&amp;allowPublicKeyRetrieval=true"/>
+            <property name="jakarta.persistence.jdbc.url"
+                      value="jdbc:mysql://localhost:3306/agendamiento_politecnico?useSSL=false&amp;serverTimezone=America/Guayaquil&amp;allowPublicKeyRetrieval=true&amp;useUnicode=true&amp;characterEncoding=UTF-8"/>
             
             <!-- Usuario de XAMPP MySQL (Default: root) -->
             <property name="jakarta.persistence.jdbc.user" value="root"/>

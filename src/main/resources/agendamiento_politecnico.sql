@@ -4,6 +4,11 @@
 -- Fecha: 2026-01-11
 -- ============================================
 
+-- Forzar charset de la sesión de importación a utf8mb4.
+-- Sin esto, el cliente mysql se conecta con latin1 por defecto y
+-- corrompe (doble-codifica) los caracteres UTF-8 de este archivo (tildes, ñ, emojis).
+SET NAMES utf8mb4;
+
 -- Eliminar base de datos si existe (CUIDADO: esto borra todo)
 DROP DATABASE IF EXISTS agendamiento_politecnico;
 

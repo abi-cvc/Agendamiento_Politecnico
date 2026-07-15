@@ -1,16 +1,15 @@
-# ─── Stage 1: Build ───────────────────────────────────────────────────────────
+# --- Stage 1: Build -----------------------------------------------------------------------
 FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /app
 
-# Descargar dependencias primero (cache layer)
+# Copiar proyecto completo
 COPY pom.xml .
-RUN mvn dependency:go-offline -B
-
-# Compilar el proyecto
 COPY src ./src
+
+# Compilar (Maven descargara dependencias automaticamente)
 RUN mvn package -DskipTests -B
 
-# ─── Stage 2: Runtime ─────────────────────────────────────────────────────────
+# --- Stage 2: Runtime -----------------------------------------------------------------------
 FROM tomcat:10.1-jre17
 
 # Instalar unzip para extraer el WAR en runtime

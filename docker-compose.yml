@@ -31,7 +31,7 @@ services:
       db:
         condition: service_healthy
     environment:
-      DB_URL: "jdbc:mysql://db:3306/agendamiento_politecnico?useSSL=false&serverTimezone=America/Guayaquil&allowPublicKeyRetrieval=true"
+      DB_URL: "jdbc:mysql://db:3306/agendamiento_politecnico?useSSL=false&serverTimezone=America/Guayaquil&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8"
       DB_USER: root
       DB_PASSWORD: 1234
     ports:
